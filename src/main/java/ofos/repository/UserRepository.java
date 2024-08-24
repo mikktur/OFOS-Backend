@@ -1,6 +1,6 @@
 package ofos.repository;
-import ofos.model.User;
+import ofos.dto.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User,String> {
+public interface UserRepository extends JpaRepository<UserDTO,String> {
 }
