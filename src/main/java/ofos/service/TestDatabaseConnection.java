@@ -8,7 +8,7 @@ public class TestDatabaseConnection {
     public static void main(String[] args) {
         String url = "jdbc:mariadb://10.120.32.94:3306/mikt";
         String user = "xxx";
-        String password = "xxxx";
+        String password = "xxx";
 
         try {
             Class.forName("org.mariadb.jdbc.Driver");
