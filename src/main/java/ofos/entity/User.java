@@ -7,6 +7,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //
     @Column(name = "User_ID")
+
+
     private Long userId;
 
     @Column(name = "Username")
@@ -27,7 +29,10 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
+
     }
+
+
     public Long getUserId() {
         return userId;
     }

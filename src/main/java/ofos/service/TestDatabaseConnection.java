@@ -7,8 +7,8 @@ import java.sql.SQLException;
 public class TestDatabaseConnection {
     public static void main(String[] args) {
         String url = "jdbc:mariadb://10.120.32.94:3306/mikt";
-        String user = "xxx";
-        String password = "xxx";
+        String user = "jimi";
+        String password = "salasana123";
 
         try {
             Class.forName("org.mariadb.jdbc.Driver");

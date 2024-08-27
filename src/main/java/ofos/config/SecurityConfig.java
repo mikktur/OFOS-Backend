@@ -18,22 +18,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/users").permitAll()
-                .anyRequest().authenticated()
+                        .requestMatchers("/api/users").permitAll() // Allow unrestricted access to /api/users
+                        .requestMatchers("/api/users/username/{username}").permitAll() // Allow unrestricted access to /api/users/user
+                        .requestMatchers("/api/users/id/{id}").permitAll() // Allow unrestricted access to /api/users/id
+                        .requestMatchers("/api/users/create").permitAll() // Allow unrestricted access to /api/users/create
+                        .anyRequest().authenticated() // Require authentication for all other requests
                 )
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
-                .build());
-        return manager;
     }
 }
