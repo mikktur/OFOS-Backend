@@ -1,6 +1,7 @@
 package ofos.controller;
 
 import ofos.entity.User;
+import ofos.security.JwtUtil;
 import ofos.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,12 +17,16 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/login")
     public String authenticateUser(@RequestParam String username, @RequestParam String password) {
         User user = userService.getUserByUsername(username);
         if (user != null) {
             if (passwordEncoder.matches(password, user.getPassword())) {
-                return "Authentication successful";
+                String token = jwtUtil.generateToken(username);
+                return "Authentication successful. Token: " + token;
             } else {
                 return "Invalid password";
             }
