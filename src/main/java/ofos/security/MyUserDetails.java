@@ -1,26 +1,30 @@
 package ofos.security;
 
-import ofos.entity.User;
+
+import ofos.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
-public class MyUserDetails implements UserDetails {
 
-    private User user;
+public class MyUserDetails implements org.springframework.security.core.userdetails.UserDetails {
 
-    public MyUserDetails(User user) {
+    private UserEntity user;
+
+    public MyUserDetails(UserEntity user) {
         this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role))  // Use role directly
-                .collect(Collectors.toList());
+        // Gets the role of the user.
+        String role = user.getRole(); // e.g., "ADMIN", "USER", etc.
+
+        // Wraps the single role in a SimpleGrantedAuthority and return it as a collection.
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
     @Override
@@ -33,23 +37,4 @@ public class MyUserDetails implements UserDetails {
         return user.getUsername();
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return user.isEnabled();
-    }
 }

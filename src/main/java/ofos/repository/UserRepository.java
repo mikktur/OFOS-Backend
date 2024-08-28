@@ -1,12 +1,10 @@
 package ofos.repository;
 
-import ofos.entity.User;
+import ofos.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
     //add custom queries here
-    User findByUsername(String username);
-    User findByUserId(Long userId);
+    UserEntity findByUsername(String username);
+    UserEntity findByUserId(Long userId);
 }

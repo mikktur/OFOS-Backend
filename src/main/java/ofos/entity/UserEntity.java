@@ -1,12 +1,11 @@
 package ofos.entity;
 
 import jakarta.persistence.*;
-import java.util.Collections;
-import java.util.List;
+
 
 @Entity
 @Table(name = "Users")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,19 +21,16 @@ public class User {
     @Column(name = "Role")
     private String role;
 
-    @Column(name = "Enabled")
-    private boolean enabled;
 
     // Constructors
-    public User() {
+    public UserEntity() {
     }
 
-    public User(Long userId, String username, String password, String role, boolean enabled) {
+    public UserEntity(Long userId, String username, String password, String role, boolean enabled) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.enabled = enabled;
     }
 
     // Getters and Setters
@@ -70,21 +66,4 @@ public class User {
         this.role = role;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    // Method to return roles as a list of authorities
-    public List<String> getRoles() {
-        return Collections.singletonList(this.role);
-    }
-
-    // Method to return the name (same as username here)
-    public String getName() {
-        return this.username;
-    }
 }

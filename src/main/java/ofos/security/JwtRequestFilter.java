@@ -1,6 +1,5 @@
 package ofos.security;
 
-import ofos.entity.User;
 import ofos.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,15 +39,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = authorizationHeader.substring(7);
             try {
                 username = jwtUtil.extractUsername(jwt);
+                System.out.println("Username: " + username);
             } catch (ExpiredJwtException | MalformedJwtException e) {
                 // Handle exceptions (expired, malformed, etc.)
             }
         }
-
+        System.out.println("SecurityContextHolder.getContext().getAuthentication(): " + SecurityContextHolder.getContext().getAuthentication());
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = this.userService.loadUserByUsername(username);
-
+            System.out.println("UserDetails: " + userDetails.getUsername());
+            System.out.println("jwtUtil.validateToken(jwt, userDetails.getUsername()): " + jwtUtil.validateToken(jwt, userDetails.getUsername()));
             if (jwtUtil.validateToken(jwt, userDetails.getUsername())) {
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =

@@ -1,6 +1,6 @@
 package ofos.controller;
 
-import ofos.entity.User;
+import ofos.entity.UserEntity;
 import ofos.security.JwtUtil;
 import ofos.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public String authenticateUser(@RequestParam String username, @RequestParam String password) {
-        User user = userService.getUserByUsername(username);
-        if (user != null) {
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                String token = jwtUtil.generateToken(username);
+        UserEntity userEntity = userService.getUserByUsername(username);
+        if (userEntity != null) {
+            if (passwordEncoder.matches(password, userEntity.getPassword())) {
+                String token = jwtUtil.generateToken(username, userEntity.getRole());
                 return "Authentication successful. Token: " + token;
             } else {
                 return "Invalid password";
