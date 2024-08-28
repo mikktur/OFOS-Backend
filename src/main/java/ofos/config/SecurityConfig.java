@@ -22,7 +22,7 @@ public class SecurityConfig {
 //                        .requestMatchers("/api/users/username/{username}").permitAll() // Allow unrestricted access to /api/users/user
 //                        .requestMatchers("/api/users/id/{id}").permitAll() // Allow unrestricted access to /api/users/id
 //                        .requestMatchers("/api/users/create").permitAll() // Allow unrestricted access to /api/users/create
-                        .requestMatchers("/api/users/**").permitAll()   // Sallii kaikki /api/users polun alaiset pyynnöt.
+                        .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
                         .anyRequest().authenticated() // Require authentication for all other requests
                 )
