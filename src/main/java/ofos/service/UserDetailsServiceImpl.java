@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
  * This class provides methods to interact with the user data stored in the database.
  * mainly used in the authentication process to retrieve user details.
  */
+// Eikö UserService voi implementoida UserDetailsServicea? Tarvitaanko kahta luokkaa hakemaan samaa dataa tietokannasta?
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
