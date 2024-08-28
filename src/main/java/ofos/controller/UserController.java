@@ -40,8 +40,9 @@ public class UserController {
         return user;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public User createUser(@RequestParam String username, @RequestParam String password, @RequestParam String role) {
+        System.out.println("Entered createUser method in UserController");
         return userService.createUser(username, password, role);
     }
 
