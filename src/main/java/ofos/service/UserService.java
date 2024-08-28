@@ -11,8 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This class provides methods to interact and save the user data stored in the database.
+ */
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -44,15 +47,4 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUserId(userId);
     }
 
-    // Implementation of loadUserByUsername required by UserDetailsService
-    @Override
-    public MyUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByUsername(username);
-
-        if (userEntity == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-
-        return new MyUserDetails(userEntity); // Return an instance of MyUserDetails which implements UserDetails
-    }
 }

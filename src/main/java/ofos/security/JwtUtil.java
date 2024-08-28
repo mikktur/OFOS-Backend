@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import io.github.cdimascio.dotenv.Dotenv;
+/**
+ * This class is used to generate and validate JWT tokens
+ */
 @Component
 public class JwtUtil {
 

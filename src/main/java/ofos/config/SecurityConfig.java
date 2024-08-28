@@ -13,6 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * This class is used to configure the security settings for the application.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -26,7 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/users/create").permitAll()
-                        .requestMatchers("/api/users").hasRole("velho")
+                        .requestMatchers("/api/users").hasRole("VELHO")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

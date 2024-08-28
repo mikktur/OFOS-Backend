@@ -6,7 +6,9 @@ import ofos.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
+/**
+ * This class is used to handle the authentication requests.
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
