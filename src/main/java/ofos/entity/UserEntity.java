@@ -2,6 +2,14 @@ package ofos.entity;
 
 import jakarta.persistence.*;
 
+/**
+ * UserEntity class is an entity class that maps to the Users table in the database.
+ * It contains the following columns:
+ * - User_ID
+ * - Username
+ * - Password
+ * - Role
+ */
 
 @Entity
 @Table(name = "Users")
