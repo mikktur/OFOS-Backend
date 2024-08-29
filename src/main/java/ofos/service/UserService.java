@@ -20,8 +20,14 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    // Method to create a new user
+    /**
+     * Creates a new user and saves it to the database.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @param role The role of the user.
+     * @return The created {@link UserEntity} object.
+     */
     public UserEntity createUser(CreateUserRequestDTO user) {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(user.getUsername());
@@ -29,17 +35,31 @@ public class UserService {
         return userRepository.save(userEntity);
     }
 
-    // Method to retrieve all users
+    /**
+     * Retrieves all users from the database.
+     *
+     * @return A list of {@link UserEntity} objects representing all users in the database.
+     */
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Method to retrieve a user by their username
+    /**
+     * Retrieves a user by their username.
+     *
+     * @param username The username of the user.
+     * @return The {@link UserEntity} object representing the user.
+     */
     public UserEntity getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    // Method to retrieve a user by their ID
+    /**
+     * Retrieves a user by their user ID.
+     *
+     * @param userId The ID of the user.
+     * @return The {@link UserEntity} object representing the user.
+     */
     public UserEntity getUserById(Long userId) {
         return userRepository.findByUserId(userId);
     }
