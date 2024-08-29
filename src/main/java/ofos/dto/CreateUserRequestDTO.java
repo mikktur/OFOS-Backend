@@ -1,32 +1,33 @@
 package ofos.dto;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-public class UserDTO {
+
+public class CreateUserRequestDTO {
 
     @NotBlank
-    @Size (min = 3, max = 20
+    @Size(min = 3, max = 20
             , message = "Username must be between 3 and 20 characters")
     private String username;
 
     @NotBlank
-    @Size (min = 6, max = 20
+    @Size(min = 6, max = 20
             , message = "Password must be between 6 and 20 characters")
     @Pattern(regexp = ".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\|,.<>/?].*",
             message = "Password must contain at least one special character")
     private String password;
 
     // Constructors, Getters, Setters
-    public UserDTO() {
+    public CreateUserRequestDTO() {
     }
 
-    public UserDTO(String username, String password) {
+    public CreateUserRequestDTO(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
     public String getUsername() {
-        System.out.println("USER DTO Username: " + username);
         return username;
     }
 

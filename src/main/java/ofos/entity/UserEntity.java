@@ -66,4 +66,7 @@ public class UserEntity {
         this.role = role;
     }
 
+    public Long getId() {
+        return userId;
+    }
 }

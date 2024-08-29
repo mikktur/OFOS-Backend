@@ -1,12 +1,9 @@
 package ofos.service;
 
-import ofos.dto.UserDTO;
+import ofos.dto.CreateUserRequestDTO;
 import ofos.entity.UserEntity;
 import ofos.repository.UserRepository;
-import ofos.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +22,7 @@ public class UserService {
     private UserRepository userRepository;
 
     // Method to create a new user
-    public UserEntity createUser(UserDTO user) {
+    public UserEntity createUser(CreateUserRequestDTO user) {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(user.getUsername());
         userEntity.setPassword(passwordEncoder.encode(user.getPassword())); // Encode password before saving

@@ -1,9 +1,13 @@
 package ofos.controller;
 
+import ofos.dto.LoginRequestDTO;
+import ofos.dto.LoginResponseDTO;
 import ofos.entity.UserEntity;
 import ofos.security.JwtUtil;
 import ofos.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 /**
@@ -23,17 +27,22 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public String authenticateUser(@RequestParam String username, @RequestParam String password) {
-        UserEntity userEntity = userService.getUserByUsername(username);
-        if (userEntity != null) {
-            if (passwordEncoder.matches(password, userEntity.getPassword())) {
-                String token = jwtUtil.generateToken(username, userEntity.getRole());
-                return "Authentication successful. Token: " + token;
-            } else {
-                return "Invalid password";
-            }
+    public ResponseEntity<LoginResponseDTO> authenticateUser(@RequestBody LoginRequestDTO loginRequest) {
+        //retrieve user from database
+        UserEntity userEntity = userService.getUserByUsername(loginRequest.getUsername());
+
+        //check if user exists in db and password matches with the user input
+        if (userEntity != null && passwordEncoder.matches(loginRequest.getPassword(), userEntity.getPassword())) {
+            String token = jwtUtil.generateToken(loginRequest.getUsername(), userEntity.getRole());
+
+            //create response object with token
+            LoginResponseDTO response = new LoginResponseDTO(true, userEntity.getUsername(), "Authentication successful", token);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
         } else {
-            return "User not found";
+            LoginResponseDTO response = new LoginResponseDTO(false,null, "Invalid credentials", null);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
 }
+

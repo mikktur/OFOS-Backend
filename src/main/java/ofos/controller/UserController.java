@@ -1,6 +1,7 @@
 package ofos.controller;
 
-import ofos.dto.UserDTO;
+import ofos.dto.CreateUserRequestDTO;
+import ofos.dto.CreateUserResponseDTO;
 import ofos.entity.UserEntity;
 import ofos.service.UserService;
 import jakarta.validation.Valid;
@@ -45,9 +46,29 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserEntity> createUser(@RequestBody @Valid UserDTO user) {
-        UserEntity createdUser = userService.createUser(user);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    public ResponseEntity<CreateUserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO createUserRequest) {
+        try {
+            UserEntity createdUser = userService.createUser(createUserRequest);
+
+            CreateUserResponseDTO response = new CreateUserResponseDTO(
+                    createdUser.getId(),
+                    createdUser.getUsername(),
+                    "User created successfully",
+                    true
+            );
+
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+
+            CreateUserResponseDTO response = new CreateUserResponseDTO(
+                    null,
+                    null,
+                    "User creation failed: " + e.getMessage(),
+                    false
+            );
+
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
