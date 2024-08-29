@@ -1,13 +1,12 @@
 package ofos.dto;
 
-import org.springframework.http.HttpStatus;
 
 public class CreateUserResponseDTO {
-    private Long user_id; // The ID of the created user
+    private Long user_id;
     private String username;
-    private String message; // Success message or error message
-    private boolean success; // True if the user was created successfully, false otherwise
-    // Constructor, getters, and setters
+    private String message;
+    private boolean success;
+
 
     public CreateUserResponseDTO() {
     }
