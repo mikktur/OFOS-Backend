@@ -22,10 +22,7 @@ public class UserService {
     private UserRepository userRepository;
     /**
      * Creates a new user and saves it to the database.
-     *
-     * @param username The username of the user.
-     * @param password The password of the user.
-     * @param role The role of the user.
+     * @param user contains username,password.
      * @return The created {@link UserEntity} object.
      */
     public UserEntity createUser(CreateUserRequestDTO user) {
