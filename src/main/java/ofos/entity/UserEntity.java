@@ -1,6 +1,7 @@
 package ofos.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 
 /**
  * UserEntity class is an entity class that maps to the Users table in the database.

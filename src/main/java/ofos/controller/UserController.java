@@ -19,7 +19,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
+    @GetMapping("/users")   // Toimiiko pelkällä oletus pathillä?
     public List<UserEntity> getAllUsers() {
         System.out.println("Entered getAllUsers method in UserController");
         List<UserEntity> userEntities = userService.getAllUsers();
