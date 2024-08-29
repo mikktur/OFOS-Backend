@@ -1,8 +1,12 @@
 package ofos.controller;
 
+import ofos.dto.UserDTO;
 import ofos.entity.UserEntity;
 import ofos.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,8 +45,9 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public UserEntity createUser(@RequestParam String username, @RequestParam String password, @RequestParam String role){
-        return userService.createUser(username, password, role);
+    public ResponseEntity<UserEntity> createUser(@RequestBody @Valid UserDTO user) {
+        UserEntity createdUser = userService.createUser(user);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
 }

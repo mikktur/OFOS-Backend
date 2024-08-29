@@ -1,5 +1,6 @@
 package ofos.service;
 
+import ofos.dto.UserDTO;
 import ofos.entity.UserEntity;
 import ofos.repository.UserRepository;
 import ofos.security.MyUserDetails;
@@ -24,11 +25,10 @@ public class UserService {
     private UserRepository userRepository;
 
     // Method to create a new user
-    public UserEntity createUser(String username, String password, String role) {
+    public UserEntity createUser(UserDTO user) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(username);
-        userEntity.setPassword(passwordEncoder.encode(password)); // Encode password before saving
-        userEntity.setRole(role);
+        userEntity.setUsername(user.getUsername());
+        userEntity.setPassword(passwordEncoder.encode(user.getPassword())); // Encode password before saving
         return userRepository.save(userEntity);
     }
 
