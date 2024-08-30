@@ -2,7 +2,7 @@ package ofos.dto;
 
 
 public class CreateUserResponseDTO {
-    private Long user_id;
+    private Integer user_id;
     private String username;
     private String message;
     private boolean success;
@@ -11,18 +11,18 @@ public class CreateUserResponseDTO {
     public CreateUserResponseDTO() {
     }
 
-    public CreateUserResponseDTO(Long id, String username, String message, boolean success) {
+    public CreateUserResponseDTO(Integer id, String username, String message, boolean success) {
         this.user_id = id;
         this.username = username;
         this.message = message;
         this.success = success;
     }
 
-    public Long getUser_id() {
+    public Integer getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(Long user_id) {
+    public void setUser_id(Integer user_id) {
         this.user_id = user_id;
     }
 

@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     //add custom queries here
     UserEntity findByUsername(String username);
-    UserEntity findByUserId(Long userId);
+    UserEntity findByUserId(int userId);
 }

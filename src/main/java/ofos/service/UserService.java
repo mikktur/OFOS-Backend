@@ -26,9 +26,11 @@ public class UserService {
      * @return The created {@link UserEntity} object.
      */
     public UserEntity createUser(CreateUserRequestDTO user) {
+        System.out.println("Creating user: " + user.getUsername());
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(user.getUsername());
         userEntity.setPassword(passwordEncoder.encode(user.getPassword())); // Encode password before saving
+        System.out.println("User created: " + userEntity.getUsername());
         return userRepository.save(userEntity);
     }
 
@@ -57,7 +59,7 @@ public class UserService {
      * @param userId The ID of the user.
      * @return The {@link UserEntity} object representing the user.
      */
-    public UserEntity getUserById(Long userId) {
+    public UserEntity getUserById(int userId) {
         return userRepository.findByUserId(userId);
     }
 

@@ -38,7 +38,7 @@ public class UserController {
 
     @GetMapping("/id/{id}")
     @ResponseBody
-    public UserEntity getUserById(@PathVariable Long id) {
+    public UserEntity getUserById(@PathVariable int id) {
         System.out.println("Entered getUserById method in UserController");
         UserEntity userEntity = userService.getUserById(id);
         System.out.println("User retrieved: " + userEntity.getUsername());
@@ -48,8 +48,12 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<CreateUserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO createUserRequest) {
         try {
+            System.out.println("Create user request received: " + createUserRequest.getUsername());
+            System.out.println("Create user request received: " + createUserRequest.getPassword());
+
             UserEntity createdUser = userService.createUser(createUserRequest);
 
+            System.out.println("User created: " + createdUser.getUsername());
             CreateUserResponseDTO response = new CreateUserResponseDTO(
                     createdUser.getId(),
                     createdUser.getUsername(),
@@ -59,7 +63,7 @@ public class UserController {
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
-
+            e.printStackTrace();
             CreateUserResponseDTO response = new CreateUserResponseDTO(
                     null,
                     null,

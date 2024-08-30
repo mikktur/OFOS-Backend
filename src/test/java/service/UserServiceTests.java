@@ -35,14 +35,14 @@ public class UserServiceTests {
     @Test
     public void getUserByIdTest() {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUserId(222L);
+        userEntity.setUserId(222);
         userEntity.setUsername("kissa2");
         userEntity.setPassword("kissa2");
         userEntity.setRole("kissa");
 
-        Mockito.when(userRepository.findByUserId(222L)).thenReturn(userEntity);
+        Mockito.when(userRepository.findByUserId(222)).thenReturn(userEntity);
 
-        UserEntity returnedUserEntity = userService.getUserById(222L);
+        UserEntity returnedUserEntity = userService.getUserById(222);
 
         Assertions.assertEquals(userEntity, returnedUserEntity);
         Assertions.assertEquals(userEntity.getUsername(), returnedUserEntity.getUsername());
@@ -51,7 +51,7 @@ public class UserServiceTests {
     @Test
     public void getUserByUsernameTest() {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUserId(222L);
+        userEntity.setUserId(222);
         userEntity.setUsername("kissa2");
         userEntity.setPassword("kissa2");
         userEntity.setRole("kissa");
@@ -67,8 +67,8 @@ public class UserServiceTests {
     @Test
     public void getAllUsersTest() {
         List<UserEntity> users = new ArrayList<>();
-        UserEntity kissa = new UserEntity(33L, "ksis", "ksis", "kissa", true);
-        UserEntity kissa1 = new UserEntity(334L, "ksis22", "ksis22", "kissa", true);
+        UserEntity kissa = new UserEntity(33, "ksis", "ksis", "kissa", true);
+        UserEntity kissa1 = new UserEntity(334, "ksis22", "ksis22", "kissa", true);
         users.add(kissa);
         users.add(kissa1);
 

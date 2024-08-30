@@ -2,7 +2,6 @@ package ofos.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import ofos.controller.UserController;
 import ofos.dto.CreateUserRequestDTO;
 import ofos.entity.UserEntity;
 import ofos.security.JwtRequestFilter;
@@ -10,7 +9,6 @@ import ofos.security.JwtUtil;
 import ofos.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -55,11 +53,11 @@ public class UserControllerTests {
     @Test
     public void getUserByIdTest() throws Exception {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUserId(10L);
+        userEntity.setUserId(10);
         userEntity.setUsername("kissa1");
         userEntity.setRole("kissa");
 
-        when(userService.getUserById(10L)).thenReturn(userEntity);
+        when(userService.getUserById(10)).thenReturn(userEntity);
 
         mvc.perform(get("/api/users/id/10"))
                 .andExpect(status().isOk())
@@ -96,7 +94,7 @@ public class UserControllerTests {
     public void getUserByUsernameTest() throws Exception {
         String username = "kissa1";
         UserEntity userEntity = new UserEntity();
-        userEntity.setUserId(10L);
+        userEntity.setUserId(10);
         userEntity.setUsername(username);
         userEntity.setRole("kissa");
 
@@ -116,10 +114,10 @@ public class UserControllerTests {
         List<UserEntity> kissat = new ArrayList<>();
         UserEntity userEntity = new UserEntity();
         UserEntity userEntity1 = new UserEntity();
-        userEntity.setUserId(10L);
+        userEntity.setUserId(10);
         userEntity.setUsername("kissa1");
         userEntity.setRole("kissa");
-        userEntity1.setUserId(101L);
+        userEntity1.setUserId(101);
         userEntity1.setUsername("kissa12");
         userEntity1.setRole("kissa");
         kissat.add(userEntity);
