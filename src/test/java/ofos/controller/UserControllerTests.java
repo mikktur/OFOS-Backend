@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -75,13 +76,14 @@ public class UserControllerTests {
     public void createUserTest() {
         CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO("kissa10", "kissa10&");
         UserEntity userEntity = new UserEntity();
-        userEntity.setUsername("kissa100");
+        userEntity.setUsername("kissa10");
         userEntity.setRole("kissa");
 
-        when(userService.createUser(createUserRequestDTO)).thenReturn(userEntity);
+
+        when(userService.createUser(any(CreateUserRequestDTO.class))).thenReturn(userEntity);
 
 
-        // Epäonnistuu aina, koska itse käyttäjää ei koskaan luoda testissä.
+
         mvc.perform(post("/api/users/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createUserRequestDTO)))
