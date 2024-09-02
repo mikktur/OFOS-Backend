@@ -6,12 +6,11 @@ import jakarta.validation.constraints.Size;
 
 public class CreateUserRequestDTO {
 
-    @NotBlank
     @Size(min = 3, max = 20
             , message = "Username must be between 3 and 20 characters")
     private String username;
 
-    @NotBlank
+
     @Size(min = 6, max = 20
             , message = "Password must be between 6 and 20 characters")
     @Pattern(regexp = ".*[!@#$%^&*()_+\\-=\\[\\]{};':\"|,.<>/?].*",

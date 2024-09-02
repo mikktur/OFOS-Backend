@@ -1,5 +1,8 @@
 package ofos.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoginResponseDTO {
     private boolean success;
     private String username;

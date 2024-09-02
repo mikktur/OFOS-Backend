@@ -40,7 +40,7 @@ public class AuthController {
             return new ResponseEntity<>(response, HttpStatus.OK);
 
         } else {
-            LoginResponseDTO response = new LoginResponseDTO(false,null, "Invalid credentials", null);
+            LoginResponseDTO response = new LoginResponseDTO(false,null, "Incorrect username or password.", null);
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }

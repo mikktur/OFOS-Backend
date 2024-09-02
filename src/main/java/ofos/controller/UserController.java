@@ -19,7 +19,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users")   // Toimiiko pelkällä oletus pathillä?
+    @GetMapping   // Toimiiko pelkällä oletus pathillä?
     public List<UserEntity> getAllUsers() {
         System.out.println("Entered getAllUsers method in UserController");
         List<UserEntity> userEntities = userService.getAllUsers();
@@ -48,8 +48,6 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<CreateUserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO createUserRequest) {
         try {
-            System.out.println("Create user request received: " + createUserRequest.getUsername());
-            System.out.println("Create user request received: " + createUserRequest.getPassword());
 
             UserEntity createdUser = userService.createUser(createUserRequest);
 
