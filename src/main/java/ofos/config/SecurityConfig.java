@@ -47,14 +47,13 @@ public class SecurityConfig {
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        http.authorizeHttpRequests(authz -> authz
-//                                .requestMatchers("/api/**").permitAll()
-//                                .requestMatchers("/api/auth/login").permitAll()
-//                                .anyRequest().authenticated() // Require authentication for all other requests
+//                        .requestMatchers("/api/**").permitAll()
+//                        .requestMatchers("/upload/**").permitAll()
 //                )
-//                .csrf(AbstractHttpConfigurer::disable);      // Sallii POST metodin käytön. Varmaan fiksumpi tapa tehdä
+//                .csrf(AbstractHttpConfigurer::disable);
 //        return http.build();
 //    }
-//}
+
 
 
     @Bean
