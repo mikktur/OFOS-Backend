@@ -39,5 +39,4 @@ build/
 
 src/main/resources/application.properties
 
-.gitignore
 .env
