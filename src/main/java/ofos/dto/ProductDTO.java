@@ -48,4 +48,16 @@ public class ProductDTO {
     public int getProductID() {
         return productID;
     }
+
+    // Testiä varten.
+    public ProductDTO(int productID, String productName, String productDesc, BigDecimal productPrice, String category, String picture) {
+        this.productID = productID;
+        this.productName = productName;
+        this.productDesc = productDesc;
+        this.productPrice = productPrice;
+        this.category = category;
+        this.picture = picture;
+    }
+
+
 }
