@@ -3,11 +3,10 @@ package ofos.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Entity
 @Table(name = "Products", schema = "mikt")
-public class DishEntity {
+public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "ProductID")
@@ -21,6 +20,15 @@ public class DishEntity {
     @Basic
     @Column(name = "ProductPrice")
     private BigDecimal productPrice;
+    @Basic
+    @Column(name = "Picture")
+    private String picture;
+    @Basic
+    @Column(name = "Category")
+    private String category;
+    @Basic
+    @Column(name = "Active")
+    private boolean active;
 
     public int getProductId() {
         return productId;
@@ -54,4 +62,27 @@ public class DishEntity {
         this.productPrice = productPrice;
     }
 
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
 }
