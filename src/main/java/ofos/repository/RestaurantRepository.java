@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RestaurantRepository extends JpaRepository<RestaurantEntity, Integer> {
@@ -14,4 +15,8 @@ public interface RestaurantRepository extends JpaRepository<RestaurantEntity, In
 
     @EntityGraph(attributePaths = {"owner"})
     List<RestaurantEntity> findByOwner_UserId(long userId);
+
+    // Default lazy loading, do not fetch owner eagerly
+    Optional<RestaurantEntity> findById(Integer id);
+
 }

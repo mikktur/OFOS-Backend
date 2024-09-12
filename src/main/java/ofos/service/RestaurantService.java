@@ -1,6 +1,8 @@
 package ofos.service;
 
+import jakarta.transaction.Transactional;
 import ofos.dto.RestaurantDTO;
+import ofos.dto.UpdateRestaurantDTO;
 import ofos.entity.RestaurantEntity;
 import ofos.entity.UserEntity;
 import ofos.exception.UserNotFoundException;
@@ -53,6 +55,24 @@ public class RestaurantService {
                 .stream()
                 .map(RestaurantDTO::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public RestaurantDTO updateRestaurant(Integer restaurantId, UpdateRestaurantDTO updateRestaurantDTO) {
+        System.out.println("Entered updateRestaurant method in RestaurantService");
+        RestaurantEntity restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new UserNotFoundException("Restaurant not found"));
+
+
+        // Update fields
+        restaurant.setRestaurantName(updateRestaurantDTO.getRestaurantName());
+        restaurant.setRestaurantPhone(updateRestaurantDTO.getRestaurantPhone());
+        restaurant.setPicture(updateRestaurantDTO.getPicture());
+
+        // Save the updated restaurant entity
+        RestaurantEntity updatedRestaurant = restaurantRepository.save(restaurant);
+
+        return RestaurantDTO.fromEntity(updatedRestaurant);
     }
 
 }

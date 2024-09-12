@@ -1,13 +1,12 @@
 package ofos.controller;
 
 import ofos.dto.RestaurantDTO;
+import ofos.dto.UpdateRestaurantDTO;
 import ofos.entity.RestaurantEntity;
 import ofos.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +20,15 @@ public class RestaurantController {
     public RestaurantController(RestaurantService restaurantService) {
         this.restaurantService = restaurantService;
     }
+
+    @PutMapping("/{restaurantId}")
+    public ResponseEntity<RestaurantDTO> updateRestaurant(
+            @PathVariable int restaurantId,
+            @RequestBody UpdateRestaurantDTO updateRestaurantDTO) {
+        RestaurantDTO updatedRestaurant = restaurantService.updateRestaurant(restaurantId, updateRestaurantDTO);
+        return ResponseEntity.ok(updatedRestaurant);
+    }
+
 
     @GetMapping
     public List<RestaurantDTO> getAllRestaurants() {
