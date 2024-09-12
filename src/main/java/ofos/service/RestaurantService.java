@@ -75,4 +75,13 @@ public class RestaurantService {
         return RestaurantDTO.fromEntity(updatedRestaurant);
     }
 
+    @Transactional
+    public List<RestaurantDTO> getRestaurantsByCategory(String categoryName) {
+        System.out.println("Entered getRestaurantsByCategory method in RestaurantService");
+        List<RestaurantEntity> restaurants = restaurantRepository.findByCategoryName(categoryName);
+        return restaurants.stream()
+                .map(RestaurantDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 }

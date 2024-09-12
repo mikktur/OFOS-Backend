@@ -41,8 +41,9 @@ public class RestaurantController {
     }
 
 
-    /*@GetMapping("/category/{categoryName}")
-    public List<RestaurantEntity> getRestaurantsByCategory(@PathVariable String categoryName) {
-        return restaurantService.getRestaurantsByCategory(categoryName);
-    }*/
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<List<RestaurantDTO>> getRestaurantsByCategory(@PathVariable String categoryName) {
+        List<RestaurantDTO> restaurants = restaurantService.getRestaurantsByCategory(categoryName);
+        return ResponseEntity.ok(restaurants);
+    }
 }
