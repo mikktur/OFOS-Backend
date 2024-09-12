@@ -43,6 +43,7 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        System.out.println("Taas");
         int hardcodedRestaurantID = 1;  // Path variablella varmaa.
         try {
             productService.createProduct(productDTO, hardcodedRestaurantID);
@@ -55,8 +56,6 @@ public class ProductController {
         }
     }
 
-    // Vois suorittaa samalla pathilla ku /create
-    // Näin luettavampaa (?)
     @PostMapping("/update")
     public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO productDTO) {
         try {
