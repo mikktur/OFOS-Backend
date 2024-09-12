@@ -30,15 +30,14 @@ public class RestaurantService {
     public List<RestaurantDTO> getAllRestaurants() {
         System.out.println("Entered getAllRestaurants method in RestaurantService");
         List<RestaurantEntity> restaurants = restaurantRepository.findAll();
-        System.out.println("Restaurants retrieved: " + restaurants.get(0).getRestaurantName());
+        // Print all restaurants retrieved from the repository
+        System.out.println("Restaurants retrieved: ");
+        restaurants.forEach(restaurant ->
+                System.out.println("Restaurant Name: " + restaurant.getRestaurantName() + ", Owner: " + restaurant.getOwner().getUsername())
+        );
+
         return restaurants.stream()
-                .map(restaurant -> new RestaurantDTO(
-                        restaurant.getId(),
-                        restaurant.getRestaurantName(),
-                        restaurant.getRestaurantPhone(),
-                        restaurant.getPicture(),
-                        restaurant.getOwner().getUsername()
-                ))
+                .map(RestaurantDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
