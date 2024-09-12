@@ -3,6 +3,8 @@ package ofos.service;
 import ofos.dto.RestaurantDTO;
 import ofos.entity.RestaurantEntity;
 import ofos.entity.UserEntity;
+import ofos.exception.UserNotFoundException;
+import ofos.exception.UserNotOwnerException;
 import ofos.repository.RestaurantRepository;
 import ofos.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +43,10 @@ public class RestaurantService {
     public List<RestaurantDTO> getRestaurantsByOwner(long userId) {
         System.out.println("Entered getRestaurantsByOwner method in RestaurantService");
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         System.out.println("User retrieved: " + user.getUsername() + " role: " + user.getRole());
         if (!"Owner".equals(user.getRole())) {
-            throw new RuntimeException("User is not an owner");
+            throw new UserNotOwnerException("User is not an owner");
         }
 
         return restaurantRepository.findByOwner_UserId(userId)

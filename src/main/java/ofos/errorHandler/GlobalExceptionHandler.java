@@ -1,5 +1,8 @@
 package ofos.errorHandler;
 
+import ofos.exception.UserNotOwnerException;
+import ofos.exception.UserNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -24,5 +27,17 @@ public class GlobalExceptionHandler {
         });
         System.out.println("Validation errors: " + errors); // Log validation errors
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    // Handle UserNotFoundException
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    // Handle UserNotOwnerException
+    @ExceptionHandler(UserNotOwnerException.class)
+    public ResponseEntity<String> handleUserNotOwnerException(UserNotOwnerException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 }
