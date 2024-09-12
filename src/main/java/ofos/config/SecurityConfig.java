@@ -49,7 +49,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/upload/**").permitAll()
-                        .requestMatchers("/restaurants").permitAll()
+                        .requestMatchers("/restaurants/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable);

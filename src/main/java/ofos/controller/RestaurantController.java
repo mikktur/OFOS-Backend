@@ -27,6 +27,11 @@ public class RestaurantController {
         return restaurantService.getAllRestaurants();
     }
 
+    @GetMapping("/owner/{userId}")
+    public List<RestaurantDTO> getRestaurantsByOwner(@PathVariable int userId) {
+        return restaurantService.getRestaurantsByOwner(userId);
+    }
+
 
     /*@GetMapping("/category/{categoryName}")
     public List<RestaurantEntity> getRestaurantsByCategory(@PathVariable String categoryName) {

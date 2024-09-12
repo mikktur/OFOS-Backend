@@ -1,5 +1,7 @@
 package ofos.dto;
 
+import ofos.entity.RestaurantEntity;
+
 public class RestaurantDTO {
     private Integer id;
     private String restaurantName;
@@ -57,6 +59,16 @@ public class RestaurantDTO {
 
     public void setOwnerUsername(String ownerUsername) {
         this.ownerUsername = ownerUsername;
+    }
+
+    public static RestaurantDTO fromEntity(RestaurantEntity restaurant) {
+        return new RestaurantDTO(
+                restaurant.getId(),
+                restaurant.getRestaurantName(),
+                restaurant.getRestaurantPhone(),
+                restaurant.getPicture(),
+                restaurant.getOwner().getUsername()
+        );
     }
 
 }

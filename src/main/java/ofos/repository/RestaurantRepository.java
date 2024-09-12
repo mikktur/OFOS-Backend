@@ -11,4 +11,7 @@ import java.util.List;
 public interface RestaurantRepository extends JpaRepository<RestaurantEntity, Integer> {
     @EntityGraph(attributePaths = {"owner"})
     List<RestaurantEntity> findAll();
+
+    @EntityGraph(attributePaths = {"owner"})
+    List<RestaurantEntity> findByOwner_UserId(long userId);
 }
