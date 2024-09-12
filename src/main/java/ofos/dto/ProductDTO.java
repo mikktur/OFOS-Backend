@@ -1,14 +1,21 @@
 package ofos.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.math.BigDecimal;
 
 public class ProductDTO {
 
     private int productID;
+    @NotBlank(message = "Product name is missing.")
     private String productName;
+    @NotBlank(message = "Product description is missing.")
     private String productDesc;
+    @NotBlank(message = "Product price is missing.")
     private BigDecimal productPrice;
+    @NotBlank(message = "Product category is missing.")
     private String category;
+    @NotBlank(message = "Picture URL is missing.")
     private String picture;
     private boolean active;
     public ProductDTO(){}

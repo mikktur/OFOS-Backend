@@ -1,7 +1,9 @@
 package ofos.controller;
 
+import jakarta.validation.Valid;
 import ofos.dto.ProductDTO;
 import ofos.entity.ProductEntity;
+import ofos.security.JwtUtil;
 import ofos.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,10 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+
     @GetMapping("/{id}")
     @ResponseBody
     public ProductEntity getDishById(@PathVariable int id) {
@@ -26,15 +32,20 @@ public class ProductController {
 
     @GetMapping("/delete/{id}")
     @Transactional
-    public void deleteDish(@PathVariable int id) {
-        // Validaatio
-        productService.deleteDishById(id);
+//    public void deleteDish(@PathVariable int id, @RequestHeader String t) {
+//        System.out.println(jwtUtil.extractUsername(t));
+    // Validaatio
+    public ResponseEntity<String> deleteDish(@PathVariable int id) {
+        String hardcodedRestaurantOwnerUsername = "Jimi1";
+        return productService.deleteDishById(id, hardcodedRestaurantOwnerUsername);
+
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<String> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        int hardcodedRestaurantID = 1;  // Path variablella varmaa.
         try {
-            productService.saveProduct(productDTO);
+            productService.createProduct(productDTO, hardcodedRestaurantID);
             return ResponseEntity.ok("Product added.");
         } catch (Exception e) {
             return new ResponseEntity<>(
@@ -47,9 +58,9 @@ public class ProductController {
     // Vois suorittaa samalla pathilla ku /create
     // Näin luettavampaa (?)
     @PostMapping("/update")
-    public ResponseEntity<String> updateProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO productDTO) {
         try {
-            productService.saveProduct(productDTO);
+            productService.updateProduct(productDTO);
             return ResponseEntity.ok("Product updated.");
         } catch (Exception e) {
             return new ResponseEntity<>(
@@ -64,5 +75,6 @@ public class ProductController {
     public List<ProductEntity> getProductsByRestaurant(@PathVariable String restaurant) {
         return productService.getAllProductsByRestaurant(restaurant);
     }
+
 
 }

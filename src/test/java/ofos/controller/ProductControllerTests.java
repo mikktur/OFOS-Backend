@@ -1,7 +1,6 @@
 package ofos.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ofos.dto.ProductDTO;
 import ofos.entity.ProductEntity;
@@ -93,7 +92,7 @@ public class ProductControllerTests {
         updatedProductEntity.setCategory("Hampurilainen");
         updatedProductEntity.setPicture("https://cdn.rkt-prod.rakentaja.com/media/original_images/202212_60205.jpg");
 
-        when(productService.saveProduct(productDTO)).thenReturn(updatedProductEntity);
+        when(productService.updateProduct(productDTO)).thenReturn(updatedProductEntity);
 
         mvc.perform(post("/api/products/update")
                 .contentType(MediaType.APPLICATION_JSON)
