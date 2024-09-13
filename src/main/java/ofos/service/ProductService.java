@@ -29,13 +29,15 @@ public class ProductService {
     @Transactional
     public ResponseEntity<String> deleteDishById(int productId, String owner) {
         List<ProvidesEntity> ownedProducts = providesRepository.findProductOwnerByName(owner);
-        for (ProvidesEntity product : ownedProducts) {
-            if (productId == product.getProductID()) {
-                productRepository.updateAvailability(productId);
-                return new ResponseEntity<>(
-                        "Product deleted.",
-                        HttpStatus.OK
-                );
+        if (!ownedProducts.isEmpty()) {
+            for (ProvidesEntity product : ownedProducts) {
+                if (productId == product.getProductID()) {
+                    productRepository.updateAvailability(productId);
+                    return new ResponseEntity<>(
+                            "Product deleted.",
+                            HttpStatus.OK
+                    );
+                }
             }
         }
         return new ResponseEntity<>(
