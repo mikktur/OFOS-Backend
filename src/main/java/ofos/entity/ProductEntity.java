@@ -13,6 +13,7 @@ public class ProductEntity {
     @Id
     @Column(name = "ProductID")
     private int productId;
+
     @Basic
     @Column(name = "ProductName")
     private String productName;

@@ -42,8 +42,10 @@ public class RestaurantEntity {
     @OneToMany(mappedBy = "restaurantID")
     private Set<OrderEntity> orders = new LinkedHashSet<>();
 
+    /*
     @ManyToMany(mappedBy = "restaurants")
     private Set<ProductEntity> products = new LinkedHashSet<>();
+    */
 
     @ManyToMany
     @JoinTable(name = "Restaurant_Categories",
