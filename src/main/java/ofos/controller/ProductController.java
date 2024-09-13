@@ -50,7 +50,6 @@ public class ProductController {
     @PostMapping("/create/{restaurantId}")
     public ResponseEntity<String> createProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable int restaurantId,
                                                 HttpServletRequest request) {
-        int hardcodedRestaurantID = 1;  // Path variablella varmaa.
         String jwt = request.getHeader("Authorization").substring(7);
         String username = jwtUtil.extractUsername(jwt);
         return productService.createProduct(productDTO, restaurantId, username);
