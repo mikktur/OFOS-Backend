@@ -24,4 +24,9 @@ public interface RestaurantRepository extends JpaRepository<RestaurantEntity, In
     @Query("SELECT r FROM RestaurantEntity r JOIN r.categories c WHERE c.categoryName = :categoryName")
     List<RestaurantEntity> findByCategoryName(@Param("categoryName") String categoryName);
 
+    @Query(value = "SELECT * FROM Restaurants WHERE Owner = " +
+            "(SELECT User_ID FROM Users WHERE username = ?1)",
+            nativeQuery = true)
+    List<RestaurantEntity> findRestaurantByOwnerName(String owner);
+
 }

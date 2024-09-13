@@ -92,7 +92,9 @@ public class ProductControllerTests {
         updatedProductEntity.setCategory("Hampurilainen");
         updatedProductEntity.setPicture("https://cdn.rkt-prod.rakentaja.com/media/original_images/202212_60205.jpg");
 
-        when(productService.updateProduct(productDTO)).thenReturn(updatedProductEntity);
+        // TODO:
+        // Metodi päivitetty palauttamaan response entityn eikä product entityä
+        //when(productService.updateProduct(productDTO)).thenReturn(updatedProductEntity);
 
         mvc.perform(post("/api/products/update")
                 .contentType(MediaType.APPLICATION_JSON)

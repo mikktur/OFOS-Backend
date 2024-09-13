@@ -45,6 +45,7 @@ public class UserController {
         return userEntity;
     }
 
+    // Pitäisikö kirjautua samalla kun luo tilin?
     @PostMapping("/create")
     public ResponseEntity<CreateUserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO createUserRequest) {
         try {

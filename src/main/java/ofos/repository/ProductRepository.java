@@ -1,7 +1,6 @@
 package ofos.repository;
 
 import ofos.entity.ProductEntity;
-import ofos.entity.ProvidesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

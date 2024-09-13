@@ -1,5 +1,6 @@
 package ofos.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import ofos.dto.ProductDTO;
 import ofos.entity.ProductEntity;
@@ -32,41 +33,41 @@ public class ProductController {
 
     @GetMapping("/delete/{id}")
     @Transactional
-//    public void deleteDish(@PathVariable int id, @RequestHeader String t) {
-//        System.out.println(jwtUtil.extractUsername(t));
-    // Validaatio
-    public ResponseEntity<String> deleteDish(@PathVariable int id) {
-        String hardcodedRestaurantOwnerUsername = "Jimi1";
-        return productService.deleteDishById(id, hardcodedRestaurantOwnerUsername);
+    public ResponseEntity<String> deleteDish(@PathVariable int id, HttpServletRequest request){
+        String authHead = request.getHeader("Authorization");
+        String jwt = authHead.substring(7);
+        if (jwtUtil.extractRole(jwt).equals("Owner")) {
+            String username = jwtUtil.extractUsername(jwt);
+            return productService.deleteDishById(id, username);
+        }
+        return new ResponseEntity<>(
+                "Not an owner.",
+                HttpStatus.UNAUTHORIZED
+        );
 
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createProduct(@Valid @RequestBody ProductDTO productDTO) {
-        System.out.println("Taas");
+    @PostMapping("/create/{restaurantId}")
+    public ResponseEntity<String> createProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable int restaurantId,
+                                                HttpServletRequest request) {
         int hardcodedRestaurantID = 1;  // Path variablella varmaa.
-        try {
-            productService.createProduct(productDTO, hardcodedRestaurantID);
-            return ResponseEntity.ok("Product added.");
-        } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "Oopsie woopsie.",
-                    HttpStatus.BAD_REQUEST
-            );
-        }
+        String jwt = request.getHeader("Authorization").substring(7);
+        String username = jwtUtil.extractUsername(jwt);
+        return productService.createProduct(productDTO, restaurantId, username);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO productDTO) {
-        try {
-            productService.updateProduct(productDTO);
-            return ResponseEntity.ok("Product updated.");
-        } catch (Exception e) {
-            return new ResponseEntity<>(
-                    "Oopsie woopsie.",
-                    HttpStatus.BAD_REQUEST
-            );
+    public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO productDTO, HttpServletRequest request) {
+        String authHead = request.getHeader("Authorization");
+        String jwt = authHead.substring(7);
+        if (jwtUtil.extractRole(jwt).equals("Owner")) {
+            String username = jwtUtil.extractUsername(jwt);
+            return productService.updateProduct(productDTO, username);
         }
+        return new ResponseEntity<>(
+                "Not an owner.",
+                HttpStatus.UNAUTHORIZED
+        );
     }
 
     @GetMapping("/restaurant/{restaurant}")
