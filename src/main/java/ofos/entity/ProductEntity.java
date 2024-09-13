@@ -1,49 +1,90 @@
 package ofos.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "Products", schema = "mikt")
 public class ProductEntity {
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ProductID", nullable = false)
-    private Integer id;
-
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "ProductName", nullable = false)
+    @Id
+    @Column(name = "ProductID")
+    private int productId;
+    @Basic
+    @Column(name = "ProductName")
     private String productName;
-
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "ProductDesc", nullable = false)
+    @Basic
+    @Column(name = "ProductDesc")
     private String productDesc;
-
-    @NotNull
-    @Column(name = "ProductPrice", nullable = false, precision = 10, scale = 2)
+    @Basic
+    @Column(name = "ProductPrice")
     private BigDecimal productPrice;
+    @Basic
+    @Column(name = "Picture")
+    private String picture;
+    @Basic
+    @Column(name = "Category")
+    private String category;
+    @Basic
+    @Column(name = "Active")
+    private boolean active;
 
-    @ManyToMany
-    @JoinTable(name = "OrderProducts",
-            joinColumns = @JoinColumn(name = "ProductID"),
-            inverseJoinColumns = @JoinColumn(name = "OrderID"))
-    private Set<OrderEntity> orders = new LinkedHashSet<>();
+    public int getProductId() {
+        return productId;
+    }
 
-    @ManyToMany
-    @JoinTable(name = "Provides",
-            joinColumns = @JoinColumn(name = "ProductID"),
-            inverseJoinColumns = @JoinColumn(name = "RestaurantID"))
-    private Set<RestaurantEntity> restaurants = new LinkedHashSet<>();
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductDesc() {
+        return productDesc;
+    }
+
+    public void setProductDesc(String productDesc) {
+        this.productDesc = productDesc;
+    }
+
+    public BigDecimal getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(BigDecimal productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
 }
