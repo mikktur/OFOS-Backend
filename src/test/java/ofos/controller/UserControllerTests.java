@@ -125,7 +125,7 @@ public class UserControllerTests {
 
         when(userService.getAllUsers()).thenReturn(kissat);
 
-        mvc.perform(get("/api/users/users"))
+        mvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andDo(MockMvcResultHandlers.print());

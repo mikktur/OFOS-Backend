@@ -63,7 +63,7 @@ public class RestaurantDTO {
 
     public static RestaurantDTO fromEntity(RestaurantEntity restaurant) {
         return new RestaurantDTO(
-                restaurant.getId(),
+                restaurant.getRestaurantID(),
                 restaurant.getRestaurantName(),
                 restaurant.getRestaurantPhone(),
                 restaurant.getPicture(),

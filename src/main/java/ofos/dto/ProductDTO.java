@@ -2,6 +2,7 @@ package ofos.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import ofos.entity.ProductEntity;
 
 import java.math.BigDecimal;
 
@@ -21,12 +22,14 @@ public class ProductDTO {
     private boolean active;
     public ProductDTO(){}
 
-    public ProductDTO(String productName, String productDesc, BigDecimal productPrice, String category, String picture) {
+    public ProductDTO(Integer productID,String productName, String productDesc, BigDecimal productPrice, String category, String picture, boolean active) {
+        this.productID = productID;
         this.productName = productName;
         this.productDesc = productDesc;
         this.productPrice = productPrice;
         this.category = category;
         this.picture = picture;
+        this.active = active;
     }
 
     public String getProductName() {
@@ -57,6 +60,35 @@ public class ProductDTO {
         return productID;
     }
 
+    public void setProductID(int productID) {
+        this.productID = productID;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void setProductDesc(String productDesc) {
+        this.productDesc = productDesc;
+    }
+
+    public void setProductPrice(BigDecimal productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+
     // Testiä varten.
     public ProductDTO(int productID, String productName, String productDesc, BigDecimal productPrice, String category, String picture) {
         this.productID = productID;
@@ -66,6 +98,9 @@ public class ProductDTO {
         this.category = category;
         this.picture = picture;
     }
+
+
+
 
 
 }

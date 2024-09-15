@@ -71,8 +71,10 @@ public class ProductController {
 
     @GetMapping("/restaurant/{restaurant}")
     @ResponseBody
-    public List<ProductEntity> getProductsByRestaurant(@PathVariable String restaurant) {
-        return productService.getAllProductsByRestaurant(restaurant);
+    public List<ProductDTO> getProductsByRestaurant(@PathVariable Integer restaurant) {
+        List<ProductDTO> products = productService.getAllProductsByRestaurant(restaurant);
+        System.out.println("Ravintolan tuotteet: " + products);
+        return products;
     }
 
 

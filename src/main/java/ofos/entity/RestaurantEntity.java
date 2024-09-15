@@ -1,6 +1,6 @@
 package ofos.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -17,7 +18,7 @@ import java.util.Set;
 public class RestaurantEntity {
     @Id
     @Column(name = "RestaurantID", nullable = false)
-    private Integer id;
+    private Integer restaurantID;
 
     @Size(max = 255)
     @NotNull
@@ -42,10 +43,9 @@ public class RestaurantEntity {
     @OneToMany(mappedBy = "restaurantID")
     private Set<OrderEntity> orders = new LinkedHashSet<>();
 
-    /*
-    @ManyToMany(mappedBy = "restaurants")
-    private Set<ProductEntity> products = new LinkedHashSet<>();
-    */
+
+    @ManyToMany(mappedBy = "restaurants", fetch = FetchType.LAZY)
+    private List<ProductEntity> products;
 
     @ManyToMany
     @JoinTable(name = "Restaurant_Categories",

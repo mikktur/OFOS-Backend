@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +41,7 @@ public class RestaurantServiceTests {
 
     private RestaurantEntity createRestaurant(int id, String name, String phone, String picture, UserEntity owner) {
         RestaurantEntity restaurant = new RestaurantEntity();
-        restaurant.setId(id);
+        restaurant.setRestaurantID(id);
         restaurant.setRestaurantName(name);
         restaurant.setRestaurantPhone(phone);
         restaurant.setPicture(picture);

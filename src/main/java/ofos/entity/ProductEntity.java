@@ -1,18 +1,22 @@
 package ofos.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
+import java.util.List;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "Products", schema = "mikt")
 public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "ProductID")
-    private int productId;
+    private Integer productId;
 
     @Basic
     @Column(name = "ProductName")
@@ -32,60 +36,15 @@ public class ProductEntity {
     @Basic
     @Column(name = "Active")
     private boolean active;
-
-    public int getProductId() {
-        return productId;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "Provides",
+            joinColumns = @JoinColumn(name = "ProductID"),
+            inverseJoinColumns = @JoinColumn(name = "RestaurantID")
+    )
+    private List<RestaurantEntity> restaurants;
+    public ProductEntity() {
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
 
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getProductDesc() {
-        return productDesc;
-    }
-
-    public void setProductDesc(String productDesc) {
-        this.productDesc = productDesc;
-    }
-
-    public BigDecimal getProductPrice() {
-        return productPrice;
-    }
-
-    public void setProductPrice(BigDecimal productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
 }

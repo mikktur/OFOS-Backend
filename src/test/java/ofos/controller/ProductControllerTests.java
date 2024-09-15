@@ -69,8 +69,8 @@ public class ProductControllerTests {
 
     @Test
     public void createProductTest() throws Exception {
-        ProductDTO productDTO = new ProductDTO("Good brgr", "Maistuu namnam", BigDecimal.valueOf(17.50),
-                "Hampurilainen", "https://cdn.rkt-prod.rakentaja.com/media/original_images/202212_60205.jpg");
+        ProductDTO productDTO = new ProductDTO(100,"Good brgr", "Maistuu namnam", BigDecimal.valueOf(17.50),
+                "Hampurilainen", "https://cdn.rkt-prod.rakentaja.com/media/original_images/202212_60205.jpg,", true);
 
         mvc.perform(post("/api/products/create")
                 .contentType(MediaType.APPLICATION_JSON)

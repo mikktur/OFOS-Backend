@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -78,7 +79,7 @@ public class ProductService {
         List<RestaurantEntity> ownedRestaurants = restaurantRepository.findRestaurantByOwnerName(owner);
         if (!ownedRestaurants.isEmpty()) {
             for (RestaurantEntity re : ownedRestaurants) {
-                if (re.getId() == restaurantID) {
+                if (re.getRestaurantID() == restaurantID) {
                     ProductEntity productEntity = new ProductEntity();
                     productRepository.save(setValues(productDTO, productEntity));
 
@@ -101,8 +102,20 @@ public class ProductService {
 
     }
 
-    public List<ProductEntity> getAllProductsByRestaurant(String restaurant) {
-        return productRepository.getProductsByRestaurant(restaurant);
+    //laitoin tän muuttaa nämä DTOksi ettei tarvii käyttää eager fetchiä
+    @Transactional(readOnly = true)
+    public List<ProductDTO> getAllProductsByRestaurant(Integer id) {
+        List<ProductEntity> products = productRepository.getProductsByRestaurant(id);
+        return products.stream()
+                .map(product -> new ProductDTO(
+                        product.getProductId(),
+                        product.getProductName(),
+                        product.getProductDesc(),
+                        product.getProductPrice(),
+                        product.getCategory(),
+                        product.getPicture(),
+                        product.isActive()))
+                .collect(Collectors.toList());
     }
 
     protected ProductEntity setValues(ProductDTO productDTO, ProductEntity productEntity) {

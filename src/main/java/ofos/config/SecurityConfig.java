@@ -32,7 +32,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/users/create").permitAll()
                         .requestMatchers("/api/users").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/products/restaurant/**").permitAll()
+                        .requestMatchers("/api/products/category/**").permitAll()
+                        .requestMatchers("/api/products/create").permitAll()
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
