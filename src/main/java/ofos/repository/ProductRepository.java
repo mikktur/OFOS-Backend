@@ -20,7 +20,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     @Query("SELECT p FROM ProductEntity p JOIN p.restaurants r WHERE r.restaurantID = :restaurantID")
     List<ProductEntity> getProductsByRestaurant(@Param("restaurantID") Integer restaurantID);
 
-    @Modifying
     @Query(value = "INSERT INTO Provides (RestaurantID, ProductID)" +
             "VALUES (?1, ?2)",
             nativeQuery = true)

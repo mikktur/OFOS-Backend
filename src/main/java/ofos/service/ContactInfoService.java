@@ -32,6 +32,11 @@ public class ContactInfoService {
         return false;
     }
 
+    public ContactInfoEntity saveContactInfo(ContactInfoDTO contactInfoDTO){
+        ContactInfoEntity contactInfoEntity = new ContactInfoEntity();
+        return contactInfoRepository.save(createEntity(contactInfoDTO, contactInfoEntity));
+    }
+
 
     protected ContactInfoEntity createEntity(ContactInfoDTO contactInfoDTO, ContactInfoEntity contactInfoEntity){
         contactInfoEntity.setPhoneNumber(contactInfoDTO.getPhoneNumber());
@@ -44,5 +49,6 @@ public class ContactInfoService {
         contactInfoEntity.setPostalCode(contactInfoDTO.getPostalCode());
         return contactInfoEntity;
     }
+
 
 }

@@ -42,4 +42,13 @@ public class ContactInfoController {
         );
     }
 
+    @PostMapping("/save")
+    public ResponseEntity<String> saveInfo(@RequestBody ContactInfoDTO dto){
+        contactInfoService.saveContactInfo(dto);
+        return new ResponseEntity<>(
+                "Contact info saved for: " + dto.getFirstName(),
+                HttpStatus.OK
+        );
+    }
+
 }
