@@ -23,14 +23,6 @@ public class ContactInfoService {
     }
 
     public boolean updateContactInfo(ContactInfoDTO contactInfoDTO, String username){
-//        System.out.println(contactInfoDTO.getAddress());
-//        System.out.println(contactInfoDTO.getCity());
-//        System.out.println(contactInfoDTO.getLastName());
-//        System.out.println(contactInfoDTO.getFirstName());
-//        System.out.println(contactInfoDTO.getEmail());
-//        System.out.println(contactInfoDTO.getPhoneNumber());
-//        System.out.println(contactInfoDTO.getUserId());
-//        System.out.println(contactInfoDTO.getPostalCode());
         UserEntity user = userRepository.findByUsername(username);
         if (user.getUserId() == contactInfoDTO.getUserId()){
             ContactInfoEntity contactInfoEntity = new ContactInfoEntity();
