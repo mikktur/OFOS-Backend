@@ -36,11 +36,11 @@ public class AuthController {
             String token = jwtUtil.generateToken(loginRequest.getUsername(), userEntity.getRole());
 
             //create response object with token
-            LoginResponseDTO response = new LoginResponseDTO(true, userEntity.getUsername(), "Authentication successful", token);
+            LoginResponseDTO response = new LoginResponseDTO(userEntity.getUserId(),true, userEntity.getUsername(), "Authentication successful", token);
             return new ResponseEntity<>(response, HttpStatus.OK);
 
         } else {
-            LoginResponseDTO response = new LoginResponseDTO(false,null, "Incorrect username or password.", null);
+            LoginResponseDTO response = new LoginResponseDTO(null,false,null, "Incorrect username or password.", null);
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
