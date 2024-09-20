@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class LoginResponseDTO {
     private boolean success;
     private String username;
+    private Integer userId;
     private String message;
     private String token;
 
@@ -14,13 +15,18 @@ public class LoginResponseDTO {
     public LoginResponseDTO() {
     }
 
-    public LoginResponseDTO(boolean success,String username, String message, String token) {
+    public LoginResponseDTO(Integer userId,boolean success,String username, String message, String token) {
         this.success = success;
         this.username = username;
         this.message = message;
         this.token = token;
+        this.userId = userId;
     }
 
+    public LoginResponseDTO(boolean success, String message) {
+        this.success = success;
+        this.message = message;
+    }
     public boolean isSuccess() {
         return success;
     }
@@ -52,5 +58,12 @@ public class LoginResponseDTO {
         this.token = token;
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
 }
