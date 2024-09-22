@@ -2,6 +2,8 @@ package ofos.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 /**
  * UserEntity class is an entity class that maps to the Users table in the database.
  * It contains the following columns:
@@ -77,4 +79,5 @@ public class UserEntity {
     public Integer getId() {
         return userId;
     }
+
 }
