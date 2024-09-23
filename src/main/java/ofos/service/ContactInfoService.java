@@ -32,10 +32,31 @@ public class ContactInfoService {
         return false;
     }
 
-    public ContactInfoEntity saveContactInfo(ContactInfoDTO contactInfoDTO){
-        ContactInfoEntity contactInfoEntity = new ContactInfoEntity();
-        return contactInfoRepository.save(createEntity(contactInfoDTO, contactInfoEntity));
+    public boolean saveContactInfo(ContactInfoDTO dto, String username) {
+        try {
+            UserEntity user = userRepository.findByUsername(username);
+            if (user == null) {
+                throw new Exception("User not found for username: " + username);
+            }
+
+            ContactInfoEntity contactInfo = new ContactInfoEntity();
+            contactInfo.setFirstName(dto.getFirstName());
+            contactInfo.setLastName(dto.getLastName());
+            contactInfo.setEmail(dto.getEmail());
+            contactInfo.setPhoneNumber(dto.getPhoneNumber());
+            contactInfo.setAddress(dto.getAddress());
+            contactInfo.setCity(dto.getCity());
+            contactInfo.setPostalCode(dto.getPostalCode());
+            contactInfo.setUserId(user.getUserId());
+
+            contactInfoRepository.save(contactInfo);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
+
 
 
     protected ContactInfoEntity createEntity(ContactInfoDTO contactInfoDTO, ContactInfoEntity contactInfoEntity){

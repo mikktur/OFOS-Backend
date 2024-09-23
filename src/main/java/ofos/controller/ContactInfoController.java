@@ -22,8 +22,13 @@ public class ContactInfoController {
     JwtUtil jwtUtil;
 
     @GetMapping("/{userID}")
-    public ContactInfoEntity getContactInfo(@PathVariable int userID){
-        return contactInfoService.getContactInfo(userID);
+    public ResponseEntity<ContactInfoEntity> getContactInfo(@PathVariable int userID){
+        ContactInfoEntity contactInfo = contactInfoService.getContactInfo(userID);
+        if (contactInfo != null) {
+            return new ResponseEntity<>(contactInfo, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/update")
@@ -43,11 +48,18 @@ public class ContactInfoController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<String> saveInfo(@RequestBody ContactInfoDTO dto){
-        contactInfoService.saveContactInfo(dto);
+    public ResponseEntity<String> saveInfo(@RequestBody ContactInfoDTO dto, HttpServletRequest request){
+        String jwt = request.getHeader("Authorization").substring(7);
+        String username = jwtUtil.extractUsername(jwt);
+        if (contactInfoService.saveContactInfo(dto, username)) {
+            return new ResponseEntity<>(
+                    "Contact info saved for: " + dto.getFirstName(),
+                    HttpStatus.OK
+            );
+        }
         return new ResponseEntity<>(
-                "Contact info saved for: " + dto.getFirstName(),
-                HttpStatus.OK
+                "Something went wrong.",
+                HttpStatus.BAD_REQUEST
         );
     }
 
