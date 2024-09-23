@@ -44,8 +44,8 @@ public class DeliveryAddressService {
         }
     }
 
-    public boolean updateDeliveryAddress(DeliveryAddressDTO deliveryAddressDTO){
-       DeliveryAddressEntity addresses = deliveryAddressRepository.getByDeliveryAddressId(deliveryAddressDTO.getDeliveryAddressID());
+    public boolean updateDeliveryAddress(DeliveryAddressDTO deliveryAddressDTO) {
+        DeliveryAddressEntity addresses = deliveryAddressRepository.getByDeliveryAddressId(deliveryAddressDTO.getDeliveryAddressId());
         if (addresses != null) {
             DeliveryAddressEntity dae = new DeliveryAddressEntity();
             deliveryAddressRepository.save(setValues(deliveryAddressDTO, dae));
@@ -69,10 +69,11 @@ public class DeliveryAddressService {
 
 
     private DeliveryAddressEntity setValues(DeliveryAddressDTO deliveryAddressDTO, DeliveryAddressEntity deliveryAddressEntity){
-        deliveryAddressEntity.setDeliveryAddressId(deliveryAddressDTO.getDeliveryAddressID());
+        deliveryAddressEntity.setDeliveryAddressId(deliveryAddressDTO.getDeliveryAddressId());
         deliveryAddressEntity.setStreetAddress(deliveryAddressDTO.getStreetAddress());
         deliveryAddressEntity.setCity(deliveryAddressDTO.getCity());
-        deliveryAddressEntity.setPostalCode(deliveryAddressDTO.getPostCode());
+        deliveryAddressEntity.setPostalCode(deliveryAddressDTO.getPostalCode());
+        deliveryAddressEntity.setInfo(deliveryAddressDTO.getInfo());
         return deliveryAddressEntity;
     }
 

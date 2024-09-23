@@ -13,15 +13,17 @@ public class DeliveryAddressDTO {
     @NotNull
     private String city;
     @NotNull
-    private String postCode;
+    private String postalCode;
     @NotNull
-    private int deliveryAddressID;
+    private int deliveryAddressId;
+    private String info;
 
-    public DeliveryAddressDTO(String streetAddress, String city, String postCode, int deliveryAddressID) {
+    public DeliveryAddressDTO(String streetAddress, String city, String postCode, int deliveryAddressID, String info) {
         this.streetAddress = streetAddress;
         this.city = city;
-        this.postCode = postCode;
-        this.deliveryAddressID = deliveryAddressID;
+        this.postalCode = postCode;
+        this.deliveryAddressId = deliveryAddressID;
+        this.info = info;
     }
 
 

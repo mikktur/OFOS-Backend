@@ -24,6 +24,9 @@ public class DeliveryAddressEntity {
     @Basic
     @Column(name = "PostalCode", nullable = false, length = 10)
     private String postalCode;
+    @Basic
+    @Column(name = "Info")
+    private String info;
     public DeliveryAddressEntity(){}
 
     @Override
