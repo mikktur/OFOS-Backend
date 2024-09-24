@@ -85,7 +85,7 @@ public class ProductService {
                     productRepository.save(setValues(productDTO, productEntity));
                     System.out.println("saven jälkeen");
 
-                    // productID autoincrement nii pitää tehä näin (?)
+                    // productId autoincrement nii pitää tehä näin (?)
                     int productID = productRepository.findIdByName(productEntity.getProductName());
                     System.out.println("ettii ID");
                     // Heittää Provides taulukkoon datat.
