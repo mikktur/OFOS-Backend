@@ -45,6 +45,8 @@ public class OrderController {
         return ordersService.getOrderContentsByUserID(id);
     }
 
+    // TODO:
+    // Lisää päivämäärä hakutuloksiin.
     @GetMapping("/history")
     @ResponseBody
     public List<IOrderHistory> getOrderHistory(HttpServletRequest req){
