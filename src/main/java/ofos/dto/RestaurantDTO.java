@@ -8,13 +8,17 @@ public class RestaurantDTO {
     private String restaurantPhone;
     private String picture;
     private String ownerUsername;
+    private String address;
+    private String businessHours;
 
-    public RestaurantDTO(Integer id, String restaurantName, String restaurantPhone, String picture, String ownerUsername) {
+    public RestaurantDTO(Integer id, String restaurantName, String restaurantPhone, String picture, String ownerUsername, String address, String businessHours) {
         this.id = id;
         this.restaurantName = restaurantName;
         this.restaurantPhone = restaurantPhone;
         this.picture = picture;
         this.ownerUsername = ownerUsername;
+        this.address = address;
+        this.businessHours = businessHours;
     }
 
     public RestaurantDTO() {
@@ -61,13 +65,32 @@ public class RestaurantDTO {
         this.ownerUsername = ownerUsername;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getBusinessHours() {
+        return businessHours;
+    }
+
+    public void setBusinessHours(String businessHours) {
+        this.businessHours = businessHours;
+    }
+
+
     public static RestaurantDTO fromEntity(RestaurantEntity restaurant) {
         return new RestaurantDTO(
                 restaurant.getRestaurantID(),
                 restaurant.getRestaurantName(),
                 restaurant.getRestaurantPhone(),
                 restaurant.getPicture(),
-                restaurant.getOwner().getUsername()
+                restaurant.getOwner().getUsername(),
+                restaurant.getAddress(),
+                restaurant.getBusinessHours()
         );
     }
 
