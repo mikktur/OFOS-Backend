@@ -35,6 +35,14 @@ public class RestaurantEntity {
     @Column(name = "Picture", nullable = false)
     private String picture;
 
+    @Size(max = 255)
+    @Column(name = "RestaurantAddress", nullable = false)
+    private String address;
+
+    @Size(max = 255)
+    @Column(name = "BusinessHours", nullable = false)
+    private String businessHours;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "Owner", nullable = false)

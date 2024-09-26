@@ -29,7 +29,7 @@ public class UserEntity {
     private String password;
 
     @Column(name = "Role")
-    private String role = "USER";
+    private String role = "OWNER";
 
 
     // Constructors
