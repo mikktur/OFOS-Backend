@@ -16,7 +16,9 @@ public class DeliveryAddressDTO {
     private String postalCode;
     @NotNull
     private int deliveryAddressId;
+
     private String info;
+
     private boolean defaultAddress;
 
     public DeliveryAddressDTO() {
