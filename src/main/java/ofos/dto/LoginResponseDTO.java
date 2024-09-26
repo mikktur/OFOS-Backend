@@ -9,18 +9,19 @@ public class LoginResponseDTO {
     private Integer userId;
     private String message;
     private String token;
-
+    private String role;
     // Constructors, Getters, Setters
 
     public LoginResponseDTO() {
     }
 
-    public LoginResponseDTO(Integer userId,boolean success,String username, String message, String token) {
+    public LoginResponseDTO(Integer userId,boolean success,String username, String message, String token, String role) {
         this.success = success;
         this.username = username;
         this.message = message;
         this.token = token;
         this.userId = userId;
+        this.role = role;
     }
 
     public LoginResponseDTO(boolean success, String message) {
