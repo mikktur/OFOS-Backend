@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,7 +47,7 @@ public class RestaurantService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         System.out.println("User retrieved: " + user.getUsername() + " role: " + user.getRole());
-        if (!"Owner".equals(user.getRole())) {
+        if (!"OWNER".equals(user.getRole().toUpperCase())) {
             throw new UserNotOwnerException("User is not an owner");
         }
 
