@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 
-public interface DeliveryAddressRepository extends JpaRepository<DeliveryAddressEntity, Long> {
+public interface DeliveryAddressRepository extends JpaRepository<DeliveryAddressEntity, Integer> {
 
 
     @Query(value = "SELECT * FROM DeliveryAddresses WHERE DeliveryAddressID IN " +
