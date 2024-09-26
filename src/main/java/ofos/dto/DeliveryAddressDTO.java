@@ -17,13 +17,19 @@ public class DeliveryAddressDTO {
     @NotNull
     private int deliveryAddressId;
     private String info;
+    private boolean defaultAddress;
 
-    public DeliveryAddressDTO(String streetAddress, String city, String postCode, int deliveryAddressID, String info) {
+    public DeliveryAddressDTO() {
+    }
+
+
+    public DeliveryAddressDTO(String streetAddress, String city, String postCode, int deliveryAddressID, String info, boolean defaultAddress) {
         this.streetAddress = streetAddress;
         this.city = city;
         this.postalCode = postCode;
         this.deliveryAddressId = deliveryAddressID;
         this.info = info;
+        this.defaultAddress = defaultAddress;
     }
 
 

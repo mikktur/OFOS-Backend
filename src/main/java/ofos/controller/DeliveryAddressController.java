@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/deliveryaddress")
@@ -27,9 +28,10 @@ public class DeliveryAddressController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public List<DeliveryAddressEntity> getDeliveryAddresses(@PathVariable int id){
-        return deliveryAddressService.getDeliveryAddresses(id);
+    public List<DeliveryAddressDTO> getDeliveryAddresses(@PathVariable int id){
+        return deliveryAddressService.getDeliveryAddressesWithDefaultFlag(id);
     }
+
 
     @PostMapping("/save")
     public ResponseEntity<String> saveDeliveryAddress(@RequestBody DeliveryAddressDTO deliveryAddressDTO, HttpServletRequest req){
@@ -77,6 +79,27 @@ public class DeliveryAddressController {
                 HttpStatus.BAD_REQUEST
         );
     }
+
+    @PutMapping("/setDefault")
+    public ResponseEntity<String> setDefaultDeliveryAddress(@RequestBody Map<String, Integer> payload, HttpServletRequest req){
+        String jwt = req.getHeader("Authorization").substring(7);
+        String username = jwtUtil.extractUsername(jwt);
+
+        int deliveryAddressId = payload.get("deliveryAddressId");
+        int userId = payload.get("userId");
+
+        if (deliveryAddressService.setDefaultDeliveryAddress(deliveryAddressId, userId, username)) {
+            return new ResponseEntity<>(
+                    "Default address set successfully.",
+                    HttpStatus.OK
+            );
+        }
+        return new ResponseEntity<>(
+                "Something went wrong.",
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
 
 
 }
