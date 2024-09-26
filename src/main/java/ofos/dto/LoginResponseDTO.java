@@ -63,6 +63,14 @@ public class LoginResponseDTO {
         return userId;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
