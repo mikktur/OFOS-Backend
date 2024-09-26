@@ -34,5 +34,15 @@ public class OrdersEntity {
     @Column(name = "RestaurantID")
     private int restaurantId;
 
+    public OrdersEntity(){}
 
+    // Testiä varten
+    public OrdersEntity(int orderId, String state, String orderAddress, Date orderDate, int userId, int restaurantId) {
+        this.orderId = orderId;
+        this.state = state;
+        this.orderAddress = orderAddress;
+        this.orderDate = orderDate;
+        this.userId = userId;
+        this.restaurantId = restaurantId;
+    }
 }

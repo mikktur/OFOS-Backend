@@ -25,6 +25,13 @@ public class OrderProductsEntity {
     @Column(name = "quantity")
     private Integer quantity;
 
+    public OrderProductsEntity() {}
+
+    public OrderProductsEntity(int orderId, int productId, Integer quantity) {
+        this.orderId = orderId;
+        this.productId = productId;
+        this.quantity = quantity;
+    }
 
 
     @Override

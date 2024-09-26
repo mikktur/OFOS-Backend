@@ -17,6 +17,10 @@ public class ContactInfoEntity {
     @Basic
     @Column(name = "Address")
     private String address;
+
+    public ContactInfoEntity(){}
+
+
     @Basic
     @Column(name = "City")
     private String city;
@@ -34,5 +38,16 @@ public class ContactInfoEntity {
     private String postalCode;
 
 
+    // Testiä varten
+    public ContactInfoEntity(int userId, String phoneNumber, String address, String city, String firstName, String lastName, String email, String postalCode) {
+        this.userId = userId;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.city = city;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.postalCode = postalCode;
+    }
 
 }
