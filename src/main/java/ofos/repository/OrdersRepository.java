@@ -2,7 +2,9 @@ package ofos.repository;
 
 import ofos.entity.OrdersEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -10,9 +12,15 @@ public interface OrdersRepository extends JpaRepository<OrdersEntity, Long> {
 
     List<OrdersEntity> findOrdersEntitiesByUserId(int id);
 
-    @Query(value = "SELECT Quantity, ProductPrice, ProductName, OrderID " +
+    @Query(value = "SELECT Quantity, ProductPrice, ProductName, OrderProducts.OrderID, OrderDate " +
             "FROM OrderProducts INNER JOIN Products ON OrderProducts.ProductID = Products.ProductID " +
-            "WHERE OrderID IN (SELECT OrderID FROM Orders WHERE User_ID = ?1)", nativeQuery = true)
+            "INNER JOIN Orders ON Orders.OrderID = OrderProducts.OrderID " +
+            "WHERE OrderProducts.OrderID IN (SELECT OrderID FROM Orders WHERE User_ID = ?1)", nativeQuery = true)
     List<IOrderHistory> getOrderHistory(int userID);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE OrdersEntity o SET o.state = ?2 WHERE o.orderId = ?1")
+    void updateByOrderId(int orderID, String status);
 
 }

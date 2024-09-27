@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,7 +111,7 @@ class OrderControllerTest {
     @Test
     void getOrderHistoryTest() throws Exception {
         List<IOrderHistory> orderHistoryList = new ArrayList<>();
-        orderHistoryList.add(new OrderHistoryImpl(1, BigDecimal.valueOf(5), 5, "Burgeri"));
+        orderHistoryList.add(new OrderHistoryImpl(1, BigDecimal.valueOf(5), 5, "Burgeri", new Date(1)));
 
         when(jwtUtil.extractUsername(any())).thenReturn("testUser");
         when(ordersService.getHistory(anyString())).thenReturn(orderHistoryList);
