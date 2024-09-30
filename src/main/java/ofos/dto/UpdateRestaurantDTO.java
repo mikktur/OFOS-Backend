@@ -1,32 +1,21 @@
 package ofos.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class UpdateRestaurantDTO {
+
     private String restaurantName;
+
     private String restaurantPhone;
+
     private String picture;
 
-    // Getters and Setters
-    public String getRestaurantName() {
-        return restaurantName;
-    }
+    private String businessHours;
 
-    public void setRestaurantName(String restaurantName) {
-        this.restaurantName = restaurantName;
-    }
+    private String restaurantAddress;
 
-    public String getRestaurantPhone() {
-        return restaurantPhone;
-    }
 
-    public void setRestaurantPhone(String restaurantPhone) {
-        this.restaurantPhone = restaurantPhone;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
 }

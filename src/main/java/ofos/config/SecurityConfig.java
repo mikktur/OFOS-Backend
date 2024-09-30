@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/products/restaurant/**").permitAll()
                         .requestMatchers("/api/products/category/**").permitAll()
                         .requestMatchers("/api/products/create").permitAll()
+                        .requestMatchers("/api/order/status/**").hasRole("OWNER")
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
@@ -45,19 +46,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    // Testausta varten.
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.authorizeHttpRequests(authz -> authz
-//                        .requestMatchers("/api/**").permitAll()
-//                        .requestMatchers("/upload/**").permitAll()
-//                        .requestMatchers("/restaurants/**").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .csrf(AbstractHttpConfigurer::disable);
-//        return http.build();
-//    }
 
 
 

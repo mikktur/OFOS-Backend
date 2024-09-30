@@ -68,7 +68,8 @@ public class RestaurantService {
         restaurant.setRestaurantName(updateRestaurantDTO.getRestaurantName());
         restaurant.setRestaurantPhone(updateRestaurantDTO.getRestaurantPhone());
         restaurant.setPicture(updateRestaurantDTO.getPicture());
-
+        restaurant.setBusinessHours(updateRestaurantDTO.getBusinessHours());
+        restaurant.setAddress(updateRestaurantDTO.getRestaurantAddress());
         // Save the updated restaurant entity
         RestaurantEntity updatedRestaurant = restaurantRepository.save(restaurant);
 

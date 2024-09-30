@@ -9,6 +9,9 @@ import ofos.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,21 +55,17 @@ public class ProductController {
                                                 HttpServletRequest request) {
         String jwt = request.getHeader("Authorization").substring(7);
         String username = jwtUtil.extractUsername(jwt);
+        System.out.println("heieieieie");
         return productService.createProduct(productDTO, restaurantId, username);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO productDTO, HttpServletRequest request) {
-        String authHead = request.getHeader("Authorization");
-        String jwt = authHead.substring(7);
-        if (jwtUtil.extractRole(jwt).equals("Owner")) {
-            String username = jwtUtil.extractUsername(jwt);
-            return productService.updateProduct(productDTO, username);
-        }
-        return new ResponseEntity<>(
-                "Not an owner.",
-                HttpStatus.UNAUTHORIZED
-        );
+    @PutMapping("/update")
+    @PreAuthorize("hasRole('Owner')") // Ensure only users with the 'Owner' role can access this endpoint
+    public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO productDTO,
+                                                @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        System.out.println("Username is: " + username);// Get the authenticated username
+        return productService.updateProduct(productDTO, username);
     }
 
     @GetMapping("/restaurant/{restaurant}")
