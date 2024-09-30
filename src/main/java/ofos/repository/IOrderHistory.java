@@ -1,6 +1,7 @@
 package ofos.repository;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 
 // Tarvitsee interfacen, koska historian haussa yhdistetään sarakkeita useasta pöydästä niin ei voi käyttää entityä.
 
@@ -13,5 +14,7 @@ public interface IOrderHistory {
     int getQuantity();
 
     String getProductName();
+
+    Date getOrderDate();
 
 }

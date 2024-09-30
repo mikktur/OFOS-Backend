@@ -55,4 +55,10 @@ public class OrderController {
         return ordersService.getHistory(username);
     }
 
+    @PostMapping("/status/{id}/{status}")
+    @ResponseBody
+    public ResponseEntity<String> updateStatus(@PathVariable int id, @PathVariable String status){
+        return ordersService.updateStatus(id, status);
+    }
+
 }

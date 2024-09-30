@@ -77,4 +77,20 @@ public class OrdersService {
         return ordersRepository.getOrderHistory(userID);
     }
 
+    public ResponseEntity<String> updateStatus(int orderID, String status){
+        try {
+            ordersRepository.updateByOrderId(orderID, status);
+            return new ResponseEntity<>(
+                    "Status updated to: " + status,
+                    HttpStatus.OK
+            );
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(
+                    "Something went wrong.",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+
 }
