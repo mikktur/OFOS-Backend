@@ -149,6 +149,7 @@ class OrderControllerTest {
                 assertEquals(expected.getOrderPrice(), returned.getOrderPrice());
                 assertEquals(expected.getQuantity(), returned.getQuantity());
                 assertEquals(expected.getProductName(), returned.getProductName());
+                assertEquals(expected.getOrderDate().toString(), returned.getOrderDate().toString());
             }
         }
     }
