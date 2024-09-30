@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import ofos.dto.OrderDTO;
+import ofos.dto.OrderHistoryDTO;
 import ofos.entity.OrderProductsEntity;
 import ofos.entity.OrdersEntity;
 import ofos.repository.IOrderHistory;
@@ -25,9 +26,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -110,28 +113,43 @@ class OrderControllerTest {
 
     @Test
     void getOrderHistoryTest() throws Exception {
-        List<IOrderHistory> orderHistoryList = new ArrayList<>();
-        orderHistoryList.add(new OrderHistoryImpl(1, BigDecimal.valueOf(5), 5, "Burgeri", new Date(1)));
+        HashMap<Integer, List<OrderHistoryDTO>> hashMap = new HashMap<>();
+        List<OrderHistoryDTO> orderHistoryList = new ArrayList<>();
+        OrderHistoryDTO orderHistoryDTO = new OrderHistoryDTO(
+                BigDecimal.valueOf(5),
+                5,
+                "Burgeri",
+                new Date(143242421)
+        );
+        orderHistoryList.add(orderHistoryDTO);
+        hashMap.put(1, orderHistoryList);
 
         when(jwtUtil.extractUsername(any())).thenReturn("testUser");
-        when(ordersService.getHistory(anyString())).thenReturn(orderHistoryList);
+        when(ordersService.getHistory(anyString())).thenReturn(hashMap);
 
         MvcResult mvcResult = mvc.perform(get("/api/order/history")
-                .header("Authorization", "Bearer testToken")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+                        .header("Authorization", "Bearer testToken")
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andReturn();
 
         String contentAsString = mvcResult.getResponse().getContentAsString();
+        HashMap<Integer, List<OrderHistoryDTO>> returnedOrderHistory = objectMapper.readValue(contentAsString, new TypeReference<HashMap<Integer, List<OrderHistoryDTO>>>(){});
 
-        List<OrderHistoryImpl> returnedOrderHistory = objectMapper.readValue(contentAsString, new TypeReference<List<OrderHistoryImpl>>(){});
+        assertEquals(hashMap.size(), returnedOrderHistory.size());
 
-        assertEquals(orderHistoryList.size(), returnedOrderHistory.size());
-        for (int i = 0; i < orderHistoryList.size(); i++) {
-            assertEquals(orderHistoryList.get(i).getOrderID(), returnedOrderHistory.get(i).getOrderID());
-            assertEquals(0, orderHistoryList.get(i).getProductPrice().compareTo(returnedOrderHistory.get(i).getProductPrice()));
-            assertEquals(orderHistoryList.get(i).getQuantity(), returnedOrderHistory.get(i).getQuantity());
-            assertEquals(orderHistoryList.get(i).getProductName(), returnedOrderHistory.get(i).getProductName());
+        for (Integer key : hashMap.keySet()) {
+            assertTrue(returnedOrderHistory.containsKey(key));
+            assertEquals(hashMap.get(key).size(), returnedOrderHistory.get(key).size());
+
+            for (int i = 0; i < hashMap.get(key).size(); i++) {
+                OrderHistoryDTO expected = hashMap.get(key).get(i);
+                OrderHistoryDTO returned = returnedOrderHistory.get(key).get(i);
+
+                assertEquals(expected.getOrderPrice(), returned.getOrderPrice());
+                assertEquals(expected.getQuantity(), returned.getQuantity());
+                assertEquals(expected.getProductName(), returned.getProductName());
+            }
         }
     }
 }

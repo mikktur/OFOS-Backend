@@ -3,6 +3,7 @@ package ofos.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import ofos.dto.OrderDTO;
+import ofos.dto.OrderHistoryDTO;
 import ofos.entity.OrderProductsEntity;
 import ofos.entity.OrdersEntity;
 import ofos.repository.IOrderHistory;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -47,9 +49,17 @@ public class OrderController {
 
     // TODO:
     // Lisää päivämäärä hakutuloksiin.
+//    @GetMapping("/history")
+//    @ResponseBody
+//    public List<IOrderHistory> getOrderHistory(HttpServletRequest req){
+//        String jwt = req.getHeader("Authorization").substring(7);
+//        String username = jwtUtil.extractUsername(jwt);
+//        return ordersService.getHistory(username);
+//    }
+
     @GetMapping("/history")
     @ResponseBody
-    public List<IOrderHistory> getOrderHistory(HttpServletRequest req){
+    public HashMap<Integer, List<OrderHistoryDTO>> getOrderHistory(HttpServletRequest req){
         String jwt = req.getHeader("Authorization").substring(7);
         String username = jwtUtil.extractUsername(jwt);
         return ordersService.getHistory(username);

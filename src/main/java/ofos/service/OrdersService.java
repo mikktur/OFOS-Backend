@@ -1,6 +1,7 @@
 package ofos.service;
 
 import ofos.dto.OrderDTO;
+import ofos.dto.OrderHistoryDTO;
 import ofos.entity.OrderProductsEntity;
 import ofos.entity.OrdersEntity;
 import ofos.entity.UserEntity;
@@ -10,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -72,9 +75,43 @@ public class OrdersService {
         );
     }
 
-    public List<IOrderHistory> getHistory(String username){
+//    public List<IOrderHistory> getHistory(String username){
+//        int userID = userRepository.findByUsername(username).getUserId();
+//        return ordersRepository.getOrderHistory(userID);
+//    }
+
+    public HashMap<Integer, List<OrderHistoryDTO>> getHistory(String username){
+        HashMap<Integer, List<OrderHistoryDTO>> orders = new HashMap<>();
         int userID = userRepository.findByUsername(username).getUserId();
-        return ordersRepository.getOrderHistory(userID);
+        List <IOrderHistory> orderHistory =ordersRepository.getOrderHistory(userID);
+
+        for (int i = 0; i < orderHistory.size(); i++) {
+            List<OrderHistoryDTO> orderProducts = new ArrayList<>();
+            int orderID = orderHistory.get(i).getOrderID();
+            int nextOrderID;
+
+            do {
+                OrderHistoryDTO orderHistoryDTO = new OrderHistoryDTO(
+                        orderHistory.get(i).getProductPrice(),
+                        orderHistory.get(i).getQuantity(),
+                        orderHistory.get(i).getProductName(),
+                        orderHistory.get(i).getOrderDate());
+
+                orderProducts.add(orderHistoryDTO);
+                i++;
+
+                if (i == orderHistory.size()){
+                    break;
+                }
+
+                nextOrderID = orderHistory.get(i).getOrderID();
+
+            } while (orderID == nextOrderID);
+
+            i--;
+            orders.put(orderID, orderProducts);
+        }
+        return orders;
     }
 
     public ResponseEntity<String> updateStatus(int orderID, String status){
