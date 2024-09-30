@@ -32,7 +32,7 @@ pipeline {
             steps {
 
                 sh 'mvn jacoco:report'
-                jacoco execPattern: '**/target/jacoco.exec',
+                jacoco execPattern: '**/target/jacoco.exec'
             }
         }
 
