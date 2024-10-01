@@ -7,6 +7,8 @@ import ofos.repository.DeliveryAddressRepository;
 import ofos.repository.UserRepository;
 import ofos.repository.UsersAddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +53,7 @@ public class DeliveryAddressService {
 
 
     @Transactional
-    public boolean saveDeliveryAddress(DeliveryAddressDTO deliveryAddressDTO, String username){
+    public ResponseEntity<String> saveDeliveryAddress(DeliveryAddressDTO deliveryAddressDTO, String username){
         try {
             int userID = userRepository.findByUsername(username).getUserId();
 
@@ -76,21 +78,30 @@ public class DeliveryAddressService {
             }
 
             usersAddressRepository.save(uae);
-            return true;
+            return new ResponseEntity<>(
+                    "Saved successfully.",
+                    HttpStatus.OK
+            );
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return new ResponseEntity<>(
+                    "Something went wrong.",
+                    HttpStatus.BAD_REQUEST
+            );
         }
     }
 
     @Transactional
-    public boolean setDefaultDeliveryAddress(int deliveryAddressId, int userId, String username) {
+    public ResponseEntity<String> setDefaultDeliveryAddress(int deliveryAddressId, int userId, String username) {
         try {
             // Verify that the userId matches the username
             int authenticatedUserId = userRepository.findByUsername(username).getUserId();
             if (authenticatedUserId != userId) {
                 System.out.println("User ID does not match the authenticated user");
-                return false; // User ID does not match the authenticated user
+                return new ResponseEntity<>(
+                        "Something went wrong.",
+                        HttpStatus.BAD_REQUEST
+                );   // User ID does not match the authenticated user
             }
 
             // Unset the current default address
@@ -101,28 +112,43 @@ public class DeliveryAddressService {
             if (usersAddressEntity != null) {
                 usersAddressEntity.setIsDefault(true);
                 usersAddressRepository.save(usersAddressEntity);
-                return true;
+                return new ResponseEntity<>(
+                        "Default address set successfully.",
+                        HttpStatus.OK
+                );
             }
-            return false;
+            return new ResponseEntity<>(
+                    "Something went wrong.",
+                    HttpStatus.BAD_REQUEST
+            );
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return new ResponseEntity<>(
+                    "Something went wrong.",
+                    HttpStatus.BAD_REQUEST
+            );
         }
     }
 
 
-    public boolean updateDeliveryAddress(DeliveryAddressDTO deliveryAddressDTO) {
+    public ResponseEntity<String> updateDeliveryAddress(DeliveryAddressDTO deliveryAddressDTO) {
         DeliveryAddressEntity addresses = deliveryAddressRepository.getByDeliveryAddressId(deliveryAddressDTO.getDeliveryAddressId());
         if (addresses != null) {
             DeliveryAddressEntity dae = new DeliveryAddressEntity();
             deliveryAddressRepository.save(setValues(deliveryAddressDTO, dae));
-            return true;
+            return new ResponseEntity<>(
+                    "Updated successfully.",
+                    HttpStatus.OK
+            );
         }
-        return false;
+        return new ResponseEntity<>(
+                "Something went wrong.",
+                HttpStatus.BAD_REQUEST
+        );
     }
 
     @Transactional
-    public boolean deleteDeliveryAddress(int addressID, String username){
+    public ResponseEntity<String> deleteDeliveryAddress(int addressID, String username){
         int userID = userRepository.findByUsername(username).getUserId();
         int addressConfirmationID = usersAddressRepository.getUsersAddressEntityByDeliveryAddressId(addressID).getUserId();
         if (userID == addressConfirmationID) {
@@ -140,9 +166,15 @@ public class DeliveryAddressService {
                 }
             }
 
-            return true;
+            return new ResponseEntity<>(
+                    "Deleted successfully.",
+                    HttpStatus.OK
+            );
         }
-        return false;
+        return new ResponseEntity<>(
+                "Something went wrong.",
+                HttpStatus.BAD_REQUEST
+        );
     }
 
     private DeliveryAddressEntity setValues(DeliveryAddressDTO deliveryAddressDTO, DeliveryAddressEntity deliveryAddressEntity){

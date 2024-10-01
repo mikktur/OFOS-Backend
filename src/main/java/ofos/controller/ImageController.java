@@ -38,16 +38,17 @@ public class ImageController extends HttpServlet{
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
             Path file = Paths.get("uploads/restaurants/products/" + filename);
-            Resource resource = new UrlResource(file.toUri());
+            return createResponse(file);
+        } catch (MalformedURLException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
-            if (resource.exists() || resource.isReadable()) {
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-                        .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-                        .body(resource);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+    @GetMapping("/restaurant/{filename:.+}")
+    public ResponseEntity<Resource> getRestaurantLogo(@PathVariable String filename) {
+        try {
+            Path file = Paths.get("uploads/restaurants/logos/" + filename);
+            return createResponse(file);
         } catch (MalformedURLException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -71,5 +72,18 @@ public class ImageController extends HttpServlet{
 //            return ResponseEntity.badRequest().build();
 //        }
 //    }
+
+    private ResponseEntity<Resource> createResponse(Path path) throws MalformedURLException {
+        Resource resource = new UrlResource(path.toUri());
+
+        if (resource.exists() || resource.isReadable()) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                    .body(resource);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }

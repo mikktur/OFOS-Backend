@@ -9,6 +9,7 @@ import ofos.security.JwtUtil;
 import ofos.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,15 +17,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import java.math.BigDecimal;
+import java.security.Principal;
+
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,6 +52,7 @@ public class ProductControllerTests {
 
     @Autowired
     private ObjectMapper objectMapper;
+
 
     @Test
     public void getProductByIdTest() throws Exception {
@@ -91,13 +98,20 @@ public class ProductControllerTests {
     public void updateProductTest() throws Exception {
         ProductDTO productDTO = new ProductDTO(333, "Good brgr", "Maistuu namnam", BigDecimal.valueOf(17.50),
                 "Hampurilainen", "https://cdn.rkt-prod.rakentaja.com/media/original_images/202212_60205.jpg");
+        UserDetails userDetails = User.withUsername("testUser")
+                .password("testPassword")
+                .roles("Owner")
+                .build();
         ResponseEntity<String> responseEntity = ResponseEntity.ok("Product updated.");
 
         when(jwtUtil.extractRole(any())).thenReturn("Owner");
         when(jwtUtil.extractUsername(any())).thenReturn("testUser");
         when(productService.updateProduct(any(ProductDTO.class), anyString())).thenReturn(responseEntity);
 
-        mvc.perform(post("/api/products/update")
+        Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        mvc.perform(put("/api/products/update")
                 .header("Authorization", "Bearer testToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(productDTO)))

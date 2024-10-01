@@ -38,46 +38,19 @@ public class DeliveryAddressController {
         String jwt = req.getHeader("Authorization").substring(7);
         String username = jwtUtil.extractUsername(jwt);
 
-        if (deliveryAddressService.saveDeliveryAddress(deliveryAddressDTO, username)) {
-            return new ResponseEntity<>(
-                    "Saved successfully.",
-                    HttpStatus.OK
-            );
-        }
-        return new ResponseEntity<>(
-                "Something went wrong.",
-                HttpStatus.BAD_REQUEST
-        );
+        return deliveryAddressService.saveDeliveryAddress(deliveryAddressDTO, username);
     }
 
     @PutMapping("/update")
     public ResponseEntity<String> updateDeliveryAddress(@RequestBody DeliveryAddressDTO deliveryAddressDTO){
-        if (deliveryAddressService.updateDeliveryAddress(deliveryAddressDTO)) {
-            return new ResponseEntity<>(
-                    "Saved successfully.",
-                    HttpStatus.OK
-            );
-        }
-        return new ResponseEntity<>(
-                "Something went wrong.",
-                HttpStatus.BAD_REQUEST
-        );
+        return deliveryAddressService.updateDeliveryAddress(deliveryAddressDTO);
     }
 
     @DeleteMapping("/delete/{addressID}")
     public ResponseEntity<String> deleteDeliveryAddress(HttpServletRequest req, @PathVariable int addressID){
         String jwt = req.getHeader("Authorization").substring(7);
         String username = jwtUtil.extractUsername(jwt);
-        if (deliveryAddressService.deleteDeliveryAddress(addressID, username)){
-            return new ResponseEntity<>(
-                    "Deleted successfully.",
-                    HttpStatus.OK
-            );
-        }
-        return new ResponseEntity<>(
-                "Something went wrong.",
-                HttpStatus.BAD_REQUEST
-        );
+        return deliveryAddressService.deleteDeliveryAddress(addressID, username);
     }
 
     @PutMapping("/setDefault")
@@ -88,16 +61,7 @@ public class DeliveryAddressController {
         int deliveryAddressId = payload.get("deliveryAddressId");
         int userId = payload.get("userId");
 
-        if (deliveryAddressService.setDefaultDeliveryAddress(deliveryAddressId, userId, username)) {
-            return new ResponseEntity<>(
-                    "Default address set successfully.",
-                    HttpStatus.OK
-            );
-        }
-        return new ResponseEntity<>(
-                "Something went wrong.",
-                HttpStatus.BAD_REQUEST
-        );
+        return deliveryAddressService.setDefaultDeliveryAddress(deliveryAddressId, userId, username);
     }
 
 

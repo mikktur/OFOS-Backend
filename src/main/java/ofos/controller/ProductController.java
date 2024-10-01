@@ -55,7 +55,6 @@ public class ProductController {
                                                 HttpServletRequest request) {
         String jwt = request.getHeader("Authorization").substring(7);
         String username = jwtUtil.extractUsername(jwt);
-        System.out.println("heieieieie");
         return productService.createProduct(productDTO, restaurantId, username);
     }
 

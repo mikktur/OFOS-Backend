@@ -6,6 +6,8 @@ import ofos.entity.UserEntity;
 import ofos.repository.ContactInfoRepository;
 import ofos.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -22,17 +24,23 @@ public class ContactInfoService {
         return contactInfoRepository.findContactInfoEntityByUserId(userID);
     }
 
-    public boolean updateContactInfo(ContactInfoDTO contactInfoDTO, String username){
+    public ResponseEntity<String> updateContactInfo(ContactInfoDTO contactInfoDTO, String username){
         UserEntity user = userRepository.findByUsername(username);
         if (user.getUserId() == contactInfoDTO.getUserId()){
             ContactInfoEntity contactInfoEntity = new ContactInfoEntity();
             contactInfoRepository.save(createEntity(contactInfoDTO, contactInfoEntity));
-            return true;
+            return new ResponseEntity<>(
+                    "Contact info updated.",
+                    HttpStatus.OK
+            );
         }
-        return false;
+        return new ResponseEntity<>(
+                "Something went wrong.",
+                HttpStatus.BAD_REQUEST
+        );
     }
 
-    public boolean saveContactInfo(ContactInfoDTO dto, String username) {
+    public ResponseEntity<String> saveContactInfo(ContactInfoDTO dto, String username) {
         try {
             UserEntity user = userRepository.findByUsername(username);
             if (user == null) {
@@ -50,10 +58,16 @@ public class ContactInfoService {
             contactInfo.setUserId(user.getUserId());
 
             contactInfoRepository.save(contactInfo);
-            return true;
+            return new ResponseEntity<>(
+                    "Contact info saved for: " + contactInfo.getFirstName(),
+                    HttpStatus.OK
+            );
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return new ResponseEntity<>(
+                    "Something went wrong.",
+                    HttpStatus.BAD_REQUEST
+            );
         }
     }
 

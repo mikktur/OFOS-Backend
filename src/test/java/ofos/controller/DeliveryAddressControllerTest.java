@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -68,10 +69,11 @@ class DeliveryAddressControllerTest {
         DeliveryAddressDTO deliveryAddressDTO = new DeliveryAddressDTO("Address", "City", "00410", 1, "Info", true);
         String jwt = "Bearer jwtToken";
         String dummyUsername = "dummyUser";
+        ResponseEntity<String> responseEntity = ResponseEntity.ok("Saved successfully.");
 
         Mockito.when(jwtUtil.extractUsername(jwt.substring(7))).thenReturn(dummyUsername);
 
-        Mockito.when(deliveryAddressService.saveDeliveryAddress(any(DeliveryAddressDTO.class), eq(dummyUsername))).thenReturn(true);
+        Mockito.when(deliveryAddressService.saveDeliveryAddress(any(DeliveryAddressDTO.class), eq(dummyUsername))).thenReturn(responseEntity);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/deliveryaddress/save")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -82,8 +84,10 @@ class DeliveryAddressControllerTest {
 
     @Test
     void updateDeliveryAddressTest() throws Exception {
-        DeliveryAddressDTO deliveryAddressDTO = new DeliveryAddressDTO("Address", "City", "00410", 1, "Info", true);
-        Mockito.when(deliveryAddressService.updateDeliveryAddress(any(DeliveryAddressDTO.class))).thenReturn(true);
+        DeliveryAddressDTO deliveryAddressDTO = new DeliveryAddressDTO("Address", "City", "00410",
+                                    1, "Info", true);
+        ResponseEntity<String> responseEntity = ResponseEntity.ok("Updated successfully.");
+        Mockito.when(deliveryAddressService.updateDeliveryAddress(any(DeliveryAddressDTO.class))).thenReturn(responseEntity);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/deliveryaddress/update")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -95,9 +99,11 @@ class DeliveryAddressControllerTest {
     void deleteDeliveryAddress() throws Exception {
         String jwt = "Bearer jwtToken";
         String dummyUsername = "dummyUser";
+        ResponseEntity<String> responseEntity = ResponseEntity.ok("Deleted successfully.");
+
 
         Mockito.when(jwtUtil.extractUsername(jwt.substring(7))).thenReturn(dummyUsername);
-        Mockito.when(deliveryAddressService.deleteDeliveryAddress(anyInt(), eq(dummyUsername))).thenReturn(true);
+        Mockito.when(deliveryAddressService.deleteDeliveryAddress(anyInt(), eq(dummyUsername))).thenReturn(responseEntity);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/deliveryaddress/delete/1")
                 .header("Authorization", jwt))
@@ -111,9 +117,10 @@ class DeliveryAddressControllerTest {
         payload.put("userId", 1);
         String jwt = "Bearer jwtToken";
         String dummyUsername = "dummyUser";
+        ResponseEntity<String> responseEntity = ResponseEntity.ok("Default address set successfully.");
 
         Mockito.when(jwtUtil.extractUsername(jwt.substring(7))).thenReturn(dummyUsername);
-        Mockito.when(deliveryAddressService.setDefaultDeliveryAddress(anyInt(), anyInt(), eq(dummyUsername))).thenReturn(true);
+        Mockito.when(deliveryAddressService.setDefaultDeliveryAddress(anyInt(), anyInt(), eq(dummyUsername))).thenReturn(responseEntity);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/deliveryaddress/setDefault")
                 .contentType(MediaType.APPLICATION_JSON)

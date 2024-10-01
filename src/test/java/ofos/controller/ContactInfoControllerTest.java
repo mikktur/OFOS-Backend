@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -73,8 +74,9 @@ class ContactInfoControllerTest {
         ContactInfoDTO contactInfoDTO = new ContactInfoDTO("05055555555", "Osoite 55", "Lontoo", "John",
                                                     "Doe", "john.doe@example.com", "1234567890", 1);
 
+        ResponseEntity<String> responseEntity = ResponseEntity.ok("Contact info updated.");
         when(jwtUtil.extractUsername(any())).thenReturn("testUser");
-        when(contactInfoService.updateContactInfo(any(ContactInfoDTO.class), anyString())).thenReturn(true);
+        when(contactInfoService.updateContactInfo(any(ContactInfoDTO.class), anyString())).thenReturn(responseEntity);
 
         mvc.perform(post("/api/contactinfo/update")
                 .header("Authorization", "Bearer testToken")
@@ -88,9 +90,10 @@ class ContactInfoControllerTest {
     public void saveInfoTest() throws Exception {
         ContactInfoDTO contactInfoDTO = new ContactInfoDTO("05055555555", "Osoite 55", "Lontoo", "John",
                                                 "Doe", "john.doe@example.com", "1234567890", 1);
+        ResponseEntity<String> responseEntity = ResponseEntity.ok("Contact info saved for: " + contactInfoDTO.getFirstName());
 
         when(jwtUtil.extractUsername(any())).thenReturn("testUser");
-        when(contactInfoService.saveContactInfo(any(ContactInfoDTO.class), anyString())).thenReturn(true);
+        when(contactInfoService.saveContactInfo(any(ContactInfoDTO.class), anyString())).thenReturn(responseEntity);
 
         mvc.perform(post("/api/contactinfo/save")
                 .header("Authorization", "Bearer testToken")
