@@ -1,4 +1,4 @@
-package service;
+package ofos.service;
 
 
 import ofos.dto.CreateUserRequestDTO;
