@@ -16,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class provides methods to interact with and save the product data stored in the database.
+ */
 @Service
 public class ProductService {
 
@@ -29,11 +32,21 @@ public class ProductService {
     RestaurantRepository restaurantRepository;
 
 
-
+    /**
+     * Retrieves all products from the database.
+     *
+     * @return A list of {@link ProductEntity} objects representing all products in the database.
+     */
     public ProductEntity getDishById(int productId) {
         return productRepository.findByProductId(productId);
     }
 
+    /**
+     * Deletes a product from the database.
+     * @param productId the id of the product to be deleted.
+     * @param owner the owner of the product.
+     * @return {@link ResponseEntity} object with a message.
+     */
     @Transactional
     public ResponseEntity<String> deleteDishById(int productId, String owner) {
         List<ProvidesEntity> ownedProducts = providesRepository.findProductOwnerByName(owner);
@@ -54,6 +67,12 @@ public class ProductService {
         );
     }
 
+    /**
+     * Updates a product in the database.
+     * @param productDTO the product to be updated.
+     * @param owner the owner of the product.
+     * @return {@link ResponseEntity} object with a message.
+     */
     public ResponseEntity<String> updateProduct(ProductDTO productDTO, String owner) {
         List<ProvidesEntity> ownedProducts = providesRepository.findProductOwnerByName(owner);
         if (!ownedProducts.isEmpty()) {
@@ -75,6 +94,13 @@ public class ProductService {
         );
     }
 
+    /**
+     * Creates a product in the database.
+     * @param productDTO the product to be created.
+     * @param restaurantID the id of the restaurant.
+     * @param owner the owner of the restaurant.
+     * @return {@link ResponseEntity} object with a message.
+     */
     public ResponseEntity<String> createProduct(ProductDTO productDTO, int restaurantID, String owner) {
         List<RestaurantEntity> ownedRestaurants = restaurantRepository.findRestaurantByOwnerName(owner);
         System.out.println("Ennen if");
@@ -105,7 +131,11 @@ public class ProductService {
 
     }
 
-    //laitoin tän muuttaa nämä DTOksi ettei tarvii käyttää eager fetchiä
+    /**
+     * Retrieves all products related to certain restaurant from the database.
+     * @param id the id of the restaurant.
+     * @return A list of {@link ProductDTO} objects representing all products in the database.
+     */
     @Transactional(readOnly = true)
     public List<ProductDTO> getAllProductsByRestaurant(Integer id) {
         List<ProductEntity> products = productRepository.getProductsByRestaurant(id);
@@ -121,6 +151,12 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Sets the values of the product.
+     * @param productDTO provides the values.
+     * @param productEntity the object to be updated.
+     * @return {@link ProductEntity} object with updated values.
+     */
     protected ProductEntity setValues(ProductDTO productDTO, ProductEntity productEntity) {
         productEntity.setProductName(productDTO.getProductName());
         productEntity.setProductDesc(productDTO.getProductDesc());

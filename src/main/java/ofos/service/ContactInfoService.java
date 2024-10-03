@@ -19,11 +19,21 @@ public class ContactInfoService {
     @Autowired
     UserRepository userRepository;
 
-
+    /**
+     * Retrieves contact info for a user.
+     * @param userID The ID of the user.
+     * @return A {@link ContactInfoEntity} object representing the contact info in the database.
+     */
     public ContactInfoEntity getContactInfo(int userID){
         return contactInfoRepository.findContactInfoEntityByUserId(userID);
     }
 
+    /**
+     * Updates contact info for a user.
+     * @param contactInfoDTO The contact info to be updated.
+     * @param username The username of the user.
+     * @return {@link ResponseEntity} object with a message and a status code.
+     */
     public ResponseEntity<String> updateContactInfo(ContactInfoDTO contactInfoDTO, String username){
         UserEntity user = userRepository.findByUsername(username);
         if (user.getUserId() == contactInfoDTO.getUserId()){
@@ -40,6 +50,12 @@ public class ContactInfoService {
         );
     }
 
+    /**
+     * Saves contact info for a user.
+     * @param dto The contact info to be saved.
+     * @param username The username of the user.
+     * @return {@link ResponseEntity} object with a message and a status code.
+     */
     public ResponseEntity<String> saveContactInfo(ContactInfoDTO dto, String username) {
         try {
             UserEntity user = userRepository.findByUsername(username);
@@ -72,7 +88,12 @@ public class ContactInfoService {
     }
 
 
-
+    /**
+     * Creates a {@link ContactInfoEntity} object from a {@link ContactInfoDTO} object.
+     * @param contactInfoDTO The {@link ContactInfoDTO} object.
+     * @param contactInfoEntity The {@link ContactInfoEntity} object.
+     * @return The {@link ContactInfoEntity} object.
+     */
     protected ContactInfoEntity createEntity(ContactInfoDTO contactInfoDTO, ContactInfoEntity contactInfoEntity){
         contactInfoEntity.setPhoneNumber(contactInfoDTO.getPhoneNumber());
         contactInfoEntity.setCity(contactInfoDTO.getCity());

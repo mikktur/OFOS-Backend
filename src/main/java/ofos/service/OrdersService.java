@@ -16,6 +16,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class provides methods to interact with and save the order data stored in the database.
+ */
 @Service
 public class OrdersService {
 
@@ -34,15 +37,32 @@ public class OrdersService {
 
 
 
-
+    /**
+     * Retrieves all orders related to certain user from the database.
+     *
+     * @param userID The ID of the user.
+     *
+     * @return A list of {@link OrdersEntity} objects representing all orders in the database.
+     */
     public List<OrdersEntity> getOrdersByUserID(int userID){
         return ordersRepository.findOrdersEntitiesByUserId(userID);
     }
 
+    /**
+     * Retrieves all order contents related to certain user from the database.
+     * @param userID The ID of the user.
+     * @return A list of {@link OrderProductsEntity} objects representing all related order contents in the database.
+     */
     public List<OrderProductsEntity> getOrderContentsByUserID(int userID){
         return orderProductsRepository.findOrdersByUserID(userID);
     }
 
+    /**
+     * Posts an order to the database.
+     * @param orders list of {@link OrderDTO} objects representing the order to be posted.
+     * @param username The username of the user making the order.
+     * @return {@link ResponseEntity} object with a message and a status code.
+     */
     public ResponseEntity<String> postOrder(List<OrderDTO> orders, String username){
         Date date = new Date();
         UserEntity user = userRepository.findByUsername(username);
@@ -80,6 +100,11 @@ public class OrdersService {
 //        return ordersRepository.getOrderHistory(userID);
 //    }
 
+    /**
+     * Retrieves the order history of a user from the database.
+     * @param username The username of the user.
+     * @return A HashMap with the order ID as the key and a list of {@link OrderHistoryDTO} objects as the value.
+     */
     public HashMap<Integer, List<OrderHistoryDTO>> getHistory(String username){
         HashMap<Integer, List<OrderHistoryDTO>> orders = new HashMap<>();
         int userID = userRepository.findByUsername(username).getUserId();
@@ -114,6 +139,12 @@ public class OrdersService {
         return orders;
     }
 
+    /**
+     * Updates the status of an order in the database.
+     * @param orderID The ID of the order.
+     * @param status The new status of the order.
+     * @return {@link ResponseEntity} object with a message and a status code.
+     */
     public ResponseEntity<String> updateStatus(int orderID, String status){
         try {
             ordersRepository.updateByOrderId(orderID, status);
