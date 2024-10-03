@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+/**
+ * This class provides methods to interact and save the restaurant data stored in the database.
+ */
 @Service
 public class RestaurantService {
 
@@ -28,6 +31,11 @@ public class RestaurantService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Retrieves all restaurants from the database.
+     *
+     * @return A list of {@link RestaurantDTO} objects representing all restaurants in the database.
+     */
     public List<RestaurantDTO> getAllRestaurants() {
         System.out.println("Entered getAllRestaurants method in RestaurantService");
         List<RestaurantEntity> restaurants = restaurantRepository.findAll();
@@ -42,6 +50,12 @@ public class RestaurantService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves all restaurants owned by a user from the database.
+     *
+     * @param userId The ID of the user.
+     * @return A list of {@link RestaurantDTO} objects representing all restaurants owned by the user in the database.
+     */
     public List<RestaurantDTO> getRestaurantsByOwner(long userId) {
         System.out.println("Entered getRestaurantsByOwner method in RestaurantService");
         UserEntity user = userRepository.findById(userId)
@@ -57,6 +71,13 @@ public class RestaurantService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Updates a restaurant in the database.
+     *
+     * @param restaurantId The ID of the restaurant.
+     * @param updateRestaurantDTO The updated restaurant data.
+     * @return The updated {@link RestaurantDTO} object.
+     */
     @Transactional
     public RestaurantDTO updateRestaurant(Integer restaurantId, UpdateRestaurantDTO updateRestaurantDTO) {
         System.out.println("Entered updateRestaurant method in RestaurantService");
@@ -76,6 +97,12 @@ public class RestaurantService {
         return RestaurantDTO.fromEntity(updatedRestaurant);
     }
 
+    /**
+     * Retrieves all restaurants of a specific category from the database.
+     *
+     * @param categoryName The name of the category.
+     * @return A list of {@link RestaurantDTO} objects representing all restaurants of the category in the database.
+     */
     @Transactional
     public List<RestaurantDTO> getRestaurantsByCategory(String categoryName) {
         System.out.println("Entered getRestaurantsByCategory method in RestaurantService");

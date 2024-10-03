@@ -21,6 +21,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     *
+     * @param username the username identifying the user whose data is required.
+     * @return {@link MyUserDetails} object with selected username.
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByUsername(username);

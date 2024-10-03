@@ -31,6 +31,11 @@ public class DeliveryAddressService {
         return deliveryAddressRepository.getAddressesById(id);
     }
 
+    /**
+     * Retrieves all delivery addresses for a user with a flag indicating if the address is the default.
+     * @param userId The ID of the user.
+     * @return A list of {@link DeliveryAddressDTO} objects representing all delivery addresses in the database.
+     */
     public List<DeliveryAddressDTO> getDeliveryAddressesWithDefaultFlag(int userId){
         List<UsersAddressEntity> usersAddresses = usersAddressRepository.findByUserId(userId);
 
@@ -51,7 +56,12 @@ public class DeliveryAddressService {
         return addressDTOs;
     }
 
-
+    /**
+     * Saves a new delivery address for a user.
+     * @param deliveryAddressDTO The delivery address to be saved.
+     * @param username The username of the user.
+     * @return {@link ResponseEntity} object with a message and a status code.
+     */
     @Transactional
     public ResponseEntity<String> saveDeliveryAddress(DeliveryAddressDTO deliveryAddressDTO, String username){
         try {
@@ -91,6 +101,13 @@ public class DeliveryAddressService {
         }
     }
 
+    /**
+     * Sets a delivery address as the default for a user.
+     * @param deliveryAddressId The ID of the delivery address.
+     * @param userId The ID of the user.
+     * @param username The username of the user.
+     * @return {@link ResponseEntity} object with a message and a status code.
+     */
     @Transactional
     public ResponseEntity<String> setDefaultDeliveryAddress(int deliveryAddressId, int userId, String username) {
         try {
@@ -130,7 +147,11 @@ public class DeliveryAddressService {
         }
     }
 
-
+    /**
+     * Updates a delivery address in the database.
+     * @param deliveryAddressDTO The object containing the data to be updated.
+     * @return {@link ResponseEntity} object with a message and a status code.
+     */
     public ResponseEntity<String> updateDeliveryAddress(DeliveryAddressDTO deliveryAddressDTO) {
         DeliveryAddressEntity addresses = deliveryAddressRepository.getByDeliveryAddressId(deliveryAddressDTO.getDeliveryAddressId());
         if (addresses != null) {
@@ -147,6 +168,12 @@ public class DeliveryAddressService {
         );
     }
 
+    /**
+     * Deletes a delivery address from the database.
+     * @param addressID The ID of the delivery address.
+     * @param username The username of the user.
+     * @return {@link ResponseEntity} object with a message and a status code.
+     */
     @Transactional
     public ResponseEntity<String> deleteDeliveryAddress(int addressID, String username){
         int userID = userRepository.findByUsername(username).getUserId();
@@ -177,6 +204,12 @@ public class DeliveryAddressService {
         );
     }
 
+    /**
+     * Sets the values of a {@link DeliveryAddressDTO} object to a {@link DeliveryAddressEntity} object.
+     * @param deliveryAddressDTO The object containing the data to be set.
+     * @param deliveryAddressEntity The object to set the data to.
+     * @return The {@link DeliveryAddressEntity} object with the values set.
+     */
     private DeliveryAddressEntity setValues(DeliveryAddressDTO deliveryAddressDTO, DeliveryAddressEntity deliveryAddressEntity){
         deliveryAddressEntity.setDeliveryAddressId(deliveryAddressDTO.getDeliveryAddressId());
         deliveryAddressEntity.setStreetAddress(deliveryAddressDTO.getStreetAddress());
