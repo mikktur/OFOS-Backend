@@ -103,20 +103,16 @@ public class ProductService {
      */
     public ResponseEntity<String> createProduct(ProductDTO productDTO, int restaurantID, String owner) {
         List<RestaurantEntity> ownedRestaurants = restaurantRepository.findRestaurantByOwnerName(owner);
-        System.out.println("Ennen if");
         if (!ownedRestaurants.isEmpty()) {
             for (RestaurantEntity re : ownedRestaurants) {
                 if (re.getRestaurantID() == restaurantID) {
                     ProductEntity productEntity = new ProductEntity();
                     productRepository.save(setValues(productDTO, productEntity));
-                    System.out.println("saven jälkeen");
 
                     // productId autoincrement nii pitää tehä näin (?)
                     int productID = productRepository.findIdByName(productEntity.getProductName());
-                    System.out.println("ettii ID");
                     // Heittää Provides taulukkoon datat.
                     productRepository.addProductToRestaurant(restaurantID, productID);
-                    System.out.println("lisää joiintableen");
                     return new ResponseEntity<>(
                             "Product created.",
                             HttpStatus.OK
