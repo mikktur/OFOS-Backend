@@ -33,9 +33,9 @@ public class ProductService {
 
 
     /**
-     * Retrieves all products from the database.
-     *
-     * @return A list of {@link ProductEntity} objects representing all products in the database.
+     * Retrieves products by their id from the database.
+     * @param productId the id of the product.
+     * @return A {@link ProductEntity} object representing the product with the ID.
      */
     public ProductEntity getDishById(int productId) {
         return productRepository.findByProductId(productId);

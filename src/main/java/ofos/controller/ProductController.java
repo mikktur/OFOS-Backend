@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * This class is used to handle the product requests.
+ */
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -27,13 +30,23 @@ public class ProductController {
     @Autowired
     private JwtUtil jwtUtil;
 
-
+    /**
+     * Retrieves a product by its id.
+     * @param id The id of the product.
+     * @return A {@link ProductEntity} object containing the product.
+     */
     @GetMapping("/{id}")
     @ResponseBody
     public ProductEntity getDishById(@PathVariable int id) {
         return productService.getDishById(id);
     }
 
+    /**
+     * Deletes a product by its id.
+     * @param id The id of the product.
+     * @param request The HTTP request object.
+     * @return A {@link ResponseEntity} object containing the status code.
+     */
     @GetMapping("/delete/{id}")
     @Transactional
     public ResponseEntity<String> deleteDish(@PathVariable int id, HttpServletRequest request){
@@ -50,6 +63,13 @@ public class ProductController {
 
     }
 
+    /**
+     * Creates a new product for a certain restaurant.
+     * @param productDTO The product to be created.
+     * @param restaurantId The id of the restaurant.
+     * @param request The HTTP request object.
+     * @return A {@link ResponseEntity} object containing the status code.
+     */
     @PostMapping("/create/{restaurantId}")
     public ResponseEntity<String> createProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable int restaurantId,
                                                 HttpServletRequest request) {
@@ -58,6 +78,12 @@ public class ProductController {
         return productService.createProduct(productDTO, restaurantId, username);
     }
 
+    /**
+     * Updates a product.
+     * @param productDTO The product to be updated.
+     * @param userDetails The authenticated user.
+     * @return A {@link ResponseEntity} object containing the status code.
+     */
     @PutMapping("/update")
     @PreAuthorize("hasRole('Owner')") // Ensure only users with the 'Owner' role can access this endpoint
     public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO productDTO,
@@ -67,6 +93,11 @@ public class ProductController {
         return productService.updateProduct(productDTO, username);
     }
 
+    /**
+     * Retrieves all products for a restaurant.
+     * @param restaurant The id of the restaurant.
+     * @return A list of {@link ProductDTO} objects containing all products of the restaurant.
+     */
     @GetMapping("/restaurant/{restaurant}")
     @ResponseBody
     public List<ProductDTO> getProductsByRestaurant(@PathVariable Integer restaurant) {
