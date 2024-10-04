@@ -47,21 +47,23 @@ public class ProductController {
      * @param request The HTTP request object.
      * @return A {@link ResponseEntity} object containing the status code.
      */
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     @Transactional
-    public ResponseEntity<String> deleteDish(@PathVariable int id, HttpServletRequest request){
+    public ResponseEntity<String> deleteDish(@PathVariable int id, HttpServletRequest request) {
         String authHead = request.getHeader("Authorization");
         String jwt = authHead.substring(7);
-        if (jwtUtil.extractRole(jwt).equals("Owner")) {
+        System.out.println("JWT: " + jwtUtil.extractRole(jwt));
+        if (jwtUtil.extractRole(jwt).equals("OWNER")) {
             String username = jwtUtil.extractUsername(jwt);
+            System.out.println("haloo");
             return productService.deleteDishById(id, username);
         }
         return new ResponseEntity<>(
                 "Not an owner.",
                 HttpStatus.UNAUTHORIZED
         );
-
     }
+
 
     /**
      * Creates a new product for a certain restaurant.
