@@ -1,11 +1,15 @@
 package ofos.service;
 
+import ofos.dto.ChangePasswordDTO;
 import ofos.dto.CreateUserRequestDTO;
 import ofos.entity.UserEntity;
 import ofos.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -61,6 +65,31 @@ public class UserService {
      */
     public UserEntity getUserById(int userId) {
         return userRepository.findByUserId(userId);
+    }
+
+    @Transactional
+    public ResponseEntity<String> updatePassword(ChangePasswordDTO changePasswordDTO, String username){
+        String hashedPassword = userRepository.findPassword(username);
+        System.out.println("Hashed password: " + hashedPassword);
+        if (hashedPassword != null){
+            if (passwordEncoder.matches(changePasswordDTO.getOldPassword(), hashedPassword)){
+                String newEncodedPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
+                System.out.println("New encoded password: " + newEncodedPassword);
+                userRepository.updatePassword(newEncodedPassword, username);
+                return new ResponseEntity<>(
+                        "Password updated.",
+                        HttpStatus.OK
+                );
+            }
+            return new ResponseEntity<>(
+                    "Old password doesn't match.",
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
+        return new ResponseEntity<>(
+                "User not found.",
+                HttpStatus.NOT_FOUND
+        );
     }
 
 }

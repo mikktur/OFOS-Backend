@@ -1,8 +1,11 @@
 package ofos.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import ofos.dto.ChangePasswordDTO;
 import ofos.dto.CreateUserRequestDTO;
 import ofos.dto.CreateUserResponseDTO;
 import ofos.entity.UserEntity;
+import ofos.security.JwtUtil;
 import ofos.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     /**
      * Retrieves all users.
@@ -94,6 +100,13 @@ public class UserController {
 
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PutMapping("/updatePassword")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO, HttpServletRequest req){
+        String jwt = req.getHeader("Authorization").substring(7);
+        String username = jwtUtil.extractUsername(jwt);
+        return userService.updatePassword(changePasswordDTO, username);
     }
 
 }
