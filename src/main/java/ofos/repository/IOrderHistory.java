@@ -17,4 +17,6 @@ public interface IOrderHistory {
 
     Date getOrderDate();
 
+    int getRestaurantID();
+
 }

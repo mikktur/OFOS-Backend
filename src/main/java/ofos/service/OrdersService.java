@@ -4,6 +4,7 @@ import ofos.dto.OrderDTO;
 import ofos.dto.OrderHistoryDTO;
 import ofos.entity.OrderProductsEntity;
 import ofos.entity.OrdersEntity;
+import ofos.entity.RestaurantEntity;
 import ofos.entity.UserEntity;
 import ofos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class provides methods to interact with and save the order data stored in the database.
@@ -33,6 +31,9 @@ public class OrdersService {
 
     @Autowired
     DeliveryAddressRepository deliveryAddressRepository;
+
+    @Autowired
+    RestaurantRepository restaurantRepository;
 
 
 
@@ -113,14 +114,24 @@ public class OrdersService {
         for (int i = 0; i < orderHistory.size(); i++) {
             List<OrderHistoryDTO> orderProducts = new ArrayList<>();
             int orderID = orderHistory.get(i).getOrderID();
+            String restaurantName = "";
             int nextOrderID;
+            Optional<RestaurantEntity> restaurant = restaurantRepository.findById(orderHistory.get(i).getRestaurantID());
+            
+            if (restaurant.isPresent()) {
+                restaurantName = restaurant.get().getRestaurantName();
+            }
+
+
 
             do {
                 OrderHistoryDTO orderHistoryDTO = new OrderHistoryDTO(
                         orderHistory.get(i).getProductPrice(),
                         orderHistory.get(i).getQuantity(),
                         orderHistory.get(i).getProductName(),
-                        orderHistory.get(i).getOrderDate());
+                        orderHistory.get(i).getOrderDate(),
+                        restaurantName
+                );
 
                 orderProducts.add(orderHistoryDTO);
                 i++;

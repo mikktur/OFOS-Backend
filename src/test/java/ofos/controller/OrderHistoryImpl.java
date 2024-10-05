@@ -15,6 +15,7 @@ public class OrderHistoryImpl implements IOrderHistory {
     private int quantity;
     private String productName;
     private Date orderDate;
+    private int restaurantID;
 
     public OrderHistoryImpl(int orderID, BigDecimal productPrice, int quantity, String productName, Date orderDate) {
         this.orderID = orderID;

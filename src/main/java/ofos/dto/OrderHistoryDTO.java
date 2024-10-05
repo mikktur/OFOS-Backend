@@ -18,11 +18,14 @@ public class OrderHistoryDTO {
 
     private Date orderDate;
 
-    public OrderHistoryDTO(BigDecimal orderPrice, int quantity, String productName, Date orderDate) {
+    private String restaurantName;
+
+    public OrderHistoryDTO(BigDecimal orderPrice, int quantity, String productName, Date orderDate, String restaurantName) {
         this.orderPrice = orderPrice;
         this.quantity = quantity;
         this.productName = productName;
         this.orderDate = orderDate;
+        this.restaurantName = restaurantName;
     }
 
 

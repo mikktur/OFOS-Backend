@@ -20,7 +20,7 @@ public interface OrdersRepository extends JpaRepository<OrdersEntity, Long> {
      * @param userID The ID of the user.
      * @return A list of {@link OrdersEntity} objects containing all orders related to the user.
      */
-    @Query(value = "SELECT Quantity, ProductPrice, ProductName, OrderProducts.OrderID, OrderDate " +
+    @Query(value = "SELECT Quantity, ProductPrice, ProductName, OrderProducts.OrderID, OrderDate, RestaurantID " +
             "FROM OrderProducts INNER JOIN Products ON OrderProducts.ProductID = Products.ProductID " +
             "INNER JOIN Orders ON Orders.OrderID = OrderProducts.OrderID " +
             "WHERE OrderProducts.OrderID IN (SELECT OrderID FROM Orders WHERE User_ID = ?1)", nativeQuery = true)
