@@ -22,27 +22,6 @@ public class ImageController extends HttpServlet{
 
 
     /**
-     * Uploads a product image to the database.
-     *
-     * @param file The image file to be uploaded.
-     */
-    @CrossOrigin(origins = "http://localhost:8001")     // Portti mistä pyynnöt tulee.
-    @PostMapping("/upload/user")
-    // Ei hyväksy useaa samannimistä kuvaa.
-    public void uploadUserPicture(@RequestPart MultipartFile file) {
-
-        try {
-            Path path = Paths.get("uploads/users/" + file.getOriginalFilename());   // Voisi generoida tiedoston nimeen. lisämerkkejä
-
-            file.transferTo(path);
-            // Heitä file.getOriginalFilename() tietokantaan (UploadServicellä (?))
-
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-    }
-
-    /**
      * Retrieves an image from the database.
      *
      * @param filename The image file to be retrieved.
