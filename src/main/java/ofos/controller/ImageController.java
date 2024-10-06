@@ -53,24 +53,6 @@ public class ImageController extends HttpServlet{
         }
     }
 
-    // Tällä saa kuvan ladattua, jos frontendi ei osaa näyttää kuvaa URL:ista suoraan.
-//    @GetMapping("/{filename:.+}")
-//    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
-//        try {
-//            Path file = Paths.get("uploads/restaurants/products/" + filename);
-//            Resource resource = new UrlResource(file.toUri());
-//
-//            if (resource.exists() || resource.isReadable()) {
-//                return ResponseEntity.ok()
-//                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-//                        .body(resource);
-//            } else {
-//                return ResponseEntity.notFound().build();
-//            }
-//        } catch (MalformedURLException e) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
 
     /**
      * Creates a response entity for the image.
