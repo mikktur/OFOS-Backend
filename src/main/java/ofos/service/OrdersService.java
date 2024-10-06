@@ -96,10 +96,6 @@ public class OrdersService {
         );
     }
 
-//    public List<IOrderHistory> getHistory(String username){
-//        int userID = userRepository.findByUsername(username).getUserId();
-//        return ordersRepository.getOrderHistory(userID);
-//    }
 
     /**
      * Retrieves the order history of a user from the database.

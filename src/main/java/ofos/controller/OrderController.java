@@ -69,15 +69,6 @@ public class OrderController {
         return ordersService.getOrderContentsByUserID(id);
     }
 
-    // TODO:
-    // Lisää päivämäärä hakutuloksiin.
-//    @GetMapping("/history")
-//    @ResponseBody
-//    public List<IOrderHistory> getOrderHistory(HttpServletRequest req){
-//        String jwt = req.getHeader("Authorization").substring(7);
-//        String username = jwtUtil.extractUsername(jwt);
-//        return ordersService.getHistory(username);
-//    }
 
     /**
      * Retrieves the order history for a user.

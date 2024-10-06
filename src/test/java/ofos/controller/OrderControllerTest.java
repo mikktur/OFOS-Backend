@@ -119,7 +119,8 @@ class OrderControllerTest {
                 BigDecimal.valueOf(5),
                 5,
                 "Burgeri",
-                new Date(143242421)
+                new Date(143242421),
+                "Ravintola Nimi"
         );
         orderHistoryList.add(orderHistoryDTO);
         hashMap.put(1, orderHistoryList);
