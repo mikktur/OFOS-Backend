@@ -90,7 +90,13 @@ public class RestaurantService {
         restaurant.setRestaurantPhone(updateRestaurantDTO.getRestaurantPhone());
         restaurant.setPicture(updateRestaurantDTO.getPicture());
         restaurant.setBusinessHours(updateRestaurantDTO.getBusinessHours());
-        restaurant.setAddress(updateRestaurantDTO.getRestaurantAddress());
+        restaurant.setAddress(updateRestaurantDTO.getAddress());
+        System.out.println(restaurant.getRestaurantID());
+        System.out.println(restaurant.getRestaurantPhone());
+        System.out.println(restaurant.getRestaurantName());
+        System.out.println(restaurant.getAddress());
+        System.out.println(restaurant.getPicture());
+        System.out.println(restaurant.getBusinessHours());
         // Save the updated restaurant entity
         RestaurantEntity updatedRestaurant = restaurantRepository.save(restaurant);
 
