@@ -15,7 +15,7 @@ public class UpdateRestaurantDTO {
 
     private String businessHours;
 
-    private String restaurantAddress;
+    private String address;
 
 
 }

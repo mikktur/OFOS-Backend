@@ -16,7 +16,6 @@ public class RestaurantDTO {
         this.restaurantName = restaurantName;
         this.restaurantPhone = restaurantPhone;
         this.picture = picture;
-        this.ownerUsername = ownerUsername;
         this.address = address;
         this.businessHours = businessHours;
     }

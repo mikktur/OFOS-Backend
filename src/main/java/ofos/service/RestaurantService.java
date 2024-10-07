@@ -85,6 +85,13 @@ public class RestaurantService {
                 .orElseThrow(() -> new UserNotFoundException("Restaurant not found"));
 
 
+        // Update fields
+        restaurant.setRestaurantName(updateRestaurantDTO.getRestaurantName());
+        restaurant.setRestaurantPhone(updateRestaurantDTO.getRestaurantPhone());
+        restaurant.setPicture(updateRestaurantDTO.getPicture());
+        restaurant.setBusinessHours(updateRestaurantDTO.getBusinessHours());
+        restaurant.setAddress(updateRestaurantDTO.getAddress());
+
         // Update fields                 it just works \_(?)_/¯
         if (updateRestaurantDTO.getRestaurantName() != null) {
             restaurant.setRestaurantName(updateRestaurantDTO.getRestaurantName());
@@ -102,9 +109,10 @@ public class RestaurantService {
             restaurant.setBusinessHours(updateRestaurantDTO.getBusinessHours());
         }
 
-        if (updateRestaurantDTO.getRestaurantAddress() != null) {
-            restaurant.setAddress(updateRestaurantDTO.getRestaurantAddress());
+        if (updateRestaurantDTO.getAddress() != null) {
+            restaurant.setAddress(updateRestaurantDTO.getAddress());
         }
+
         // Save the updated restaurant entity
         RestaurantEntity updatedRestaurant = restaurantRepository.save(restaurant);
 
