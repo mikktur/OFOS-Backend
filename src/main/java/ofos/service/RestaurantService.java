@@ -91,12 +91,28 @@ public class RestaurantService {
         restaurant.setPicture(updateRestaurantDTO.getPicture());
         restaurant.setBusinessHours(updateRestaurantDTO.getBusinessHours());
         restaurant.setAddress(updateRestaurantDTO.getAddress());
-        System.out.println(restaurant.getRestaurantID());
-        System.out.println(restaurant.getRestaurantPhone());
-        System.out.println(restaurant.getRestaurantName());
-        System.out.println(restaurant.getAddress());
-        System.out.println(restaurant.getPicture());
-        System.out.println(restaurant.getBusinessHours());
+
+        // Update fields                 it just works \_(?)_/¯
+        if (updateRestaurantDTO.getRestaurantName() != null) {
+            restaurant.setRestaurantName(updateRestaurantDTO.getRestaurantName());
+        }
+
+        if (updateRestaurantDTO.getRestaurantPhone() != null) {
+            restaurant.setRestaurantPhone(updateRestaurantDTO.getRestaurantPhone());
+        }
+
+        if (updateRestaurantDTO.getPicture() != null) {
+            restaurant.setPicture(updateRestaurantDTO.getPicture());
+        }
+
+        if (updateRestaurantDTO.getBusinessHours() != null) {
+            restaurant.setBusinessHours(updateRestaurantDTO.getBusinessHours());
+        }
+
+        if (updateRestaurantDTO.getAddress() != null) {
+            restaurant.setAddress(updateRestaurantDTO.getAddress());
+        }
+
         // Save the updated restaurant entity
         RestaurantEntity updatedRestaurant = restaurantRepository.save(restaurant);
 
