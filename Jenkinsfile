@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'
         DOCKERHUB_REPO = 'mikt90/ofos_backend'
+        CONTAINER_NAME = 'ofos_backend'
     }
 
     tools {
@@ -47,6 +48,19 @@ pipeline {
                 }
             }
         }
+        stage('Run Latest Docker Image') {
+            steps {
+                script {
+                    sh """
+                    if [ \$(docker ps -q -f name=${CONTAINER_NAME}) ]; then
+                        docker stop ${CONTAINER_NAME}
+                        docker rm ${CONTAINER_NAME}
+                    fi
+                    """
+                    sh "docker pull ${DOCKERHUB_REPO}:latest"
+                    sh "docker run -d -p 8000:8000 --name ${CONTAINER_NAME} ${DOCKERHUB_REPO}:latest"
+                }
+            }
 
         stage('Code Coverage') {
             steps {
