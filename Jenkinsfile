@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'
-        IMAGE_NAME = 'ofos_backend'
+        DOCKERHUB_REPO = 'mikt90/ofos_backend'
     }
 
     tools {
@@ -33,7 +33,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${IMAGE_NAME}")
+                    docker.build("${DOCKERHUB_REPO}")
                 }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', "${DOCKER_HUB_CREDENTIALS}") {
-                        docker.image("${IMAGE_NAME}").push()
+                        docker.image("${DOCKERHUB_REPO}").push()
                     }
                 }
             }
