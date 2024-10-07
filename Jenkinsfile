@@ -48,6 +48,7 @@ pipeline {
                 }
             }
         }
+
         stage('Run Latest Docker Image') {
             steps {
                 script {
@@ -61,6 +62,7 @@ pipeline {
                     sh "docker run -d -p 8000:8000 --name ${CONTAINER_NAME} ${DOCKERHUB_REPO}:latest"
                 }
             }
+        }
 
         stage('Code Coverage') {
             steps {
@@ -74,7 +76,6 @@ pipeline {
                 junit '**/target/surefire-reports/*.xml'
             }
         }
-
     }
 
     post {
