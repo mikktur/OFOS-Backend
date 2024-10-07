@@ -13,6 +13,7 @@ COPY pom.xml /app/
 # Copy the entire project to the container
 COPY . /app/
 
+EXPOSE 8000
 # Package your application
 RUN mvn package
 
