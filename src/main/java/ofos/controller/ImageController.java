@@ -31,7 +31,7 @@ public class ImageController extends HttpServlet{
     @GetMapping("/{filename:.+}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
-            Path file = Paths.get("uploads/restaurants/products/" + filename);
+            Path file = Paths.get("app/uploads/restaurants/products/" + filename);
             return createResponse(file);
         } catch (MalformedURLException e) {
             return ResponseEntity.badRequest().build();
@@ -46,7 +46,7 @@ public class ImageController extends HttpServlet{
     @GetMapping("/restaurant/{filename:.+}")
     public ResponseEntity<Resource> getRestaurantLogo(@PathVariable String filename) {
         try {
-            Path file = Paths.get("uploads/restaurants/logos/" + filename);
+            Path file = Paths.get("app/uploads/restaurants/logos/" + filename);
             return createResponse(file);
         } catch (MalformedURLException e) {
             return ResponseEntity.badRequest().build();
