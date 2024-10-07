@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'
-        IMAGE_NAME = 'ofos backend'
+        IMAGE_NAME = 'ofos_backend'
     }
 
     tools {
