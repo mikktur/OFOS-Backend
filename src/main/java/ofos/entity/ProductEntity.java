@@ -1,5 +1,6 @@
 package ofos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +43,7 @@ public class ProductEntity {
             joinColumns = @JoinColumn(name = "ProductID"),
             inverseJoinColumns = @JoinColumn(name = "RestaurantID")
     )
+    @JsonIgnore // TODO: Voi olla että tämä hajottaa jotain.
     private List<RestaurantEntity> restaurants;
     public ProductEntity() {
     }

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import ofos.dto.ProductDTO;
 import ofos.entity.ProductEntity;
+import ofos.entity.TranslationEntity;
 import ofos.security.JwtUtil;
 import ofos.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +31,19 @@ public class ProductController {
     @Autowired
     private JwtUtil jwtUtil;
 
+
     /**
      * Retrieves a product by its id.
      * @param id The id of the product.
      * @return A {@link ProductEntity} object containing the product.
      */
-    @GetMapping("/{id}")
+    @GetMapping("/{language}/{id}")
     @ResponseBody
-    public ProductEntity getDishById(@PathVariable int id) {
-        return productService.getDishById(id);
+    public ProductEntity getDishById(@PathVariable int id, @PathVariable String language) {
+        return productService.getDishById(id, language);
     }
+
+
 
     /**
      * Deletes a product by its id.

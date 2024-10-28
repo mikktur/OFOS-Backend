@@ -46,7 +46,7 @@ class ProductServiceTest {
         ProductEntity productEntity = new ProductEntity();
         when(productRepository.findByProductId(anyInt())).thenReturn(productEntity);
 
-        ProductEntity result = productService.getDishById(1);
+        ProductEntity result = productService.getDishById(1, "en");
 
         assertEquals(productEntity, result);
         verify(productRepository).findByProductId(anyInt());

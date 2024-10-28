@@ -4,9 +4,11 @@ import ofos.dto.ProductDTO;
 import ofos.entity.ProductEntity;
 import ofos.entity.ProvidesEntity;
 import ofos.entity.RestaurantEntity;
+import ofos.entity.TranslationEntity;
 import ofos.repository.ProductRepository;
 import ofos.repository.ProvidesRepository;
 import ofos.repository.RestaurantRepository;
+import ofos.repository.TranslationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +33,28 @@ public class ProductService {
     @Autowired
     RestaurantRepository restaurantRepository;
 
+    @Autowired
+    TranslationRepository translationRepository;
+
 
     /**
      * Retrieves products by their id from the database.
      * @param productId the id of the product.
      * @return A {@link ProductEntity} object representing the product with the ID.
      */
-    public ProductEntity getDishById(int productId) {
-        return productRepository.findByProductId(productId);
+
+    public ProductEntity getDishById(int productId, String language) {
+        ProductEntity product = productRepository.findByProductId(productId);
+        if (language.equals("fi")) {
+            return product;    // Oletus
+        }
+        TranslationEntity translated = translationRepository.findByProductIdAndLang(productId, language);
+        product.setProductDesc(translated.getDescription());
+        product.setProductName(translated.getName());
+        return product;
+
     }
+
 
     /**
      * Deletes a product from the database.
@@ -134,6 +149,13 @@ public class ProductService {
      */
     @Transactional(readOnly = true)
     public List<ProductDTO> getAllProductsByRestaurant(Integer id) {
+        // Translation entity
+        // Mätsää tuotteen ja käännetyt arvot -> setProductDesc(getTranslatedDesc)
+        // languageCode pathvariablella
+        // uus repository hakemaan translation taulukosta
+        String languageCode = "en";
+        if (!languageCode.equals("fi")){
+        }
         List<ProductEntity> products = productRepository.getProductsByRestaurant(id);
         return products.stream()
                 .map(product -> new ProductDTO(

@@ -64,7 +64,7 @@ public class ProductControllerTests {
         productEntity.setCategory("Hampurilainen");
         productEntity.setActive(true);
 
-        when(productService.getDishById(20)).thenReturn(productEntity);
+        when(productService.getDishById(20, "en")).thenReturn(productEntity);
 
         mvc.perform(get("/api/products/20"))
                 .andExpect(status().isOk())
