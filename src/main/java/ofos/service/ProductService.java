@@ -46,12 +46,11 @@ public class ProductService {
 
     public ProductEntity getDishById(int productId, String language) {
         ProductEntity product = productRepository.findByProductId(productId);
-        if (language.equals("fi")) {
-            return product;    // Oletus
+        if (!language.equals("fi")) {
+            TranslationEntity translated = translationRepository.findByProductIdAndLang(productId, language);
+            product.setProductDesc(translated.getDescription());
+            product.setProductName(translated.getName());
         }
-        TranslationEntity translated = translationRepository.findByProductIdAndLang(productId, language);
-        product.setProductDesc(translated.getDescription());
-        product.setProductName(translated.getName());
         return product;
 
     }
