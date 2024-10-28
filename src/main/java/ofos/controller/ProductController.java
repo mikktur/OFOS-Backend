@@ -104,10 +104,10 @@ public class ProductController {
      * @param restaurant The id of the restaurant.
      * @return A list of {@link ProductDTO} objects containing all products of the restaurant.
      */
-    @GetMapping("/restaurant/{restaurant}")
+    @GetMapping("/restaurant/{language}/{restaurant}")
     @ResponseBody
-    public List<ProductDTO> getProductsByRestaurant(@PathVariable Integer restaurant) {
-        List<ProductDTO> products = productService.getAllProductsByRestaurant(restaurant);
+    public List<ProductDTO> getProductsByRestaurant(@PathVariable Integer restaurant, @PathVariable String language) {
+        List<ProductDTO> products = productService.getAllProductsByRestaurant(restaurant, language);
         System.out.println("Ravintolan tuotteet: " + products);
         return products;
     }

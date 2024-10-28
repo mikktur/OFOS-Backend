@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -148,15 +149,22 @@ public class ProductService {
      * @return A list of {@link ProductDTO} objects representing all products in the database.
      */
     @Transactional(readOnly = true)
-    public List<ProductDTO> getAllProductsByRestaurant(Integer id) {
-        // Translation entity
-        // Mätsää tuotteen ja käännetyt arvot -> setProductDesc(getTranslatedDesc)
-        // languageCode pathvariablella
-        // uus repository hakemaan translation taulukosta
-        String languageCode = "en";
-        if (!languageCode.equals("fi")){
-        }
+    public List<ProductDTO> getAllProductsByRestaurant(Integer id, String lang) {
+
         List<ProductEntity> products = productRepository.getProductsByRestaurant(id);
+
+        int iterations = 0;
+        if (!lang.equals("fi")){
+            List<TranslationEntity> translations = translationRepository.findTranslationEntitiesByProductIdAndLang(id, lang);
+            for (ProductEntity p : products){
+                for (TranslationEntity t : translations){
+                    if (p.getProductId() == t.getProductId()){
+                        p.setProductName(t.getName());
+                        p.setProductDesc(t.getDescription());
+                    }
+                }
+            }
+        }
         return products.stream()
                 .map(product -> new ProductDTO(
                         product.getProductId(),

@@ -130,7 +130,7 @@ class ProductServiceTest {
 
         when(productRepository.getProductsByRestaurant(anyInt())).thenReturn(entities);
 
-        List<ProductDTO> res = productService.getAllProductsByRestaurant(1);
+        List<ProductDTO> res = productService.getAllProductsByRestaurant(1, "en");
 
 
         verify(productRepository).getProductsByRestaurant(anyInt());
