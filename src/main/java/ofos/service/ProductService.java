@@ -153,7 +153,6 @@ public class ProductService {
 
         List<ProductEntity> products = productRepository.getProductsByRestaurant(id);
 
-        int iterations = 0;
         if (!lang.equals("fi")){
             List<TranslationEntity> translations = translationRepository.findTranslationEntitiesByProductIdAndLang(id, lang);
             for (ProductEntity p : products){
