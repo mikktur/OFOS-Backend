@@ -7,6 +7,7 @@ import ofos.entity.RestaurantEntity;
 import ofos.repository.ProductRepository;
 import ofos.repository.ProvidesRepository;
 import ofos.repository.RestaurantRepository;
+import ofos.repository.TranslationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -29,6 +30,9 @@ class ProductServiceTest {
 
     @Mock
     ProductRepository productRepository;
+
+    @Mock
+    TranslationRepository translationRepository;
 
     @Mock
     ProvidesRepository providesRepository;

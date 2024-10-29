@@ -56,6 +56,7 @@ public class ProductControllerTests {
 
     @Test
     public void getProductByIdTest() throws Exception {
+        String language = "en";
         ProductEntity productEntity = new ProductEntity();
         productEntity.setProductId(20);
         productEntity.setProductName("Good brgr");
@@ -64,9 +65,9 @@ public class ProductControllerTests {
         productEntity.setCategory("Hampurilainen");
         productEntity.setActive(true);
 
-        when(productService.getDishById(20, "en")).thenReturn(productEntity);
+        when(productService.getDishById(20, language)).thenReturn(productEntity);
 
-        mvc.perform(get("/api/products/20"))
+        mvc.perform(get("/api/products/" + language + "/20"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.productName").value(productEntity.getProductName()))
                 .andExpect(jsonPath("$.productId").value(productEntity.getProductId()))
