@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,6 +31,8 @@ public class ProductEntity {
     @Basic
     @Column(name = "Picture")
     private String picture;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ProductTranslation> translations = new ArrayList<>();
     @Basic
     @Column(name = "Category")
     private String category;

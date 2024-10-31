@@ -57,15 +57,13 @@ public class RestaurantServiceTests {
 
         RestaurantEntity restaurant1 = createRestaurant(1, "McDonalds", "123456789", "mcdonalds.jpg", owner1);
         RestaurantEntity restaurant2 = createRestaurant(2, "Burger King", "987654321", "burgerking.jpg", owner2);
-
         List<RestaurantEntity> restaurants = List.of(restaurant1, restaurant2);
-
+        System.out.println("Restaurants: " + restaurants.get(0).getOwner().getUsername());
         // Mock repository response
         Mockito.when(restaurantRepository.findAll()).thenReturn(restaurants);
 
         // Act
         List<RestaurantDTO> returnedRestaurants = restaurantService.getAllRestaurants();
-
         // Assert
         Assertions.assertEquals(2, returnedRestaurants.size());
         Assertions.assertEquals("McDonalds", returnedRestaurants.get(0).getRestaurantName());

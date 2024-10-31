@@ -30,7 +30,16 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
      * @param restaurantID The ID of the restaurant.
      * @return A list of {@link ProductEntity} objects containing all products related to the restaurant.
      */
-    @Query("SELECT p FROM ProductEntity p JOIN p.restaurants r WHERE r.restaurantID = :restaurantID")
+    //TODO change database schema to support this query. not in use curently
+    @Query("SELECT p FROM ProductEntity p " +
+            "JOIN p.restaurants r " +
+            "JOIN p.translations t " +
+            "WHERE r.restaurantID = :restaurantID " +
+            "AND t.lang = :locale")
+    List<ProductEntity> getLocalizedProductsByRestaurant(
+            @Param("restaurantID") Integer restaurantID,
+            @Param("locale") String locale);
+
     List<ProductEntity> getProductsByRestaurant(@Param("restaurantID") Integer restaurantID);
 
     /**
