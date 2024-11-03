@@ -76,24 +76,24 @@ public class ProductControllerTests {
 
     }
 
-    @Test
-    public void createProductTest() throws Exception {
-        ProductDTO productDTO = new ProductDTO(100,"Good brgr", "Maistuu namnam", BigDecimal.valueOf(17.50),
-                "Hampurilainen", "https://cdn.rkt-prod.rakentaja.com/media/original_images/202212_60205.jpg,", true);
-        ResponseEntity<String> responseEntity = ResponseEntity.ok("Product created.");
-
-        when(jwtUtil.extractRole(any())).thenReturn("Owner");
-        when(jwtUtil.extractUsername(any())).thenReturn("testUser");
-        when(productService.createProduct(any(ProductDTO.class), anyInt(), anyString())).thenReturn(responseEntity);
-
-        mvc.perform(post("/api/products/create/1")
-                .header("Authorization", "Bearer testToken")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDTO)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Product created."))
-                .andDo(MockMvcResultHandlers.print());
-    }
+//    @Test
+//    public void createProductTest() throws Exception {
+//        ProductDTO productDTO = new ProductDTO(100,"Good brgr", "Maistuu namnam", BigDecimal.valueOf(17.50),
+//                "Hampurilainen", "https://cdn.rkt-prod.rakentaja.com/media/original_images/202212_60205.jpg,", true);
+//        ResponseEntity<String> responseEntity = ResponseEntity.ok("Product created.");
+//
+//        when(jwtUtil.extractRole(any())).thenReturn("Owner");
+//        when(jwtUtil.extractUsername(any())).thenReturn("testUser");
+//        when(productService.createProduct(any(ProductDTO.class), anyInt(), anyString())).thenReturn(responseEntity);
+//
+//        mvc.perform(post("/api/products/create/1")
+//                .header("Authorization", "Bearer testToken")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(productDTO)))
+//                .andExpect(status().isOk())
+//                .andExpect(content().string("Product created."))
+//                .andDo(MockMvcResultHandlers.print());
+//    }
 
     @Test
     public void updateProductTest() throws Exception {

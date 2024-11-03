@@ -71,17 +71,17 @@ public class ProductController {
 
     /**
      * Creates a new product for a certain restaurant.
-     * @param productDTO The product to be created.
+     * @param productDTOs The product to be created.
      * @param restaurantId The id of the restaurant.
      * @param request The HTTP request object.
      * @return A {@link ResponseEntity} object containing the status code.
      */
     @PostMapping("/create/{restaurantId}")
-    public ResponseEntity<String> createProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable int restaurantId,
+    public ResponseEntity<String> createProduct(@Valid @RequestBody List<ProductDTO> productDTOs, @PathVariable int restaurantId,
                                                 HttpServletRequest request) {
         String jwt = request.getHeader("Authorization").substring(7);
         String username = jwtUtil.extractUsername(jwt);
-        return productService.createProduct(productDTO, restaurantId, username);
+        return productService.createProduct(productDTOs, restaurantId, username);
     }
 
     /**

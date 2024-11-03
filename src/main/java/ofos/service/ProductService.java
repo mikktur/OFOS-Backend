@@ -116,16 +116,56 @@ public class ProductService {
      * @param owner the owner of the restaurant.
      * @return {@link ResponseEntity} object with a message.
      */
-    public ResponseEntity<String> createProduct(ProductDTO productDTO, int restaurantID, String owner) {
+//    public ResponseEntity<String> createProduct(ProductDTO productDTO, int restaurantID, String owner) {
+//        List<RestaurantEntity> ownedRestaurants = restaurantRepository.findRestaurantByOwnerName(owner);
+//        if (!ownedRestaurants.isEmpty()) {
+//            for (RestaurantEntity re : ownedRestaurants) {
+//                if (re.getRestaurantID() == restaurantID) {
+//                    ProductEntity productEntity = new ProductEntity();
+//                    productRepository.save(setValues(productDTO, productEntity));
+//
+//                    // productId autoincrement nii pitää tehä näin (?)
+//                    int productID = productRepository.findIdByName(productEntity.getProductName());
+//                    // Heittää Provides taulukkoon datat.
+//                    productRepository.addProductToRestaurant(restaurantID, productID);
+//                    return new ResponseEntity<>(
+//                            "Product created.",
+//                            HttpStatus.OK
+//                    );
+//                }
+//            }
+//        }
+//        return new ResponseEntity<>(
+//                "Wrong owner or restaurant.",
+//                HttpStatus.UNAUTHORIZED
+//        );
+//
+//    }
+
+    public ResponseEntity<String> createProduct(List<ProductDTO> productDTOs, int restaurantID, String owner) {
         List<RestaurantEntity> ownedRestaurants = restaurantRepository.findRestaurantByOwnerName(owner);
+        int productID = 0;
         if (!ownedRestaurants.isEmpty()) {
             for (RestaurantEntity re : ownedRestaurants) {
                 if (re.getRestaurantID() == restaurantID) {
-                    ProductEntity productEntity = new ProductEntity();
-                    productRepository.save(setValues(productDTO, productEntity));
+                        ProductEntity productEntity = new ProductEntity();
+                    for (ProductDTO p : productDTOs) {
+                        if (p.getLang().equals("fi")){
+                           productRepository.save(setValues(p, productEntity));
+                            // productId autoincrement nii pitää tehä näin (?)
+                            productID = productRepository.findIdByName(productEntity.getProductName());
+                        }
+                        else {
+                            TranslationEntity t = new TranslationEntity();
+                            t.setProductId(productID);
+                            t.setLang(p.getLang());
+                            t.setName(p.getProductName());
+                            t.setDescription(p.getProductDesc());
+                            translationRepository.save(t);
+                        }
+                    }
 
-                    // productId autoincrement nii pitää tehä näin (?)
-                    int productID = productRepository.findIdByName(productEntity.getProductName());
+
                     // Heittää Provides taulukkoon datat.
                     productRepository.addProductToRestaurant(restaurantID, productID);
                     return new ResponseEntity<>(

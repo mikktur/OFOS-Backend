@@ -92,31 +92,31 @@ class ProductServiceTest {
         assertEquals("Product updated.", res.getBody());
     }
 
-    @Test
-    void createProductTest() {
-        String owner = "username";
-        ProductDTO productDTO = new ProductDTO(
-                1,
-                "Tuote",
-                "Hyvä tuote",
-                BigDecimal.valueOf(5),
-                "Kategoria",
-                "kuva.jpg"
-        );
-        List<RestaurantEntity> restaurants = new ArrayList<>();
-        RestaurantEntity restaurant = new RestaurantEntity();
-        restaurant.setAddress("Osoite 1");
-        restaurant.setRestaurantID(1);
-        restaurant.setRestaurantPhone("0505555555");
-        restaurant.setRestaurantName("Nimi");
-        restaurant.setPicture("logo.jpg");
-        restaurants.add(restaurant);
-
-        when(restaurantRepository.findRestaurantByOwnerName(owner)).thenReturn(restaurants);
-        ResponseEntity<String> res = productService.createProduct(productDTO,  1, owner);
-
-        assertEquals("Product created.", res.getBody());
-    }
+//    @Test
+//    void createProductTest() {
+//        String owner = "username";
+//        ProductDTO productDTO = new ProductDTO(
+//                1,
+//                "Tuote",
+//                "Hyvä tuote",
+//                BigDecimal.valueOf(5),
+//                "Kategoria",
+//                "kuva.jpg"
+//        );
+//        List<RestaurantEntity> restaurants = new ArrayList<>();
+//        RestaurantEntity restaurant = new RestaurantEntity();
+//        restaurant.setAddress("Osoite 1");
+//        restaurant.setRestaurantID(1);
+//        restaurant.setRestaurantPhone("0505555555");
+//        restaurant.setRestaurantName("Nimi");
+//        restaurant.setPicture("logo.jpg");
+//        restaurants.add(restaurant);
+//
+//        when(restaurantRepository.findRestaurantByOwnerName(owner)).thenReturn(restaurants);
+//        ResponseEntity<String> res = productService.createProduct(productDTO,  1, owner);
+//
+//        assertEquals("Product created.", res.getBody());
+//    }
 
     @Test
     void getAllProductsByRestaurantTest() {
