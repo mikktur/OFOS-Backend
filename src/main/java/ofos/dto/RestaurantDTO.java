@@ -17,6 +17,7 @@ public class RestaurantDTO {
         this.restaurantPhone = restaurantPhone;
         this.picture = picture;
         this.address = address;
+        this.ownerUsername = ownerUsername;
         this.businessHours = businessHours;
     }
 
@@ -57,6 +58,7 @@ public class RestaurantDTO {
     }
 
     public String getOwnerUsername() {
+
         return ownerUsername;
     }
 

@@ -85,12 +85,6 @@ public class RestaurantService {
                 .orElseThrow(() -> new UserNotFoundException("Restaurant not found"));
 
 
-        // Update fields
-        restaurant.setRestaurantName(updateRestaurantDTO.getRestaurantName());
-        restaurant.setRestaurantPhone(updateRestaurantDTO.getRestaurantPhone());
-        restaurant.setPicture(updateRestaurantDTO.getPicture());
-        restaurant.setBusinessHours(updateRestaurantDTO.getBusinessHours());
-        restaurant.setAddress(updateRestaurantDTO.getAddress());
 
         // Update fields                 it just works \_(?)_/¯
         if (updateRestaurantDTO.getRestaurantName() != null) {
