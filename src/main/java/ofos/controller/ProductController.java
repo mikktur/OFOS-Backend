@@ -68,6 +68,26 @@ public class ProductController {
         );
     }
 
+    @DeleteMapping("/delete/{productId}/restaurant/{restaurantId}")
+    @Transactional
+    public ResponseEntity<String> deleteDishFromRestaurant(
+            @PathVariable int productId,
+            @PathVariable int restaurantId,
+            HttpServletRequest request) {
+
+        String authHead = request.getHeader("Authorization");
+        String jwt = authHead.substring(7);
+
+        if (jwtUtil.extractRole(jwt).equals("OWNER")) {
+            String username = jwtUtil.extractUsername(jwt);
+
+            return productService.deleteProductFromRestaurant(productId, restaurantId, username);
+        }
+
+        return new ResponseEntity<>("Not an owner.", HttpStatus.UNAUTHORIZED);
+    }
+
+
 
     /**
      * Creates a new product for a certain restaurant.

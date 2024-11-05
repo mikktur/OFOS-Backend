@@ -40,6 +40,7 @@ public class ProductService {
 
     /**
      * Retrieves products by their id from the database.
+     *
      * @param productId the id of the product.
      * @return A {@link ProductEntity} object representing the product with the ID.
      */
@@ -58,8 +59,9 @@ public class ProductService {
 
     /**
      * Deletes a product from the database.
+     *
      * @param productId the id of the product to be deleted.
-     * @param owner the owner of the product.
+     * @param owner     the owner of the product.
      * @return {@link ResponseEntity} object with a message.
      */
     @Transactional
@@ -84,8 +86,9 @@ public class ProductService {
 
     /**
      * Updates a product in the database.
+     *
      * @param productDTO the product to be updated.
-     * @param owner the owner of the product.
+     * @param owner      the owner of the product.
      * @return {@link ResponseEntity} object with a message.
      */
     public ResponseEntity<String> updateProduct(ProductDTO productDTO, String owner) {
@@ -111,9 +114,10 @@ public class ProductService {
 
     /**
      * Creates a product in the database.
-     * @param productDTO the product to be created.
+     *
+     * @param productDTOs  the product to be created.
      * @param restaurantID the id of the restaurant.
-     * @param owner the owner of the restaurant.
+     * @param owner        the owner of the restaurant.
      * @return {@link ResponseEntity} object with a message.
      */
 //    public ResponseEntity<String> createProduct(ProductDTO productDTO, int restaurantID, String owner) {
@@ -141,21 +145,19 @@ public class ProductService {
 //        );
 //
 //    }
-
     public ResponseEntity<String> createProduct(List<ProductDTO> productDTOs, int restaurantID, String owner) {
         List<RestaurantEntity> ownedRestaurants = restaurantRepository.findRestaurantByOwnerName(owner);
         int productID = 0;
         if (!ownedRestaurants.isEmpty()) {
             for (RestaurantEntity re : ownedRestaurants) {
                 if (re.getRestaurantID() == restaurantID) {
-                        ProductEntity productEntity = new ProductEntity();
+                    ProductEntity productEntity = new ProductEntity();
                     for (ProductDTO p : productDTOs) {
-                        if (p.getLang().equals("fi")){
-                           productRepository.save(setValues(p, productEntity));
+                        if (p.getLang().equals("fi")) {
+                            productRepository.save(setValues(p, productEntity));
                             // productId autoincrement nii pitää tehä näin (?)
                             productID = productRepository.findIdByName(productEntity.getProductName());
-                        }
-                        else {
+                        } else {
                             TranslationEntity t = new TranslationEntity();
                             t.setProductId(productID);
                             t.setLang(p.getLang());
@@ -184,6 +186,7 @@ public class ProductService {
 
     /**
      * Retrieves all products related to certain restaurant from the database.
+     *
      * @param id the id of the restaurant.
      * @return A list of {@link ProductDTO} objects representing all products in the database.
      */
@@ -192,11 +195,11 @@ public class ProductService {
 
         List<ProductEntity> products = productRepository.getProductsByRestaurant(id);
 
-        if (!lang.equals("fi")){
+        if (!lang.equals("fi")) {
             List<TranslationEntity> translations = translationRepository.findTranslationEntitiesByProductIdAndLang(id, lang);
-            for (ProductEntity p : products){
-                for (TranslationEntity t : translations){
-                    if (p.getProductId() == t.getProductId()){
+            for (ProductEntity p : products) {
+                for (TranslationEntity t : translations) {
+                    if (p.getProductId() == t.getProductId()) {
                         p.setProductName(t.getName());
                         p.setProductDesc(t.getDescription());
                     }
@@ -217,7 +220,8 @@ public class ProductService {
 
     /**
      * Sets the values of the product.
-     * @param productDTO provides the values.
+     *
+     * @param productDTO    provides the values.
      * @param productEntity the object to be updated.
      * @return {@link ProductEntity} object with updated values.
      */
@@ -230,5 +234,34 @@ public class ProductService {
         productEntity.setActive(true);
         return productEntity;
     }
+
+    /**
+     * Deletes a product from a specific restaurant.
+     *
+     * @param productId    the ID of the product to be deleted.
+     * @param restaurantId the ID of the restaurant from which the product will be removed.
+     * @param owner        the username of the owner to verify authorization.
+     * @return {@link ResponseEntity} object with a message indicating the result of the deletion.
+     */
+    @Transactional
+    public ResponseEntity<String> deleteProductFromRestaurant(int productId, int restaurantId, String owner) {
+        RestaurantEntity restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+
+        if (!restaurant.getOwner().getUsername().equals(owner)) {
+            return new ResponseEntity<>("You are not authorized to delete products from this restaurant.", HttpStatus.UNAUTHORIZED);
+        }
+
+        ProvidesEntity providesEntity = providesRepository.findByProductIdAndRestaurantId(productId, restaurantId);
+
+        if (providesEntity == null) {
+            return new ResponseEntity<>("Product not found in this restaurant.", HttpStatus.NOT_FOUND);
+        }
+
+        providesRepository.delete(providesEntity);
+
+        return new ResponseEntity<>("Product successfully deleted from the restaurant.", HttpStatus.OK);
+    }
+
 
 }
