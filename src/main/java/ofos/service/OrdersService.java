@@ -2,10 +2,7 @@ package ofos.service;
 
 import ofos.dto.OrderDTO;
 import ofos.dto.OrderHistoryDTO;
-import ofos.entity.OrderProductsEntity;
-import ofos.entity.OrdersEntity;
-import ofos.entity.RestaurantEntity;
-import ofos.entity.UserEntity;
+import ofos.entity.*;
 import ofos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +31,9 @@ public class OrdersService {
 
     @Autowired
     RestaurantRepository restaurantRepository;
+
+    @Autowired
+    TranslationRepository translationRepository;
 
 
 
@@ -102,31 +102,47 @@ public class OrdersService {
      * @param username The username of the user.
      * @return A HashMap with the order ID as the key and a list of {@link OrderHistoryDTO} objects as the value.
      */
-    public HashMap<Integer, List<OrderHistoryDTO>> getHistory(String username){
+    // TODO: Refaktoroi paska koodi pienempiin osiin
+    // TODO: Loopissa ei varmaan kannata tehdä useaa tietokantakyselyä
+    public HashMap<Integer, List<OrderHistoryDTO>> getHistory(String username, String language){
         HashMap<Integer, List<OrderHistoryDTO>> orders = new HashMap<>();
         int userID = userRepository.findByUsername(username).getUserId();
         List <IOrderHistory> orderHistory =ordersRepository.getOrderHistory(userID);
 
         for (int i = 0; i < orderHistory.size(); i++) {
             List<OrderHistoryDTO> orderProducts = new ArrayList<>();
+            TranslationEntity translationEntity;
             int orderID = orderHistory.get(i).getOrderID();
             String restaurantName = "";
             int nextOrderID;
             Optional<RestaurantEntity> restaurant = restaurantRepository.findById(orderHistory.get(i).getRestaurantID());
+
+
             
             if (restaurant.isPresent()) {
                 restaurantName = restaurant.get().getRestaurantName();
             }
 
 
-
             do {
+                if (language.equals("fi")){
+                    translationEntity = new TranslationEntity(orderHistory.get(i).getProductDesc(), orderHistory.get(i).getProductName());
+                }
+                else {
+                    translationEntity = translationRepository.findByProductIdAndLang(
+                            orderHistory.get(i).getProductID(), language);
+                }
+                if (translationEntity == null){
+                    throw new RuntimeException("Product has no translations.");
+                }
                 OrderHistoryDTO orderHistoryDTO = new OrderHistoryDTO(
                         orderHistory.get(i).getProductPrice(),
                         orderHistory.get(i).getQuantity(),
                         orderHistory.get(i).getProductName(),
                         orderHistory.get(i).getOrderDate(),
-                        restaurantName
+                        restaurantName,
+                        translationEntity.getDescription(),
+                        translationEntity.getProductId()
                 );
 
                 orderProducts.add(orderHistoryDTO);

@@ -20,12 +20,18 @@ public class OrderHistoryDTO {
 
     private String restaurantName;
 
-    public OrderHistoryDTO(BigDecimal orderPrice, int quantity, String productName, Date orderDate, String restaurantName) {
+    private String description;
+
+    private int productId;
+
+    public OrderHistoryDTO(BigDecimal orderPrice, int quantity, String productName, Date orderDate, String restaurantName, String description, int productId) {
         this.orderPrice = orderPrice;
         this.quantity = quantity;
         this.productName = productName;
         this.orderDate = orderDate;
         this.restaurantName = restaurantName;
+        this.description = description;
+        this.productId = productId;
     }
 
 

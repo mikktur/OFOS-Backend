@@ -16,12 +16,14 @@ public class OrderHistoryImpl implements IOrderHistory {
     private String productName;
     private Date orderDate;
     private int restaurantID;
+    private String productDesc;
 
-    public OrderHistoryImpl(int orderID, BigDecimal productPrice, int quantity, String productName, Date orderDate) {
+    public OrderHistoryImpl(int orderID, BigDecimal productPrice, int quantity, String productName, Date orderDate, String productDesc) {
         this.orderID = orderID;
         this.productPrice = productPrice;
         this.quantity = quantity;
         this.productName = productName;
         this.orderDate = orderDate;
+        this.productDesc = productDesc;
     }
 }
