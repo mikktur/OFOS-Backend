@@ -75,12 +75,12 @@ public class OrderController {
      * @param req The HTTP request object.
      * @return A {@link HashMap} object containing the order history.
      */
-    @GetMapping("/history")
+    @GetMapping("/{language}/history")
     @ResponseBody
-    public HashMap<Integer, List<OrderHistoryDTO>> getOrderHistory(HttpServletRequest req){
+    public HashMap<Integer, List<OrderHistoryDTO>> getOrderHistory(@PathVariable String language, HttpServletRequest req){
         String jwt = req.getHeader("Authorization").substring(7);
         String username = jwtUtil.extractUsername(jwt);
-        return ordersService.getHistory(username);
+        return ordersService.getHistory(username, language);
     }
 
     /**

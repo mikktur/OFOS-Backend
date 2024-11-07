@@ -120,13 +120,15 @@ class OrderControllerTest {
                 5,
                 "Burgeri",
                 new Date(143242421),
-                "Ravintola Nimi"
+                "Ravintola Nimi",
+                "Namnam",
+                1
         );
         orderHistoryList.add(orderHistoryDTO);
         hashMap.put(1, orderHistoryList);
 
         when(jwtUtil.extractUsername(any())).thenReturn("testUser");
-        when(ordersService.getHistory(anyString())).thenReturn(hashMap);
+        when(ordersService.getHistory(anyString(), anyString())).thenReturn(hashMap);
 
         MvcResult mvcResult = mvc.perform(get("/api/order/history")
                         .header("Authorization", "Bearer testToken")

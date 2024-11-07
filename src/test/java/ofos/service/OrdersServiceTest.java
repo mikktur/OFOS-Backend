@@ -111,7 +111,7 @@ class OrdersServiceTest {
         userEntity.setUserId(1);
         when(userRepository.findByUsername(username)).thenReturn(userEntity);
 
-        ordersService.getHistory(username);
+        ordersService.getHistory(username, "fi");
 
         verify(userRepository).findByUsername(username);
         verify(ordersRepository).getOrderHistory(userEntity.getUserId());
