@@ -103,7 +103,7 @@ public class UserController {
     }
 
     @PutMapping("/updatePassword")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO, HttpServletRequest req){
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO, HttpServletRequest req){
         String jwt = req.getHeader("Authorization").substring(7);
         String username = jwtUtil.extractUsername(jwt);
         return userService.updatePassword(changePasswordDTO, username);

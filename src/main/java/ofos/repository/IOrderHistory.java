@@ -19,4 +19,8 @@ public interface IOrderHistory {
 
     int getRestaurantID();
 
+    String getProductDesc();
+
+    int getProductID();
+
 }

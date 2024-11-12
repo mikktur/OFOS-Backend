@@ -25,4 +25,11 @@ public class TranslationEntity {
     @Column(name = "Name")
     private String name;
 
+    public TranslationEntity(){}
+
+    public TranslationEntity(String description, String name){
+        this.description = description;
+        this.name = name;
+    }
+
 }
