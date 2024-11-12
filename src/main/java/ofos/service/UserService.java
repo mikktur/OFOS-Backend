@@ -2,15 +2,21 @@ package ofos.service;
 
 import ofos.dto.ChangePasswordDTO;
 import ofos.dto.CreateUserRequestDTO;
+import ofos.entity.DeliveryAddressEntity;
 import ofos.entity.UserEntity;
+import ofos.entity.UsersAddressEntity;
+import ofos.repository.DeliveryAddressRepository;
 import ofos.repository.UserRepository;
+import ofos.repository.UsersAddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -24,6 +30,13 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private DeliveryAddressRepository deliveryAddressRepository;
+
+    @Autowired
+    private UsersAddressRepository usersAddressRepository;
+
     /**
      * Creates a new user and saves it to the database.
      * @param user contains username,password.
@@ -90,6 +103,30 @@ public class UserService {
                 "User not found.",
                 HttpStatus.NOT_FOUND
         );
+    }
+
+    @Transactional
+    public ResponseEntity<String> deleteUser(String username){
+        UserEntity user = userRepository.findByUsername(username);
+
+        // DeliveryAddresses-taulukkoon ei p‰‰se CASCADE:lla, joten pit‰‰ tehd‰ sielt‰ poistot loopissa.
+
+        List<UsersAddressEntity> usersAddressEntity = usersAddressRepository.findByUserId(user.getUserId());
+        for (UsersAddressEntity uae : usersAddressEntity){
+            deliveryAddressRepository.deleteById(uae.getDeliveryAddressId());
+        }
+        try {
+            userRepository.deleteById((long) user.getUserId());
+            return new ResponseEntity<>(
+                    "User deleted.",
+                    HttpStatus.OK
+            );
+        } catch (Exception e){
+            return new ResponseEntity<>(
+                    "Something went wrong",
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
     }
 
 }

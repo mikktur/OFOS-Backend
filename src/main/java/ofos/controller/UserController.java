@@ -109,4 +109,17 @@ public class UserController {
         return userService.updatePassword(changePasswordDTO, username);
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteUser(HttpServletRequest req){
+        String jwt = req.getHeader("Authorization").substring(7);
+        String username = jwtUtil.extractUsername(jwt);
+        if (jwtUtil.extractRole(jwt).equals("OWNER")) {
+            return new ResponseEntity<>(
+                    "Owner accounts cannot be deleted.",
+                    HttpStatus.I_AM_A_TEAPOT
+            );
+        }
+        return userService.deleteUser(username);
+    }
+
 }
