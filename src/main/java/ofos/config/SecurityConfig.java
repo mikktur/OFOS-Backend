@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/products/restaurant/**").permitAll()
                         .requestMatchers("/api/products/category/**").permitAll()
                         .requestMatchers("/api/products/create").permitAll()
+                        .requestMatchers("/api/products/delete/{productId}/restaurant/{restaurantId}").hasRole("OWNER")
                         .requestMatchers("/api/order/status/**").hasRole("OWNER")
                         .anyRequest().permitAll()
                 )
