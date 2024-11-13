@@ -26,4 +26,10 @@ public class OrderHistoryImpl implements IOrderHistory {
         this.orderDate = orderDate;
         this.productDesc = productDesc;
     }
+
+
+    @Override
+    public int getProductID() {
+        return 0;
+    }
 }
