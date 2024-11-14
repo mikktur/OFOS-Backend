@@ -138,7 +138,7 @@ public class OrdersService {
                 OrderHistoryDTO orderHistoryDTO = new OrderHistoryDTO(
                         orderHistory.get(i).getProductPrice(),
                         orderHistory.get(i).getQuantity(),
-                        orderHistory.get(i).getProductName(),
+                        translationEntity.getName(),
                         orderHistory.get(i).getOrderDate(),
                         restaurantName,
                         translationEntity.getDescription(),

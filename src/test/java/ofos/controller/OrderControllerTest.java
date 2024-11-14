@@ -130,7 +130,7 @@ class OrderControllerTest {
         when(jwtUtil.extractUsername(any())).thenReturn("testUser");
         when(ordersService.getHistory(anyString(), anyString())).thenReturn(hashMap);
 
-        MvcResult mvcResult = mvc.perform(get("/api/order/history")
+        MvcResult mvcResult = mvc.perform(get("/api/order/fi/history")
                         .header("Authorization", "Bearer testToken")
                         .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
