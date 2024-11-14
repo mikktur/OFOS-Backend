@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -133,15 +134,21 @@ public class OrdersService {
                             orderHistory.get(i).getProductID(), language);
                 }
                 if (translationEntity == null){
+                    System.out.println("name: " + orderHistory.get(i).getProductName());
                     throw new RuntimeException("Product has no translations.");
                 }
+                BigDecimal price;
+                if (language.equals("fi")) {
+                    price = orderHistory.get(i).getProductPrice();
+                } else {
+                    price = CurrencyConverter.convert("EUR", language, orderHistory.get(i).getProductPrice());
+                }
                 OrderHistoryDTO orderHistoryDTO = new OrderHistoryDTO(
-                        orderHistory.get(i).getProductPrice(),
+                        price,
                         orderHistory.get(i).getQuantity(),
                         translationEntity.getName(),
                         orderHistory.get(i).getOrderDate(),
                         restaurantName,
-                        translationEntity.getDescription(),
                         translationEntity.getProductId()
                 );
 

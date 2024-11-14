@@ -201,6 +201,7 @@ public class ProductService {
                     if (p.getProductId() == t.getProductId()) {
                         p.setProductName(t.getName());
                         p.setProductDesc(t.getDescription());
+                        p.setProductPrice(CurrencyConverter.convert("EUR",lang,p.getProductPrice()));
                     }
                 }
             }
