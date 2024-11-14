@@ -52,7 +52,6 @@ public class ProductController {
      * @return A {@link ResponseEntity} object containing the status code.
      */
     @DeleteMapping("/delete/{id}")
-    @Transactional
     public ResponseEntity<String> deleteDish(@PathVariable int id, HttpServletRequest request) {
         String authHead = request.getHeader("Authorization");
         String jwt = authHead.substring(7);
@@ -69,7 +68,6 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{productId}/restaurant/{restaurantId}")
-    @Transactional
     public ResponseEntity<String> deleteDishFromRestaurant(
             @PathVariable int productId,
             @PathVariable int restaurantId,
@@ -97,9 +95,13 @@ public class ProductController {
      * @return A {@link ResponseEntity} object containing the status code.
      */
     @PostMapping("/create/{restaurantId}")
-    public ResponseEntity<String> createProduct(@Valid @RequestBody List<ProductDTO> productDTOs, @PathVariable int restaurantId,
+    public ResponseEntity<String> createProduct(@Valid @RequestBody ProductDTO productDTOs, @PathVariable int restaurantId,
                                                 HttpServletRequest request) {
+        System.out.println("ProductDTOs: " + productDTOs.getProductName());
+        System.out.println("RestaurantId: " + restaurantId);
+        System.out.println("Request: " + request);
         String jwt = request.getHeader("Authorization").substring(7);
+
         String username = jwtUtil.extractUsername(jwt);
         return productService.createProduct(productDTOs, restaurantId, username);
     }

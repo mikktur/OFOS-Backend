@@ -145,27 +145,26 @@ public class ProductService {
 //        );
 //
 //    }
-    public ResponseEntity<String> createProduct(List<ProductDTO> productDTOs, int restaurantID, String owner) {
+    public ResponseEntity<String> createProduct(ProductDTO productDTOs, int restaurantID, String owner) {
         List<RestaurantEntity> ownedRestaurants = restaurantRepository.findRestaurantByOwnerName(owner);
         int productID = 0;
+
         if (!ownedRestaurants.isEmpty()) {
             for (RestaurantEntity re : ownedRestaurants) {
                 if (re.getRestaurantID() == restaurantID) {
                     ProductEntity productEntity = new ProductEntity();
-                    for (ProductDTO p : productDTOs) {
-                        if (p.getLang().equals("fi")) {
-                            productRepository.save(setValues(p, productEntity));
-                            // productId autoincrement nii pitää tehä näin (?)
-                            productID = productRepository.findIdByName(productEntity.getProductName());
-                        } else {
-                            TranslationEntity t = new TranslationEntity();
-                            t.setProductId(productID);
-                            t.setLang(p.getLang());
-                            t.setName(p.getProductName());
-                            t.setDescription(p.getProductDesc());
-                            translationRepository.save(t);
+                    productRepository.save(setValues(productDTOs, productEntity));
+                    // productId autoincrement nii pitää tehä näin (?)
+                    productID = productRepository.findIdByName(productEntity.getProductName());
+                } else {
+                    TranslationEntity t = new TranslationEntity();
+                    t.setProductId(productID);
+                    t.setLang(productDTOs.getLang());
+                    t.setName(productDTOs.getProductName());
+                    t.setDescription(productDTOs.getProductDesc());
+                    translationRepository.save(t);
                         }
-                    }
+
 
 
                     // Heittää Provides taulukkoon datat.
@@ -175,7 +174,7 @@ public class ProductService {
                             HttpStatus.OK
                     );
                 }
-            }
+
         }
         return new ResponseEntity<>(
                 "Wrong owner or restaurant.",
