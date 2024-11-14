@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -193,19 +194,26 @@ public class ProductService {
     public List<ProductDTO> getAllProductsByRestaurant(Integer id, String lang) {
 
         List<ProductEntity> products = productRepository.getProductsByRestaurant(id);
+        BigDecimal price;
 
-        if (!lang.equals("fi")) {
+
             List<TranslationEntity> translations = translationRepository.findTranslationEntitiesByProductIdAndLang(id, lang);
             for (ProductEntity p : products) {
                 for (TranslationEntity t : translations) {
                     if (p.getProductId() == t.getProductId()) {
                         p.setProductName(t.getName());
                         p.setProductDesc(t.getDescription());
-                        p.setProductPrice(CurrencyConverter.convert("EUR",lang,p.getProductPrice()));
+
+                        if (lang.equals("fi")) {
+                            price = p.getProductPrice();
+                        } else {
+                            price = CurrencyConverter.convert("EUR", lang, p.getProductPrice());
+                        }
+                        p.setProductPrice(price);
                     }
                 }
             }
-        }
+
         return products.stream()
                 .map(product -> new ProductDTO(
                         product.getProductId(),
