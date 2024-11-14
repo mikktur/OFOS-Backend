@@ -157,7 +157,8 @@ public class ProductService {
                     productRepository.save(setValues(productDTOs, productEntity));
                     // productId autoincrement nii pitää tehä näin (?)
                     productID = productRepository.findIdByName(productEntity.getProductName());
-                } else {
+                }
+                if (productID != 0) {
                     TranslationEntity t = new TranslationEntity();
                     t.setProductId(productID);
                     t.setLang(productDTOs.getLang());
