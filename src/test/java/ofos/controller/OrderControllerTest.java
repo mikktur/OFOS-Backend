@@ -121,7 +121,6 @@ class OrderControllerTest {
                 "Burgeri",
                 new Date(143242421),
                 "Ravintola Nimi",
-                "Namnam",
                 1
         );
         orderHistoryList.add(orderHistoryDTO);
