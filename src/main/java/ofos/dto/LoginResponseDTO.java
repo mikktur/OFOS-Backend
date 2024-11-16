@@ -15,7 +15,7 @@ public class LoginResponseDTO {
     public LoginResponseDTO() {
     }
 
-    public LoginResponseDTO(Integer userId,boolean success,String username, String message, String token, String role) {
+    public LoginResponseDTO(Integer userId, boolean success, String username, String message, String token, String role) {
         this.success = success;
         this.username = username;
         this.message = message;

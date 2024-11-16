@@ -64,7 +64,7 @@ public class UserControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.role").value(userEntity.getRole()))
                 .andExpect(jsonPath("$.username").value(userEntity.getUsername()))
-                .andExpect(jsonPath("$.id").value(userEntity.getUserId()))
+                .andExpect(jsonPath("$.userId").value(userEntity.getUserId()))
                 .andDo(MockMvcResultHandlers.print());
 
 
@@ -93,6 +93,7 @@ public class UserControllerTests {
 
     @Test
     public void getUserByUsernameTest() throws Exception {
+
         String username = "kissa1";
         UserEntity userEntity = new UserEntity();
         userEntity.setUserId(10);
@@ -105,7 +106,7 @@ public class UserControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.role").value(userEntity.getRole()))
                 .andExpect(jsonPath("$.username").value(userEntity.getUsername()))
-                .andExpect(jsonPath("$.id").value(userEntity.getUserId()))
+                .andExpect(jsonPath("$.userId").value(userEntity.getUserId()))
                 .andDo(MockMvcResultHandlers.print());
 
     }

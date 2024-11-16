@@ -13,7 +13,7 @@ import java.util.List;
  * Repository for the {@link ProductEntity} class.
  */
 
-public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
+public interface ProductRepository extends JpaRepository<ProductEntity, Integer> {
 
     ProductEntity findByProductId(int id);
 
@@ -31,7 +31,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
      * @return A list of {@link ProductEntity} objects containing all products related to the restaurant.
      */
     @Query("SELECT p FROM ProductEntity p JOIN p.restaurants r WHERE r.restaurantID = :restaurantID")
-    List<ProductEntity> getProductsByRestaurant(@Param("restaurantID") Integer restaurantID);
+    List<ProductEntity> getProductsByRestaurant(@Param("restaurantID") int restaurantID);
 
     /**
      * Adds a product to a restaurant.

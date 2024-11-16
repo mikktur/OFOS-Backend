@@ -21,9 +21,9 @@ public class OrderHistoryDTO {
     private String restaurantName;
 
 
-    private int productId;
+    private Integer productId;
 
-    public OrderHistoryDTO(BigDecimal orderPrice, int quantity, String productName, Date orderDate, String restaurantName, int productId) {
+    public OrderHistoryDTO(BigDecimal orderPrice, int quantity, String productName, Date orderDate, String restaurantName, Integer productId) {
         this.orderPrice = orderPrice;
         this.quantity = quantity;
         this.productName = productName;

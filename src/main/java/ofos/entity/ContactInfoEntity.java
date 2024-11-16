@@ -9,9 +9,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "ContactInfo", schema = "mikt")
 public class ContactInfoEntity {
+
     @Id
-    @Column(name = "User_ID")
-    private int userId;
+    @Column(name = "User_ID") // Shared primary key
+    private Integer userId;
     @Column(name = "PhoneNumber")
     private String phoneNumber;
     @Basic
@@ -39,8 +40,8 @@ public class ContactInfoEntity {
 
 
     // Testiä varten
-    public ContactInfoEntity(int userId, String phoneNumber, String address, String city, String firstName, String lastName, String email, String postalCode) {
-        this.userId = userId;
+    public ContactInfoEntity(Integer id, String phoneNumber, String address, String city, String firstName, String lastName, String email, String postalCode) {
+        this.userId = id;
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.city = city;

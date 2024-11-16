@@ -1,8 +1,11 @@
 package ofos.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * UserEntity class is an entity class that maps to the Users table in the database.
@@ -12,7 +15,8 @@ import java.util.Set;
  * - Password
  * - Role
  */
-
+@Setter
+@Getter
 @Entity
 @Table(name = "Users")
 public class UserEntity {
@@ -21,63 +25,31 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "User_ID")
     private Integer userId;
-
     @Column(name = "Username")
     private String username;
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<OrdersEntity> orders = new ArrayList<>();
     @Column(name = "Password")
     private String password;
-
     @Column(name = "Role")
     private String role = "USER";
-
+    @Column(name = "Enabled")
+    private boolean enabled;
 
     // Constructors
     public UserEntity() {
     }
 
-    public UserEntity(Integer userId, String username, String password, String role, boolean enabled) {
+    public UserEntity(int userId, String username, String password, String role, boolean enabled) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.role = role;
-    }
-
-    // Getters and Setters
-    public Integer getUserId() {
-        return userId;
     }
 
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public Integer getId() {
-        return userId;
-    }
 
 }

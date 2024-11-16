@@ -116,7 +116,7 @@ public class UserService {
             deliveryAddressRepository.deleteById(uae.getDeliveryAddressId());
         }
         try {
-            userRepository.deleteById((long) user.getUserId());
+            userRepository.deleteById(user.getUserId());
             return new ResponseEntity<>(
                     "User deleted.",
                     HttpStatus.OK

@@ -20,10 +20,10 @@ public interface RestaurantRepository extends JpaRepository<RestaurantEntity, In
     List<RestaurantEntity> findAll();
 
     @EntityGraph(attributePaths = {"owner"})
-    List<RestaurantEntity> findByOwner_UserId(long userId);
+    List<RestaurantEntity> findByOwner_UserId(int userId);
 
 
-    Optional<RestaurantEntity> findById(Integer id);
+    Optional<RestaurantEntity> findById(int id);
 
     /**
      * Retrieves all restaurants by category name.

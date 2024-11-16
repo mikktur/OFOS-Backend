@@ -4,46 +4,49 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "OrderProducts", schema = "mikt")
-@IdClass(OrderProductsEntityPK.class)
 public class OrderProductsEntity {
-    @Id
-    @Column(name = "OrderID")
-    private int orderId;
 
+    @EmbeddedId
+    private OrderProductsEntityPK id;
 
-    @Id
-    @Column(name = "ProductID")
-    private int productId;
+    @ManyToOne
+    @MapsId("orderId")
+    @JoinColumn(name = "OrderID", nullable = false)
+    private OrdersEntity order;
+
+    @ManyToOne
+    @MapsId("productId")
+    @JoinColumn(name = "ProductID", nullable = false)
+    private ProductEntity product;
 
     @Column(name = "quantity")
     private Integer quantity;
 
     public OrderProductsEntity() {}
 
-    public OrderProductsEntity(int orderId, int productId, Integer quantity) {
-        this.orderId = orderId;
-        this.productId = productId;
+    public OrderProductsEntity(OrdersEntity order, ProductEntity product, Integer quantity) {
+        this.id = new OrderProductsEntityPK(order.getOrderId(), product.getProductId());
+        this.order = order;
+        this.product = product;
         this.quantity = quantity;
     }
-
 
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         OrderProductsEntity that = (OrderProductsEntity) object;
-        return orderId == that.orderId && productId == that.productId && Objects.equals(quantity, that.quantity);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderId, productId, quantity);
+        return Objects.hash(id);
     }
 }

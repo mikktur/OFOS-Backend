@@ -128,7 +128,7 @@ public class ProductController {
      */
     @GetMapping("/restaurant/{language}/{restaurant}")
     @ResponseBody
-    public List<ProductDTO> getProductsByRestaurant(@PathVariable Integer restaurant, @PathVariable String language) {
+    public List<ProductDTO> getProductsByRestaurant(@PathVariable int restaurant, @PathVariable String language) {
         List<ProductDTO> products = productService.getAllProductsByRestaurant(restaurant, language);
         System.out.println("Ravintolan tuotteet: " + products);
         return products;

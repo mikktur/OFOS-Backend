@@ -82,7 +82,7 @@ public class UserController {
 
             System.out.println("User created: " + createdUser.getUsername());
             CreateUserResponseDTO response = new CreateUserResponseDTO(
-                    createdUser.getId(),
+                    createdUser.getUserId(),
                     createdUser.getUsername(),
                     "User created successfully",
                     true

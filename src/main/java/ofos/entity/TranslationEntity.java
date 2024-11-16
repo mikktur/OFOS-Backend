@@ -17,7 +17,7 @@ public class TranslationEntity {
 
     @Id
     @Column(name = "ProductID")
-    private int productId;
+    private Integer productId;
 
     @Column(name = "Description")
     private String description;

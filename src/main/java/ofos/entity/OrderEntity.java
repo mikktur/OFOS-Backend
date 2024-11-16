@@ -21,7 +21,9 @@ public class OrderEntity {
     @NotNull
     @Column(name = "State", nullable = false)
     private String state;
-
+    @ManyToOne
+    @JoinColumn(name = "User_ID", nullable = false)
+    private UserEntity user;
     @Size(max = 255)
     @NotNull
     @Column(name = "OrderAddress", nullable = false)

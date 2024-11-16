@@ -192,7 +192,7 @@ public class ProductService {
      * @return A list of {@link ProductDTO} objects representing all products in the database.
      */
     @Transactional(readOnly = true)
-    public List<ProductDTO> getAllProductsByRestaurant(Integer id, String lang) {
+    public List<ProductDTO> getAllProductsByRestaurant(int id, String lang) {
 
         List<ProductEntity> products = productRepository.getProductsByRestaurant(id);
         BigDecimal price;

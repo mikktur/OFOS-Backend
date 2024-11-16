@@ -15,12 +15,12 @@ import java.util.Objects;
 public class UsersAddressEntity implements Serializable {
     @Id
     @Column(name = "User_ID", nullable = false)
-    private int userId;
+    private Integer userId;
 
 
     @Id
     @Column(name = "DeliveryAddressID", nullable = false)
-    private int deliveryAddressId;
+    private Integer deliveryAddressId;
 
     @Column(name = "is_default")
     private Boolean isDefault;

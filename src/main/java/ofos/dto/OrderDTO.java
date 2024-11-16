@@ -11,14 +11,14 @@ public class OrderDTO {
 
     int quantity;
 
-    int productID;
+    Integer productID;
 
-    int deliveryAddressID;
+    Integer deliveryAddressID;
 
-    int restaurantID;
+    Integer restaurantID;
 
 
-    public OrderDTO(String state, int quantity, int productID, int deliveryAddressID, int restaurantID) {
+    public OrderDTO(String state, int quantity, Integer productID, Integer deliveryAddressID, Integer restaurantID) {
         this.state = state;
         this.quantity = quantity;
         this.productID = productID;

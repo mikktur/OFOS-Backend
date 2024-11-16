@@ -1,17 +1,12 @@
 package ofos.service;
 
 import ofos.dto.OrderDTO;
-import ofos.dto.OrderHistoryDTO;
-import ofos.entity.DeliveryAddressEntity;
-import ofos.entity.OrderProductsEntity;
-import ofos.entity.OrdersEntity;
-import ofos.entity.UserEntity;
+import ofos.entity.*;
 import ofos.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
@@ -33,6 +28,8 @@ class OrdersServiceTest {
     private UserRepository userRepository;
     @Mock
     private DeliveryAddressRepository deliveryAddressRepository;
+    @Mock
+    private RestaurantRepository restaurantRepository;
     @InjectMocks
     private OrdersService ordersService;
 
@@ -45,12 +42,12 @@ class OrdersServiceTest {
     void getOrdersByUserIDTest() {
         int userId = 1;
         List<OrdersEntity> expectedOrders = Collections.singletonList(new OrdersEntity());
-        when(ordersRepository.findOrdersEntitiesByUserId(userId)).thenReturn(expectedOrders);
+        when(ordersRepository.findOrdersEntitiesByUser_UserId(userId)).thenReturn(expectedOrders);
 
         List<OrdersEntity> actualOrders = ordersService.getOrdersByUserID(userId);
 
         assertEquals(expectedOrders, actualOrders);
-        verify(ordersRepository).findOrdersEntitiesByUserId(userId);
+        verify(ordersRepository).findOrdersEntitiesByUser_UserId(userId);
     }
 
     @Test
@@ -89,13 +86,17 @@ class OrdersServiceTest {
         ordersEntity.setOrderAddress("Osoite 1");
         ordersEntity.setState("Preparing order");
         ordersEntity.setOrderId(1);
-        ordersEntity.setRestaurantId(1);
-        ordersEntity.setUserId(1);
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setRestaurantID(1);
+        ordersEntity.setRestaurant(restaurantEntity);
+        UserEntity user = new UserEntity();
+        user.setUserId(1);
+        ordersEntity.setUser(user);
 
         when(userRepository.findByUsername(username)).thenReturn(userEntity);
         when(deliveryAddressRepository.getByDeliveryAddressId(anyInt())).thenReturn(deliveryAddressEntity);
         when(ordersRepository.save(any(OrdersEntity.class))).thenReturn(ordersEntity);
-
+        when(restaurantRepository.findById(anyInt())).thenReturn(java.util.Optional.of(restaurantEntity));
         ResponseEntity<String> responseEntity = ordersService.postOrder(orders, username);
 
         assertEquals(ResponseEntity.ok("Order received."), responseEntity);
@@ -114,7 +115,7 @@ class OrdersServiceTest {
         ordersService.getHistory(username, "fi");
 
         verify(userRepository).findByUsername(username);
-        verify(ordersRepository).getOrderHistory(userEntity.getUserId());
+        verify(ordersRepository).findOrdersEntitiesByUser_UserId(userEntity.getUserId());
     }
 
     @Test

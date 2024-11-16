@@ -6,7 +6,7 @@ import java.util.Objects;
 public class TranslationId implements Serializable {
 
     private String lang;
-    private int productId;
+    private Integer productId;
 
     public TranslationId(){}
 

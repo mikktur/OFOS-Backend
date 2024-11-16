@@ -4,7 +4,6 @@ package ofos.service;
 import ofos.dto.CreateUserRequestDTO;
 import ofos.entity.UserEntity;
 import ofos.repository.UserRepository;
-import ofos.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

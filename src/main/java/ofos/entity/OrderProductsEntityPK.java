@@ -1,5 +1,7 @@
 package ofos.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,16 +10,20 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@Embeddable
 public class OrderProductsEntityPK implements Serializable {
 
-    private int orderId;
-    private int productId;
+    @Column(name = "OrderID")
+    private Integer orderId;
 
-    public OrderProductsEntityPK(){};
+    @Column(name = "ProductID")
+    private Integer productId;
 
-    public OrderProductsEntityPK(int orderID, int productID) {
-        this.orderId = orderID;
-        this.productId = productID;
+    public OrderProductsEntityPK() {}
+
+    public OrderProductsEntityPK(Integer orderId, Integer productId) {
+        this.orderId = orderId;
+        this.productId = productId;
     }
 
     @Override
@@ -25,7 +31,8 @@ public class OrderProductsEntityPK implements Serializable {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         OrderProductsEntityPK that = (OrderProductsEntityPK) object;
-        return orderId == that.orderId && productId == that.productId;
+        return Objects.equals(orderId, that.orderId) &&
+                Objects.equals(productId, that.productId);
     }
 
     @Override

@@ -50,6 +50,7 @@ class ContactInfoControllerTest {
 
     @Test
     public void getContactInfoTest() throws Exception {
+
         ContactInfoEntity contactInfoEntity = new ContactInfoEntity(1, "0505555555", "Osoite 55 B23", "Lontoo",
                                                             "John", "Doe", "john.doe@example.com", "1234567890");
 

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 /**
  * Repository for the {@link UserEntity} class.
  */
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     //add custom queries here
     UserEntity findByUsername(String username);
     UserEntity findByUserId(int userId);

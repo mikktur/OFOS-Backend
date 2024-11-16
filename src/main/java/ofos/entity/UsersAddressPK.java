@@ -10,12 +10,12 @@ import java.util.Objects;
 @Setter
 public class UsersAddressPK implements Serializable {
 
-    private int userId;
-    private int deliveryAddressId;
+    private Integer userId;
+    private Integer deliveryAddressId;
 
     public UsersAddressPK() {}
 
-    public UsersAddressPK(int userId, int deliveryAddressId) {
+    public UsersAddressPK(Integer userId, Integer deliveryAddressId) {
         this.userId = userId;
         this.deliveryAddressId = deliveryAddressId;
     }
