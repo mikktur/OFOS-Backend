@@ -71,12 +71,21 @@ class DeliveryAddressServiceTest {
         deliveryAddressEntity.setCity("Kaupunki");
         deliveryAddressEntity.setInfo("Ovikoodi: 777");
         deliveryAddressEntity.setPostalCode("00220");
-
+        deliveryAddressEntity.setDeliveryAddressId(1);
 
         when(usersAddressRepository.findByUserId(anyInt())).thenReturn(usersAddressEntities);
         when(deliveryAddressRepository.findById(anyInt())).thenReturn(Optional.of(deliveryAddressEntity));
         List<DeliveryAddressDTO> result = deliveryAddressService.getDeliveryAddressesWithDefaultFlag(1);
+
         assertEquals(1, result.size());
+        DeliveryAddressDTO dto = result.get(0);
+        assertEquals("Osoite 1", dto.getStreetAddress());
+        assertEquals("Kaupunki", dto.getCity());
+        assertEquals("Ovikoodi: 777", dto.getInfo());
+        assertEquals("00220", dto.getPostalCode());
+        verify(usersAddressRepository).findByUserId(1);
+        verify(deliveryAddressRepository).findById(1);
+
     }
 
     @Test

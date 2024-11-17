@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -78,7 +77,7 @@ public class RestaurantService {
     @Transactional
     public RestaurantDTO updateRestaurant(int restaurantId, UpdateRestaurantDTO updateRestaurantDTO) {
         System.out.println("Entered updateRestaurant method in RestaurantService");
-        RestaurantEntity restaurant = restaurantRepository.findById(restaurantId)
+        RestaurantEntity restaurant = restaurantRepository.findByRestaurantID(restaurantId)
                 .orElseThrow(() -> new UserNotFoundException("Restaurant not found"));
 
 

@@ -131,7 +131,7 @@ public class RestaurantServiceTests {
         RestaurantEntity restaurant = createRestaurant(1, "Old Name", "123456789", "oldpicture.jpg", owner1);
 
         // Mock repository behavior
-        Mockito.when(restaurantRepository.findById(1)).thenReturn(Optional.of(restaurant));
+        Mockito.when(restaurantRepository.findByRestaurantID(1)).thenReturn(Optional.of(restaurant));
         Mockito.when(restaurantRepository.save(any(RestaurantEntity.class))).thenReturn(restaurant);
 
         // Act: Call the service method to update the restaurant

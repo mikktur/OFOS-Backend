@@ -23,7 +23,7 @@ public interface RestaurantRepository extends JpaRepository<RestaurantEntity, In
     List<RestaurantEntity> findByOwner_UserId(int userId);
 
 
-    Optional<RestaurantEntity> findById(int id);
+    Optional<RestaurantEntity> findByRestaurantID(int id);
 
     /**
      * Retrieves all restaurants by category name.

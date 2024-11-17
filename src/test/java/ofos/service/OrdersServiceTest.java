@@ -1,6 +1,7 @@
 package ofos.service;
 
 import ofos.dto.OrderDTO;
+import ofos.dto.OrderHistoryDTO;
 import ofos.entity.*;
 import ofos.repository.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,14 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class OrdersServiceTest {
@@ -30,6 +31,8 @@ class OrdersServiceTest {
     private DeliveryAddressRepository deliveryAddressRepository;
     @Mock
     private RestaurantRepository restaurantRepository;
+    @Mock
+    private ProductRepository productRepository;
     @InjectMocks
     private OrdersService ordersService;
 
@@ -71,51 +74,98 @@ class OrdersServiceTest {
                 1,
                 1,
                 1
-                );
+        );
         orders.add(orderDTO);
+
         String username = "test";
+
         UserEntity userEntity = new UserEntity();
         userEntity.setUserId(1);
+
         DeliveryAddressEntity deliveryAddressEntity = new DeliveryAddressEntity();
         deliveryAddressEntity.setStreetAddress("Osoite 1");
-        deliveryAddressEntity.setCity("Kaupunki");
-        deliveryAddressEntity.setInfo("Ovikoodi: 777");
-        deliveryAddressEntity.setPostalCode("00220");
-        OrdersEntity ordersEntity = new OrdersEntity();
-        ordersEntity.setOrderDate(new Date(1));
-        ordersEntity.setOrderAddress("Osoite 1");
-        ordersEntity.setState("Preparing order");
-        ordersEntity.setOrderId(1);
+
         RestaurantEntity restaurantEntity = new RestaurantEntity();
         restaurantEntity.setRestaurantID(1);
+
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setProductId(1);
+
+        OrdersEntity ordersEntity = new OrdersEntity();
+        ordersEntity.setOrderId(1);
         ordersEntity.setRestaurant(restaurantEntity);
-        UserEntity user = new UserEntity();
-        user.setUserId(1);
-        ordersEntity.setUser(user);
+        ordersEntity.setUser(userEntity);
+
 
         when(userRepository.findByUsername(username)).thenReturn(userEntity);
-        when(deliveryAddressRepository.getByDeliveryAddressId(anyInt())).thenReturn(deliveryAddressEntity);
+        when(deliveryAddressRepository.findById(anyInt())).thenReturn(Optional.of(deliveryAddressEntity));
+        when(restaurantRepository.findById(anyInt())).thenReturn(Optional.of(restaurantEntity));
+        when(productRepository.findAllById(anyList())).thenReturn(List.of(productEntity));
         when(ordersRepository.save(any(OrdersEntity.class))).thenReturn(ordersEntity);
-        when(restaurantRepository.findById(anyInt())).thenReturn(java.util.Optional.of(restaurantEntity));
+
         ResponseEntity<String> responseEntity = ordersService.postOrder(orders, username);
 
-        assertEquals(ResponseEntity.ok("Order received."), responseEntity);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("Order placed successfully", responseEntity.getBody());
+
         verify(userRepository).findByUsername(username);
+        verify(deliveryAddressRepository).findById(anyInt());
+        verify(restaurantRepository).findById(anyInt());
+        verify(productRepository).findAllById(anyList());
         verify(ordersRepository).save(any(OrdersEntity.class));
-        verify(orderProductsRepository, times(orders.size())).save(any(OrderProductsEntity.class));
     }
 
     @Test
     void getHistoryTest() {
-        String username = "test";
+        String username = "testUser";
+        String language = "en";
+
+
         UserEntity userEntity = new UserEntity();
         userEntity.setUserId(1);
+
+        RestaurantEntity restaurantEntity = new RestaurantEntity();
+        restaurantEntity.setRestaurantID(1);
+        restaurantEntity.setRestaurantName("Mock Restaurant");
+
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setProductId(1);
+        productEntity.setProductName("Mock Product");
+        productEntity.setProductPrice(BigDecimal.valueOf(10.00));
+
+        OrderProductsEntity orderProductsEntity = new OrderProductsEntity();
+        orderProductsEntity.setProduct(productEntity);
+        orderProductsEntity.setQuantity(2);
+
+        OrdersEntity ordersEntity = new OrdersEntity();
+        ordersEntity.setOrderId(1);
+        ordersEntity.setRestaurant(restaurantEntity);
+        ordersEntity.setOrderProducts(List.of(orderProductsEntity));
+
+        userEntity.setOrders(List.of(ordersEntity));
+
+
         when(userRepository.findByUsername(username)).thenReturn(userEntity);
 
-        ordersService.getHistory(username, "fi");
+
+        HashMap<Integer, List<OrderHistoryDTO>> result = ordersService.getHistory(username, language);
+
+        assertNotNull(result);
+        assertTrue(result.containsKey(1));
+        List<OrderHistoryDTO> orderHistory = result.get(1);
+        assertNotNull(orderHistory);
+        assertEquals(1, orderHistory.size());
+
+        OrderHistoryDTO dto = orderHistory.get(0);
+        assertEquals(productEntity.getProductName(), dto.getProductName());
+        assertEquals(productEntity.getProductPrice(), dto.getOrderPrice());
+        assertEquals(restaurantEntity.getRestaurantName(), dto.getRestaurantName());
+        assertEquals(ordersEntity.getOrderDate(), dto.getOrderDate());
+        assertEquals(orderProductsEntity.getQuantity(), dto.getQuantity());
+
 
         verify(userRepository).findByUsername(username);
-        verify(ordersRepository).findOrdersEntitiesByUser_UserId(userEntity.getUserId());
     }
 
     @Test

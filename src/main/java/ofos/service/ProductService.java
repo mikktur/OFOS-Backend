@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -254,7 +253,7 @@ public class ProductService {
      */
     @Transactional
     public ResponseEntity<String> deleteProductFromRestaurant(int productId, int restaurantId, String owner) {
-        RestaurantEntity restaurant = restaurantRepository.findById(restaurantId)
+        RestaurantEntity restaurant = restaurantRepository.findByRestaurantID(restaurantId)
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
         if (!restaurant.getOwner().getUsername().equals(owner)) {
