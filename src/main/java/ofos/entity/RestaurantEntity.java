@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,8 +53,8 @@ public class RestaurantEntity {
     private Set<OrderEntity> orders = new LinkedHashSet<>();
 
 
-    @ManyToMany(mappedBy = "restaurants", fetch = FetchType.LAZY)
-    private List<ProductEntity> products;
+    @ManyToMany(mappedBy = "restaurants", cascade = {CascadeType.MERGE,CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    private List<ProductEntity> products = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "Restaurant_Categories",
@@ -61,4 +62,19 @@ public class RestaurantEntity {
             inverseJoinColumns = @JoinColumn(name = "CategoryID"))
     private Set<CategoryEntity> categories = new LinkedHashSet<>();
 
+    public void addProduct(ProductEntity product) {
+        if (products == null) {
+            products = new ArrayList<>();
+        }
+        if (!products.contains(product)) {
+            products.add(product);
+            product.getRestaurants().add(this);
+        }
+    }
+    public void removeProduct(ProductEntity product) {
+        if (products != null && products.contains(product)) {
+            products.remove(product);
+            product.getRestaurants().remove(this);
+        }
+    }
 }

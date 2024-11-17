@@ -40,11 +40,12 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(int userId, String username, String password, String role, boolean enabled) {
-        this.userId = userId;
+    public UserEntity(int id,String username, String password, String role, boolean enabled) {
+        this.userId = id;
         this.username = username;
         this.password = password;
         this.role = role;
+        this.enabled = enabled;
     }
 
     public void setUserId(Integer userId) {

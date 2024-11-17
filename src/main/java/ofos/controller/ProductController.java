@@ -6,15 +6,18 @@ import ofos.dto.ProductDTO;
 import ofos.entity.ProductEntity;
 import ofos.entity.TranslationEntity;
 import ofos.security.JwtUtil;
+import ofos.security.MyUserDetails;
 import ofos.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -34,6 +37,7 @@ public class ProductController {
 
     /**
      * Retrieves a product by its id.
+     *
      * @param id The id of the product.
      * @return A {@link ProductEntity} object containing the product.
      */
@@ -44,10 +48,10 @@ public class ProductController {
     }
 
 
-
     /**
      * Deletes a product by its id.
-     * @param id The id of the product.
+     *
+     * @param id      The id of the product.
      * @param request The HTTP request object.
      * @return A {@link ResponseEntity} object containing the status code.
      */
@@ -86,12 +90,12 @@ public class ProductController {
     }
 
 
-
     /**
      * Creates a new product for a certain restaurant.
-     * @param productDTOs The product to be created.
+     *
+     * @param productDTOs  The product to be created.
      * @param restaurantId The id of the restaurant.
-     * @param request The HTTP request object.
+     * @param request      The HTTP request object.
      * @return A {@link ResponseEntity} object containing the status code.
      */
     @PostMapping("/create/{restaurantId}")
@@ -108,21 +112,28 @@ public class ProductController {
 
     /**
      * Updates a product.
-     * @param productDTO The product to be updated.
+     *
+     * @param productDTO  The product to be updated.
      * @param userDetails The authenticated user.
      * @return A {@link ResponseEntity} object containing the status code.
      */
-    @PutMapping("/update")
+    @PutMapping("/update/{rid}")
     @PreAuthorize("hasRole('Owner')") // Ensure only users with the 'Owner' role can access this endpoint
-    public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO productDTO,
-                                                @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        System.out.println("Username is: " + username);// Get the authenticated username
-        return productService.updateProduct(productDTO, username);
+    public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable int rid,
+                                                @AuthenticationPrincipal MyUserDetails userDetails) {
+        int userId = userDetails.getUserId();
+        try {
+            return productService.updateProduct(productDTO, userId, rid);
+        } catch (AccessDeniedException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (Exception ex) {
+            return new ResponseEntity<>("An error occurred while updating the product.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
      * Retrieves all products for a restaurant.
+     *
      * @param restaurant The id of the restaurant.
      * @return A list of {@link ProductDTO} objects containing all products of the restaurant.
      */

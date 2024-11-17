@@ -36,8 +36,6 @@ public class OrdersService {
     RestaurantRepository restaurantRepository;
 
     @Autowired
-    TranslationRepository translationRepository;
-    @Autowired
     private ProductRepository productRepository;
 
 
@@ -119,39 +117,36 @@ public class OrdersService {
                 .stream()
                 .collect(Collectors.toMap(ProductEntity::getProductId, Function.identity()));
     }
-
+    //should maybe limit history to 20 etc for efficiency
     @Transactional
     public HashMap<Integer, List<OrderHistoryDTO>> getHistory(String username, String language) {
-        UserEntity user = userRepository.findByUsername(username);
-        if (user == null) {
-            return null;
-        }
+        List<Object[]> results = ordersRepository.findOrdersByUsername(username,language);
+
         HashMap<Integer, List<OrderHistoryDTO>> history = new HashMap<>();
-        List<OrdersEntity> orders = user.getOrders();
 
-        for (OrdersEntity order : orders) {
-            System.out.println(order.getOrderId());
-            List<OrderHistoryDTO> productsList = new ArrayList<>();
-            List<OrderProductsEntity> orderProducts = order.getOrderProducts();
-            String restaurantName = order.getRestaurant().getRestaurantName();
-            for (OrderProductsEntity orderProduct : orderProducts) {
-                System.out.println(orderProduct.getProduct().getProductName());
-                OrderHistoryDTO dto = new OrderHistoryDTO(
-                        orderProduct.getProduct().getProductPrice(),
-                        orderProduct.getQuantity(),
-                        orderProduct.getProduct().getProductName(),
-                        order.getOrderDate(),
-                        restaurantName,
-                        orderProduct.getProduct().getProductId()
+        for (Object[] result : results) {
+            OrdersEntity order = (OrdersEntity) result[0];
+            OrderHistoryDTO dto = getOrderHistoryDTO(result, order);
 
-                );
-                productsList.add(dto);
-            }
-            history.put(order.getOrderId(), productsList);
+            history.computeIfAbsent(order.getOrderId(), k -> new ArrayList<>()).add(dto);
         }
-
 
         return history;
+    }
+
+    private static OrderHistoryDTO getOrderHistoryDTO(Object[] result, OrdersEntity order) {
+        OrderProductsEntity orderProduct = (OrderProductsEntity) result[1];
+        ProductEntity product = (ProductEntity) result[2];
+        TranslationEntity translation = (TranslationEntity) result[3];
+        RestaurantEntity restaurant = (RestaurantEntity) result[4];
+        return new OrderHistoryDTO(
+                product.getProductPrice(),
+                orderProduct.getQuantity(),
+                translation.getName(),
+                order.getOrderDate(),
+                restaurant.getRestaurantName(),
+                product.getProductId()
+        );
     }
 
     /**

@@ -32,7 +32,7 @@ public class OrdersEntity {
     @ManyToOne
     @JoinColumn(name = "RestaurantID")
     private RestaurantEntity restaurant;
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
     private List<OrderProductsEntity> orderProducts = new ArrayList<>();
     public OrdersEntity(){}
 

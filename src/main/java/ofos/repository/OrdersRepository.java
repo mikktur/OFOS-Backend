@@ -34,4 +34,19 @@ public interface OrdersRepository extends JpaRepository<OrdersEntity, Integer> {
 
     @Query("SELECT o FROM OrdersEntity o WHERE o.user.userId = :userId")
     List<OrdersEntity> findByUserId(@Param("userId") int userId);
+
+    @Query("""
+    SELECT o, op, p, t, r
+    FROM OrdersEntity o
+    JOIN o.orderProducts op
+    JOIN op.product p
+    JOIN FETCH o.restaurant r
+    JOIN FETCH o.user u
+    LEFT JOIN p.translations t ON t.id.lang = :language
+    WHERE u.username = :username
+""")
+    List<Object[]> findOrdersByUsername(
+            @Param("username") String username,
+            @Param("language") String language
+    );
 }

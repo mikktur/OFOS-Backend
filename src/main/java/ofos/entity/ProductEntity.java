@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -22,6 +23,8 @@ public class ProductEntity {
     @Basic
     @Column(name = "ProductName")
     private String productName;
+
+
     @Basic
     @Column(name = "ProductDesc")
     private String productDesc;
@@ -37,16 +40,45 @@ public class ProductEntity {
     @Basic
     @Column(name = "Active")
     private boolean active;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TranslationEntity> translations = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinTable(
             name = "Provides",
             joinColumns = @JoinColumn(name = "ProductID"),
             inverseJoinColumns = @JoinColumn(name = "RestaurantID")
     )
-    @JsonIgnore // TODO: Voi olla että tämä hajottaa jotain.
-    private List<RestaurantEntity> restaurants;
+    private List<RestaurantEntity> restaurants = new ArrayList<>();
     public ProductEntity() {
     }
+    public TranslationEntity getTranslation(String lang) {
+        if (translations == null || translations.isEmpty()) {
+            return null;
+        }
+        return translations.stream()
+                .filter(t -> t.getId().getLang().equalsIgnoreCase(lang))
+                .findFirst()
+                .orElse(null);
+    }
+    public void addRestaurant(RestaurantEntity restaurant) {
+        if (restaurants == null) {
+            restaurants = new ArrayList<>();
+        }
+        if (!restaurants.contains(restaurant)) {
+            restaurants.add(restaurant);
+            restaurant.getProducts().add(this);
+        }
+    }
 
+    public void addTranslation(TranslationEntity translation) {
+        if (translations == null) {
+            translations = new ArrayList<>();
+        }
+        if (!translations.contains(translation)) {
+            translations.add(translation);
+            translation.setProduct(this);
+            translation.getId().setProductId(this.productId);
+        }
+    }
 
 }
