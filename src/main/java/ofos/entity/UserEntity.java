@@ -31,6 +31,9 @@ public class UserEntity {
     @Column(name = "Role")
     private String role = "USER";
 
+    @Column(name = "Enabled")
+    private boolean enabled;
+
 
     // Constructors
     public UserEntity() {
@@ -41,9 +44,20 @@ public class UserEntity {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.enabled = enabled;
     }
 
     // Getters and Setters
+
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Integer getUserId() {
         return userId;
     }

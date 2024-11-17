@@ -10,10 +10,11 @@ import ofos.exception.UserNotOwnerException;
 import ofos.repository.RestaurantRepository;
 import ofos.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -126,6 +127,39 @@ public class RestaurantService {
         return restaurants.stream()
                 .map(RestaurantDTO::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    public ResponseEntity<String> setNewOwner(int newOwnerId, int restaurantId){
+        try {
+            RestaurantEntity restaurant = restaurantRepository.findByRestaurantID(restaurantId);
+            UserEntity newOwner = userRepository.findByUserId(newOwnerId);
+            int oldOwnerId = restaurant.getOwner().getUserId();
+            restaurant.setOwner(newOwner);
+            restaurantRepository.save(restaurant);
+
+            // Jos uuden omistajan rooli ei ole entuudestaan "Owner"
+            if (!newOwner.getRole().equalsIgnoreCase("Owner")){
+                newOwner.setRole("OWNER");
+                userRepository.save(newOwner);
+            }
+
+            // Jos vanhalla omistajalla ei ole ravintoloita.
+            List<RestaurantEntity> ownedRestaurants = restaurantRepository.findByOwner_UserId(oldOwnerId);
+            if (ownedRestaurants.isEmpty()){
+                userRepository.setRoleToUser(oldOwnerId);
+            }
+
+            return new ResponseEntity<>(
+                    "Owner updated.",
+                    HttpStatus.OK
+            );
+        } catch (Exception e){
+            return new ResponseEntity<>(
+                    "Failed to update owner.",
+                    HttpStatus.EXPECTATION_FAILED
+            );
+        }
+
     }
 
 }
