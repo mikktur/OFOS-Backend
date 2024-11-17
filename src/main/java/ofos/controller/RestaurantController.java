@@ -1,14 +1,17 @@
 package ofos.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import ofos.dto.RestaurantDTO;
 import ofos.dto.UpdateRestaurantDTO;
 import ofos.entity.RestaurantEntity;
+import ofos.security.JwtUtil;
 import ofos.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class is used to handle the restaurant requests.
@@ -23,6 +26,9 @@ public class RestaurantController {
     public RestaurantController(RestaurantService restaurantService) {
         this.restaurantService = restaurantService;
     }
+
+    @Autowired
+    JwtUtil jwtUtil;
 
     /**
      * Update a restaurant.
@@ -65,5 +71,13 @@ public class RestaurantController {
     public ResponseEntity<List<RestaurantDTO>> getRestaurantsByCategory(@PathVariable String categoryName) {
         List<RestaurantDTO> restaurants = restaurantService.getRestaurantsByCategory(categoryName);
         return ResponseEntity.ok(restaurants);
+    }
+
+    @PutMapping("/changeowner")
+    public ResponseEntity<String> changeOwner(@RequestBody Map<String, Object> payload){
+        int ownerId = (int) payload.get("newOwnerId");
+        int restaurantId = (int) payload.get("restaurantId");
+        System.out.println(ownerId + " aaa " + restaurantId);
+        return restaurantService.setNewOwner(ownerId, restaurantId);
     }
 }

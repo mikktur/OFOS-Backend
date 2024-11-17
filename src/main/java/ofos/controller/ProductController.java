@@ -58,7 +58,6 @@ public class ProductController {
         System.out.println("JWT: " + jwtUtil.extractRole(jwt));
         if (jwtUtil.extractRole(jwt).equals("OWNER")) {
             String username = jwtUtil.extractUsername(jwt);
-            System.out.println("haloo");
             return productService.deleteDishById(id, username);
         }
         return new ResponseEntity<>(
