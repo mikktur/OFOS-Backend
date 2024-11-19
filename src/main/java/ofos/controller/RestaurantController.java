@@ -4,9 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import ofos.dto.RestaurantDTO;
 import ofos.dto.UpdateRestaurantDTO;
 import ofos.entity.RestaurantEntity;
+import ofos.exception.RestaurantNotFoundException;
+import ofos.exception.UserNotFoundException;
 import ofos.security.JwtUtil;
 import ofos.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,7 +80,13 @@ public class RestaurantController {
     public ResponseEntity<String> changeOwner(@RequestBody Map<String, Object> payload){
         int ownerId = (int) payload.get("newOwnerId");
         int restaurantId = (int) payload.get("restaurantId");
-        System.out.println(ownerId + " aaa " + restaurantId);
-        return restaurantService.setNewOwner(ownerId, restaurantId);
+        try {
+            restaurantService.setNewOwner(ownerId, restaurantId);
+            return ResponseEntity.ok("Owner updated successfully.");
+        } catch (UserNotFoundException | RestaurantNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
+        }
     }
 }

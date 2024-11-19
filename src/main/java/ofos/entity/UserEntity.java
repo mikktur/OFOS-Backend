@@ -37,7 +37,8 @@ public class UserEntity {
     private String role = "USER";
     @Column(name = "Enabled")
     private boolean enabled;
-
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<RestaurantEntity> restaurants = new ArrayList<>();
     // Constructors
     public UserEntity() {
     }
@@ -50,9 +51,10 @@ public class UserEntity {
         this.enabled = enabled;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void addRestaurant(RestaurantEntity restaurant) {
+        if (!restaurants.contains(restaurant)) {
+            restaurants.add(restaurant);
+
+        }
     }
-
-
 }

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import ofos.dto.ChangePasswordDTO;
 import ofos.dto.CreateUserRequestDTO;
 import ofos.dto.CreateUserResponseDTO;
+import ofos.dto.UserDTO;
 import ofos.entity.UserEntity;
 import ofos.security.JwtUtil;
 import ofos.service.UserService;
@@ -11,8 +12,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -31,32 +34,43 @@ public class UserController {
 
     /**
      * Retrieves all users.
+     *
      * @return A list of {@link UserEntity} objects containing all users.
      */
     @GetMapping   // Toimiiko pelkällä oletus pathillä?
-    public List<UserEntity> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         System.out.println("Entered getAllUsers method in UserController");
-        List<UserEntity> userEntities = userService.getAllUsers();
-        System.out.println("Users retrieved: " + userEntities.get(0).getUsername());
-        return userEntities;
+        return userService.getAllUsers();
     }
 
     /**
      * Retrieves a user by their username.
+     *
      * @param username The username of the user.
      * @return A {@link UserEntity} object containing the user.
      */
     @GetMapping("/username/{username}")
     @ResponseBody
-    public UserEntity getUserByUsername(@PathVariable String username) {
+    public UserDTO getUserByUsername(@PathVariable String username) {
         System.out.println("Entered getUserByUsername method in UserController");
         UserEntity userEntity = userService.getUserByUsername(username);
         System.out.println("User retrieved: " + userEntity.getUsername());
-        return userEntity;
+        if (userEntity == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        // Transform UserEntity to UserDTO
+        return new UserDTO(
+                userEntity.getUserId(),
+                userEntity.getUsername(),
+                userEntity.getRole(),
+                userEntity.isEnabled()
+        );
     }
 
     /**
      * Retrieves a user by their id.
+     *
      * @param id The id of the user.
      * @return A {@link UserEntity} object containing the user.
      */
@@ -70,8 +84,10 @@ public class UserController {
     }
 
     // Pitäisikö kirjautua samalla kun luo tilin?
+
     /**
      * Creates a new user.
+     *
      * @param createUserRequest The request object containing the user data.
      * @return A {@link ResponseEntity} object containing the status code and message.
      */
@@ -104,14 +120,14 @@ public class UserController {
     }
 
     @PutMapping("/updatePassword")
-    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO, HttpServletRequest req){
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO, HttpServletRequest req) {
         String jwt = req.getHeader("Authorization").substring(7);
         String username = jwtUtil.extractUsername(jwt);
         return userService.updatePassword(changePasswordDTO, username);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(HttpServletRequest req){
+    public ResponseEntity<String> deleteUser(HttpServletRequest req) {
         String jwt = req.getHeader("Authorization").substring(7);
         String username = jwtUtil.extractUsername(jwt);
         if (jwtUtil.extractRole(jwt).equals("OWNER")) {
@@ -124,8 +140,28 @@ public class UserController {
     }
 
     @PostMapping("/ban/{userId}")
-    public ResponseEntity<String> updateBanStatus(@PathVariable int userId){
+    public ResponseEntity<String> updateBanStatus(@PathVariable int userId) {
         return userService.updateBanStatus(userId);
     }
 
+    @PutMapping("/changerole")
+    public ResponseEntity<String> changeRole(@RequestBody UserDTO userDTO) {
+        try {
+            System.out.println("Entered changeRole method in UserController");
+            userService.updateUserRole(userDTO.getUserId(), userDTO.getRole());
+            return new ResponseEntity<>(
+                    "User's role updated.",
+                    HttpStatus.OK
+            );
+        }catch (UsernameNotFoundException e){
+            System.out.println("User not found.");
+            return new ResponseEntity<>(
+                    "User not found.",
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+
+
+    }
 }

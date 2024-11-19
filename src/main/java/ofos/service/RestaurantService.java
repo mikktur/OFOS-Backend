@@ -128,7 +128,8 @@ public class RestaurantService {
 
     public ResponseEntity<String> setNewOwner(int newOwnerId, int restaurantId){
         try {
-            RestaurantEntity restaurant = restaurantRepository.findByRestaurantID(restaurantId);
+            RestaurantEntity restaurant = restaurantRepository.findById(restaurantId)
+                    .orElseThrow(() -> new RuntimeException("Restaurant not found"));
             UserEntity newOwner = userRepository.findByUserId(newOwnerId);
             int oldOwnerId = restaurant.getOwner().getUserId();
             restaurant.setOwner(newOwner);
@@ -159,4 +160,14 @@ public class RestaurantService {
 
     }
 
+    @Transactional
+    public void addRestaurantOwnerRole(int uid,int rid){
+        UserEntity user = userRepository.findById(uid)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        RestaurantEntity restaurant = restaurantRepository.findById(rid)
+                .orElseThrow(() -> new UserNotFoundException("Restaurant not found"));
+        restaurant.setOwner(user);
+        restaurantRepository.save(restaurant);
+
+    }
 }

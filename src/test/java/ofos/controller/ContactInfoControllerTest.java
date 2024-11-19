@@ -5,6 +5,7 @@ import ofos.dto.ContactInfoDTO;
 import ofos.entity.ContactInfoEntity;
 import ofos.security.JwtUtil;
 import ofos.service.ContactInfoService;
+import ofos.service.CustomUserDetailsService;
 import ofos.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +48,8 @@ class ContactInfoControllerTest {
 
     @MockBean
     private ProductService productService;
-
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
     @Test
     public void getContactInfoTest() throws Exception {
 

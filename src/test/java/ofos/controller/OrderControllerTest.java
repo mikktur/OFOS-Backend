@@ -7,6 +7,7 @@ import ofos.dto.OrderDTO;
 import ofos.dto.OrderHistoryDTO;
 import ofos.entity.*;
 import ofos.security.JwtUtil;
+import ofos.service.CustomUserDetailsService;
 import ofos.service.OrdersService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +44,8 @@ class OrderControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
     @MockBean
     private OrdersService ordersService;
 
@@ -53,8 +55,6 @@ class OrderControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Mock
-    private HttpServletRequest request;
 
     @Test
     void makeOrderTest() throws Exception {

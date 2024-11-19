@@ -5,6 +5,7 @@ import ofos.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 
 import java.util.Arrays;
@@ -43,26 +44,13 @@ public class MyUserDetails implements UserDetails {
         return userEntity.getUsername();
     }
 
-    public int getUserId() {
-        return userEntity.getUserId();
-    }
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
     @Override
     public boolean isEnabled() {
-        return true;
+        return userEntity.isEnabled();
+    }
+
+    // Custom getter for user ID
+    public int getUserId() {
+        return userEntity.getUserId();
     }
 }

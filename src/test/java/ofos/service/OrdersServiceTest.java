@@ -4,10 +4,12 @@ import ofos.dto.OrderDTO;
 import ofos.dto.OrderHistoryDTO;
 import ofos.entity.*;
 import ofos.repository.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -118,54 +120,46 @@ class OrdersServiceTest {
 
     @Test
     void getHistoryTest() {
-        String username = "testUser";
-        String language = "en";
+        OrdersEntity mockOrder = new OrdersEntity();
+        mockOrder.setOrderId(1);
+        mockOrder.setOrderDate(Date.valueOf("2024-01-01"));
+
+        OrderProductsEntity mockOrderProduct = new OrderProductsEntity();
+        mockOrderProduct.setQuantity(2);
+
+        ProductEntity mockProduct = new ProductEntity();
+        mockProduct.setProductId(101);
+        mockProduct.setProductPrice(BigDecimal.valueOf(9.99));
+
+        TranslationEntity mockTranslation = new TranslationEntity();
+        mockTranslation.setName("Pizza");
+
+        RestaurantEntity mockRestaurant = new RestaurantEntity();
+        mockRestaurant.setRestaurantName("Italian Delight");
+
+        Object[] result = new Object[]{mockOrder, mockOrderProduct, mockProduct, mockTranslation, mockRestaurant};
 
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUserId(1);
-
-        RestaurantEntity restaurantEntity = new RestaurantEntity();
-        restaurantEntity.setRestaurantID(1);
-        restaurantEntity.setRestaurantName("Mock Restaurant");
-
-        ProductEntity productEntity = new ProductEntity();
-        productEntity.setProductId(1);
-        productEntity.setProductName("Mock Product");
-        productEntity.setProductPrice(BigDecimal.valueOf(10.00));
-
-        OrderProductsEntity orderProductsEntity = new OrderProductsEntity();
-        orderProductsEntity.setProduct(productEntity);
-        orderProductsEntity.setQuantity(2);
-
-        OrdersEntity ordersEntity = new OrdersEntity();
-        ordersEntity.setOrderId(1);
-        ordersEntity.setRestaurant(restaurantEntity);
-        ordersEntity.setOrderProducts(List.of(orderProductsEntity));
-
-        userEntity.setOrders(List.of(ordersEntity));
+        Mockito.when(ordersRepository.findOrdersByUsername("testuser", "en"))
+                .thenReturn(Collections.singletonList(result));
 
 
-        when(userRepository.findByUsername(username)).thenReturn(userEntity);
+        HashMap<Integer, List<OrderHistoryDTO>> history = ordersService.getHistory("testuser", "en");
 
 
-        HashMap<Integer, List<OrderHistoryDTO>> result = ordersService.getHistory(username, language);
+        Assertions.assertEquals(1, history.size(), "History should contain one order");
+        Assertions.assertTrue(history.containsKey(1), "History should contain order ID 1");
 
-        assertNotNull(result);
-        assertTrue(result.containsKey(1));
-        List<OrderHistoryDTO> orderHistory = result.get(1);
-        assertNotNull(orderHistory);
-        assertEquals(1, orderHistory.size());
+        List<OrderHistoryDTO> orderHistoryList = history.get(1);
+        Assertions.assertEquals(1, orderHistoryList.size(), "Order ID 1 should have one entry");
 
-        OrderHistoryDTO dto = orderHistory.get(0);
-        assertEquals(productEntity.getProductName(), dto.getProductName());
-        assertEquals(productEntity.getProductPrice(), dto.getOrderPrice());
-        assertEquals(restaurantEntity.getRestaurantName(), dto.getRestaurantName());
-        assertEquals(ordersEntity.getOrderDate(), dto.getOrderDate());
-        assertEquals(orderProductsEntity.getQuantity(), dto.getQuantity());
-
-
-        verify(userRepository).findByUsername(username);
+        OrderHistoryDTO dto = orderHistoryList.get(0);
+        Assertions.assertEquals(9.99, dto.getOrderPrice().doubleValue(), 0.01);
+        Assertions.assertEquals(2, dto.getQuantity());
+        Assertions.assertEquals("Pizza", dto.getProductName());
+        Assertions.assertEquals(mockOrder.getOrderDate(), dto.getOrderDate());
+        Assertions.assertEquals("Italian Delight", dto.getRestaurantName());
+        Assertions.assertEquals(101, dto.getProductId());
     }
 
     @Test
