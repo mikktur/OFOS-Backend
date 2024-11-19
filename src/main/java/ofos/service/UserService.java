@@ -129,4 +129,18 @@ public class UserService {
         }
     }
 
+    public ResponseEntity<String> updateBanStatus(int userId){
+        int affectedRows = userRepository.updateBanStatus(userId);
+        if (affectedRows != 0){
+            return new ResponseEntity<>(
+                    "User's ban status updated.",
+                    HttpStatus.OK
+            );
+        }
+        return new ResponseEntity<>(
+                "Something went wrong",
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
 }

@@ -25,12 +25,14 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "User_ID")
     private Integer userId;
+
     @Column(name = "Username")
     private String username;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrdersEntity> orders = new ArrayList<>();
     @Column(name = "Password")
     private String password;
+
     @Column(name = "Role")
     private String role = "USER";
     @Column(name = "Enabled")
