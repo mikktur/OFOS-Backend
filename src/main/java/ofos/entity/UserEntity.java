@@ -35,8 +35,8 @@ public class UserEntity {
 
     @Column(name = "Role")
     private String role = "USER";
-    @Column(name = "Enabled")
-    private boolean enabled;
+    @Column(name = "Enabled", nullable = true)
+    private boolean enabled = true;
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RestaurantEntity> restaurants = new ArrayList<>();
     // Constructors

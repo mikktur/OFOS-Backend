@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -199,7 +200,11 @@ public class ProductService {
             productDTO.setProductID(product.getProductId());
             productDTO.setProductName(translation != null ? translation.getName() : null);
             productDTO.setProductDesc(translation != null ? translation.getDescription() : null);
-            productDTO.setProductPrice(product.getProductPrice());
+            BigDecimal price = product.getProductPrice();
+            if (!lang.equals("fi")) {
+                price = CurrencyConverter.convert("EUR",lang,product.getProductPrice());
+            }
+            productDTO.setProductPrice(price);
             productDTO.setCategory(product.getCategory());
             productDTO.setPicture(product.getPicture());
             productDTO.setLang(lang);
