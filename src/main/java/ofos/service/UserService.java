@@ -109,7 +109,6 @@ public class UserService {
     public ResponseEntity<String> deleteUser(String username){
         UserEntity user = userRepository.findByUsername(username);
 
-        // DeliveryAddresses-taulukkoon ei p‰‰se CASCADE:lla, joten pit‰‰ tehd‰ sielt‰ poistot loopissa.
 
         List<UsersAddressEntity> usersAddressEntity = usersAddressRepository.findByUserId(user.getUserId());
         for (UsersAddressEntity uae : usersAddressEntity){

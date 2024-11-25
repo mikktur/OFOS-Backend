@@ -66,6 +66,13 @@ public class ProductController {
         );
     }
 
+    /**
+     * Deletes a product from a restaurant.
+     * @param productId The id of the product to be deleted.
+     * @param restaurantId The id of the restaurant.
+     * @param request The HTTP request object for authorization purposes.
+     * @return A ResponseEntity object containing the status code and message.
+     */
     @DeleteMapping("/delete/{productId}/restaurant/{restaurantId}")
     public ResponseEntity<String> deleteDishFromRestaurant(
             @PathVariable int productId,
