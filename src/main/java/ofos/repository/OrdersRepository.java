@@ -35,6 +35,12 @@ public interface OrdersRepository extends JpaRepository<OrdersEntity, Integer> {
     @Query("SELECT o FROM OrdersEntity o WHERE o.user.userId = :userId")
     List<OrdersEntity> findByUserId(@Param("userId") int userId);
 
+    /**
+     * Finds required fields for user's order history in the chosen language.
+     * @param username The username of the user.
+     * @param language The language of the order.
+     * @return A list of objects containing the required fields.
+     */
     @Query("""
     SELECT o, op, p, t, r
     FROM OrdersEntity o
