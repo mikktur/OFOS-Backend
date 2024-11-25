@@ -107,6 +107,11 @@ public class OrdersService {
         return new ResponseEntity<>("Order placed successfully", HttpStatus.OK);
     }
 
+    /**
+     * Retrieves all products related to the orders from the database.
+     * @param orders list of {@link OrderDTO} objects representing the orders of the user.
+     * @return A map of products contained in the orders.
+     */
     private Map<Integer, ProductEntity> getProductsMappedById(List<OrderDTO> orders) {
         List<Integer> productIds = orders.stream()
                 .map(OrderDTO::getProductID)
@@ -118,6 +123,13 @@ public class OrdersService {
                 .collect(Collectors.toMap(ProductEntity::getProductId, Function.identity()));
     }
     //should maybe limit history to 20 etc for efficiency
+    /**
+     * Retrieves the order history of a user from the database in the chosen language.
+     *
+     * @param username The username of the user.
+     * @param language The language of the user.
+     * @return A map of order IDs and lists of {@link OrderHistoryDTO} objects representing the order history of the user.
+     */
     @Transactional
     public HashMap<Integer, List<OrderHistoryDTO>> getHistory(String username, String language) {
         List<Object[]> results = ordersRepository.findOrdersByUsername(username,language);
@@ -134,6 +146,13 @@ public class OrdersService {
         return history;
     }
 
+    /**
+     * Creates an {@link OrderHistoryDTO} object from the given result and order.
+     *
+     * @param result The result of the query.
+     * @param order  The order to be used.
+     * @return An {@link OrderHistoryDTO} object.
+     */
     private static OrderHistoryDTO getOrderHistoryDTO(Object[] result, OrdersEntity order) {
         OrderProductsEntity orderProduct = (OrderProductsEntity) result[1];
         ProductEntity product = (ProductEntity) result[2];

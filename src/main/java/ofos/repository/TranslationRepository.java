@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * Repository for the {@link TranslationEntity} class.
+ */
 public interface TranslationRepository extends JpaRepository<TranslationEntity, Integer> {
 
     @Query("""

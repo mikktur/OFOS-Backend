@@ -39,6 +39,7 @@ public class ProductController {
      * Retrieves a product by its id.
      *
      * @param id The id of the product.
+     * @param language The language of the product.
      * @return A {@link ProductEntity} object containing the product.
      */
     @GetMapping("/{language}/{id}")
@@ -121,6 +122,7 @@ public class ProductController {
      *
      * @param productDTO  The product to be updated.
      * @param userDetails The authenticated user.
+     * @param rid The id of the restaurant.
      * @return A {@link ResponseEntity} object containing the status code.
      */
     @PutMapping("/update/{rid}")
@@ -141,6 +143,7 @@ public class ProductController {
      * Retrieves all products for a restaurant.
      *
      * @param restaurant The id of the restaurant.
+     * @param language The language of the products.
      * @return A list of {@link ProductDTO} objects containing all products of the restaurant.
      */
     @GetMapping("/restaurant/{language}/{restaurant}")

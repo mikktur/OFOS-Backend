@@ -42,7 +42,6 @@ public class ContactInfoController {
 
     /**
      * Updates contact info for a user.
-     *
      * @param contactInfoDTO The contact info to be updated.
      * @param request The HTTP request object.
      * @return {@link ResponseEntity} object with and the username of the user.

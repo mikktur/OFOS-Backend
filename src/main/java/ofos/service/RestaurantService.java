@@ -160,6 +160,11 @@ public class RestaurantService {
 
     }
 
+    /**
+     * Adds a new owner to a restaurant.
+     * @param uid The ID of the user.
+     * @param rid The ID of the restaurant.
+     */
     @Transactional
     public void addRestaurantOwnerRole(int uid,int rid){
         UserEntity user = userRepository.findById(uid)

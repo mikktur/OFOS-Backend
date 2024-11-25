@@ -100,6 +100,12 @@ public class UserService {
         return userRepository.findByUserId(userId);
     }
 
+    /**
+     * Updates password for a user.
+     * @param changePasswordDTO {@link ChangePasswordDTO} DTO containing old and new password.
+     * @param username The username of the user.
+     * @return
+     */
     @Transactional
     public ResponseEntity<String> updatePassword(ChangePasswordDTO changePasswordDTO, String username){
         String hashedPassword = userRepository.findPassword(username);
@@ -125,6 +131,11 @@ public class UserService {
         );
     }
 
+    /**
+     * Deletes a user from the database.
+     * @param username The username of the user.
+     * @return ResponseEntity object with a message and a status code.
+     */
     @Transactional
     public ResponseEntity<String> deleteUser(String username){
         UserEntity user = userRepository.findByUsername(username);
@@ -147,6 +158,12 @@ public class UserService {
             );
         }
     }
+
+    /**
+     * Updates ban status for a user.
+     * @param userId The ID of the user.
+     * @return ResponseEntity object with a message and a status code.
+     */
     @Transactional
     public ResponseEntity<String> updateBanStatus(int userId){
         int affectedRows = userRepository.updateBanStatus(userId);
@@ -162,6 +179,11 @@ public class UserService {
         );
     }
 
+    /**
+     * Updates user role.
+     * @param userId The ID of the user.
+     * @param role The new role for the user.
+     */
     @Transactional
     public void updateUserRole(int userId, String role){
 
