@@ -16,17 +16,7 @@ public interface OrdersRepository extends JpaRepository<OrdersEntity, Integer> {
 
     List<OrdersEntity> findOrdersEntitiesByUser_UserId(int userId);
 
-    /**
-     * Retrieves all orders by user ID.
-     * @param userID The ID of the user.
-     * @return A list of {@link OrdersEntity} objects containing all orders related to the user.
-     */
 
-    /**
-     * Updates the status of an order by its ID.
-     * @param orderID The ID of the order.
-     * @param status The new status of the order.
-     */
     @Modifying
     @Transactional
     @Query("UPDATE OrdersEntity o SET o.state = ?2 WHERE o.orderId = ?1")

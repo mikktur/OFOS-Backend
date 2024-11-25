@@ -13,21 +13,12 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * This class is used to handle the image requests.
- */
 @RestController
 @RequestMapping("/images")
 public class ImageController extends HttpServlet{
 
 
-    /**
-     * Retrieves an image from the database.
-     *
-     * @param filename The image file to be retrieved.
-     *
-     * @return A {@link ResponseEntity} object containing the image.
-     */
+
     @GetMapping("/{filename:.+}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
@@ -38,11 +29,6 @@ public class ImageController extends HttpServlet{
         }
     }
 
-    /**
-     * Retrieves a restaurant logo from the database.
-     * @param filename The logo file to be retrieved.
-     * @return A {@link ResponseEntity} object containing the logo.
-     */
     @GetMapping("/restaurant/{filename:.+}")
     public ResponseEntity<Resource> getRestaurantLogo(@PathVariable String filename) {
         try {
@@ -54,13 +40,6 @@ public class ImageController extends HttpServlet{
     }
 
 
-    /**
-     * Creates a response entity for the image.
-     *
-     * @param path The path to the image.
-     * @return A {@link ResponseEntity} object containing the image.
-     * @throws MalformedURLException If the URL is malformed.
-     */
     private ResponseEntity<Resource> createResponse(Path path) throws MalformedURLException {
         Resource resource = new UrlResource(path.toUri());
 

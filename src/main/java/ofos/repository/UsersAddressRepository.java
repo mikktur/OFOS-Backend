@@ -9,20 +9,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Repository for the {@link UsersAddressEntity} class.
- */
+
 @Repository
 public interface UsersAddressRepository extends JpaRepository<UsersAddressEntity, Integer> {
     boolean existsByUserId(int userId);
 
     boolean existsByUserIdAndIsDefaultTrue(int userId);
 
-    /**
-     * Method to deselect a default delivery address for a user.
-     * @param userId The ID of the user.
-     * @return A list of {@link UsersAddressEntity} objects containing all addresses related to the user.
-     */
+
     @Modifying
     @Query("UPDATE UsersAddressEntity ua SET ua.isDefault = NULL WHERE ua.userId = :userId")
     void unsetDefaultAddresses(@Param("userId") int userId);
