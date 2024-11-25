@@ -23,12 +23,11 @@ public class ContactInfoDTO {
     private String email;
     @NotNull
     private String postalCode;
-    @NotNull
-    private int userId;
+    private @NotNull Integer userId;
 
     public ContactInfoDTO(String phoneNumber, String address, String city,
                           String firstName, String lastName, String email,
-                          String postalCode, int userId) {
+                          String postalCode, @NotNull Integer userId) {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.city = city;

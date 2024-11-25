@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -34,11 +35,26 @@ public class ContactInfoService {
      * @param username The username of the user.
      * @return {@link ResponseEntity} object with a message and a status code.
      */
+    @Transactional
     public ResponseEntity<String> updateContactInfo(ContactInfoDTO contactInfoDTO, String username){
         UserEntity user = userRepository.findByUsername(username);
-        if (user.getUserId() == contactInfoDTO.getUserId()){
-            ContactInfoEntity contactInfoEntity = new ContactInfoEntity();
-            contactInfoRepository.save(createEntity(contactInfoDTO, contactInfoEntity));
+        if (user.getUserId().equals(contactInfoDTO.getUserId())){
+            ContactInfoEntity contactInfoEntity = contactInfoRepository.findContactInfoEntityByUserId(user.getUserId());
+            if (contactInfoEntity == null){
+                return new ResponseEntity<>(
+                        "Contact info not found.",
+                        HttpStatus.NOT_FOUND
+                );
+            }
+            contactInfoEntity.setAddress(contactInfoDTO.getAddress());
+            contactInfoEntity.setCity(contactInfoDTO.getCity());
+            contactInfoEntity.setEmail(contactInfoDTO.getEmail());
+            contactInfoEntity.setFirstName(contactInfoDTO.getFirstName());
+            contactInfoEntity.setLastName(contactInfoDTO.getLastName());
+            contactInfoEntity.setPhoneNumber(contactInfoDTO.getPhoneNumber());
+            contactInfoEntity.setPostalCode(contactInfoDTO.getPostalCode());
+            contactInfoRepository.save(contactInfoEntity);
+
             return new ResponseEntity<>(
                     "Contact info updated.",
                     HttpStatus.OK
@@ -88,23 +104,7 @@ public class ContactInfoService {
     }
 
 
-    /**
-     * Creates a {@link ContactInfoEntity} object from a {@link ContactInfoDTO} object.
-     * @param contactInfoDTO The {@link ContactInfoDTO} object.
-     * @param contactInfoEntity The {@link ContactInfoEntity} object.
-     * @return The {@link ContactInfoEntity} object.
-     */
-    protected ContactInfoEntity createEntity(ContactInfoDTO contactInfoDTO, ContactInfoEntity contactInfoEntity){
-        contactInfoEntity.setPhoneNumber(contactInfoDTO.getPhoneNumber());
-        contactInfoEntity.setCity(contactInfoDTO.getCity());
-        contactInfoEntity.setAddress(contactInfoDTO.getAddress());
-        contactInfoEntity.setFirstName(contactInfoDTO.getFirstName());
-        contactInfoEntity.setEmail(contactInfoDTO.getEmail());
-        contactInfoEntity.setLastName(contactInfoDTO.getLastName());
-        contactInfoEntity.setUserId(contactInfoDTO.getUserId());
-        contactInfoEntity.setPostalCode(contactInfoDTO.getPostalCode());
-        return contactInfoEntity;
-    }
+
 
 
 }

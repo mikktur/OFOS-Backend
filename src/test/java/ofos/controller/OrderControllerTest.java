@@ -5,10 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import ofos.dto.OrderDTO;
 import ofos.dto.OrderHistoryDTO;
-import ofos.entity.OrderProductsEntity;
-import ofos.entity.OrdersEntity;
-import ofos.repository.IOrderHistory;
+import ofos.entity.*;
 import ofos.security.JwtUtil;
+import ofos.service.CustomUserDetailsService;
 import ofos.service.OrdersService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +44,8 @@ class OrderControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
     @MockBean
     private OrdersService ordersService;
 
@@ -55,8 +55,6 @@ class OrderControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Mock
-    private HttpServletRequest request;
 
     @Test
     void makeOrderTest() throws Exception {
@@ -76,8 +74,12 @@ class OrderControllerTest {
 
     @Test
     void getOrdersByIDTest() throws Exception {
+        RestaurantEntity restaurant = new RestaurantEntity();
+        restaurant.setRestaurantID(1);
+        UserEntity user = new UserEntity();
+        user.setUserId(1);
         List<OrdersEntity> orders = new ArrayList<>();
-        orders.add(new OrdersEntity(1, "Ordered", "Osoite", new java.sql.Date(1), 1, 1));
+        orders.add(new OrdersEntity(1, "Ordered", "Osoite", new java.sql.Date(1), user, restaurant));
 
         when(ordersService.getOrdersByUserID(anyInt())).thenReturn(orders);
 
@@ -89,13 +91,17 @@ class OrderControllerTest {
         String contentAsString = mvcResult.getResponse().getContentAsString();
         List<OrdersEntity> returnedOrders = objectMapper.readValue(contentAsString, new TypeReference<List<OrdersEntity>>(){});
 
-        assertEquals(1, returnedOrders.get(0).getUserId());
+        assertEquals(1, returnedOrders.get(0).getUser().getUserId());
     }
 
     @Test
     void getOrderProductsByIdTest() throws Exception {
+        ProductEntity product = new ProductEntity();
+        product.setProductId(1);
+        OrdersEntity order = new OrdersEntity();
+        order.setOrderId(1);
         List<OrderProductsEntity> orderProducts = new ArrayList<>();
-        orderProducts.add(new OrderProductsEntity(1, 1, 2));
+        orderProducts.add(new OrderProductsEntity(order, product, 2));
 
         when(ordersService.getOrderContentsByUserID(anyInt())).thenReturn(orderProducts);
 
@@ -107,8 +113,8 @@ class OrderControllerTest {
         String contentAsString = mvcResult.getResponse().getContentAsString();
         List<OrderProductsEntity> returnedOrderProducts = objectMapper.readValue(contentAsString, new TypeReference<List<OrderProductsEntity>>(){});
 
-        assertEquals(1, returnedOrderProducts.get(0).getOrderId());
-        assertEquals(1, returnedOrderProducts.get(0).getProductId());
+        assertEquals(1, returnedOrderProducts.get(0).getOrder().getOrderId());
+        assertEquals(1, returnedOrderProducts.get(0).getProduct().getProductId());
     }
 
     @Test

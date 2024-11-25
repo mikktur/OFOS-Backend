@@ -1,9 +1,7 @@
 package ofos.service;
 
 import ofos.dto.ProductDTO;
-import ofos.entity.ProductEntity;
-import ofos.entity.ProvidesEntity;
-import ofos.entity.RestaurantEntity;
+import ofos.entity.*;
 import ofos.repository.ProductRepository;
 import ofos.repository.ProvidesRepository;
 import ofos.repository.RestaurantRepository;
@@ -13,12 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -69,27 +69,34 @@ class ProductServiceTest {
 
     @Test
     void updateProductTest() {
-        ProvidesEntity providesEntity = new ProvidesEntity();
-        providesEntity.setProductID(1);
-        ProductEntity productEntity = new ProductEntity();
-        productEntity.setProductPrice(BigDecimal.valueOf(5));
-        productEntity.setProductDesc("Namnam");
-        productEntity.setProductName("Nimi");
-        productEntity.setProductId(1);
-        productEntity.setActive(true);
-        productEntity.setCategory("Kategoria");
-        productEntity.setPicture("kuva.jpg");
-
-
-        when(providesRepository.findProductOwnerByName(anyString())).thenReturn(Collections.singletonList(providesEntity));
-        when(productRepository.findByProductId(1)).thenReturn(productEntity);
+        int userId = 1;
+        int restaurantId = 1;
+        int productId = 1;
 
         ProductDTO productDTO = new ProductDTO();
-        productDTO.setProductID(1);
-        ResponseEntity<String> res = productService.updateProduct(productDTO, "owner");
+        productDTO.setProductID(productId);
+        productDTO.setProductName("Updated Product");
+        productDTO.setProductPrice(BigDecimal.valueOf(10));
 
-        verify(productRepository).save(any());
-        assertEquals("Product updated.", res.getBody());
+        RestaurantEntity restaurant = new RestaurantEntity();
+        UserEntity owner = new UserEntity();
+        owner.setUserId(userId);
+        restaurant.setOwner(owner);
+
+        ProductEntity product = new ProductEntity();
+        product.setProductId(productId);
+        product.setProductName("Original Product");
+
+        when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
+        when(productRepository.findByProductIdAndRestaurantId(productId, restaurantId)).thenReturn(Optional.of(product));
+
+
+        ResponseEntity<String> response = productService.updateProduct(productDTO, userId, restaurantId);
+
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Product updated.", response.getBody());
+        verify(productRepository).save(any(ProductEntity.class));
     }
 
 //    @Test
@@ -119,25 +126,28 @@ class ProductServiceTest {
 //    }
 
     @Test
+    @SuppressWarnings("unchecked")
     void getAllProductsByRestaurantTest() {
-        ProductEntity productEntity = new ProductEntity();
-        List<ProductEntity> entities = new ArrayList<>();
-        productEntity.setProductPrice(BigDecimal.valueOf(5));
-        productEntity.setProductDesc("Namnam");
-        productEntity.setProductName("Nimi");
-        productEntity.setProductId(1);
-        productEntity.setActive(true);
-        productEntity.setCategory("Kategoria");
-        productEntity.setPicture("kuva.jpg");
-        entities.add(productEntity);
+        int restaurantId = 1;
+        String lang = "en";
 
+        ProductEntity product = new ProductEntity();
+        product.setProductId(1);
+        product.setProductPrice(BigDecimal.valueOf(10));
 
-        when(productRepository.getProductsByRestaurant(anyInt())).thenReturn(entities);
+        TranslationEntity translation = new TranslationEntity();
+        translation.setName("Translated Name");
+        translation.setDescription("Translated Description");
 
-        List<ProductDTO> res = productService.getAllProductsByRestaurant(1, "en");
+        List<Object[]> mockResult = new ArrayList<>();
+        mockResult.add(new Object[]{product, translation});
 
+        when(productRepository.findProductsWithTranslations(anyInt(), anyString())).thenReturn(mockResult);
 
-        verify(productRepository).getProductsByRestaurant(anyInt());
-        assertEquals(res.size(), 1);
+        List<ProductDTO> result = productService.getAllProductsByRestaurant(restaurantId, lang);
+
+        assertEquals(1, result.size());
+        assertEquals("Translated Name", result.get(0).getProductName());
+        assertEquals("Translated Description", result.get(0).getProductDesc());
     }
 }

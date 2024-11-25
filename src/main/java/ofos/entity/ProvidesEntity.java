@@ -1,10 +1,14 @@
 package ofos.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "Provides")
 @IdClass(ProvidesPK.class)
 public class ProvidesEntity {
@@ -30,19 +34,4 @@ public class ProvidesEntity {
     public ProvidesEntity(){
     }
 
-    public void setProductID(Integer productID) {
-        ProductID = productID;
-    }
-
-    public Integer getProductID() {
-        return ProductID;
-    }
-
-    public void setRestaurantID(Integer restaurantID) {
-        RestaurantID = restaurantID;
-    }
-
-    public Integer getRestaurantID() {
-        return RestaurantID;
-    }
 }

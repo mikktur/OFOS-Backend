@@ -1,17 +1,18 @@
 package ofos.repository;
 
+import ofos.entity.ProductEntity;
 import ofos.entity.TranslationEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+public interface TranslationRepository extends JpaRepository<TranslationEntity, Integer> {
 
-public interface TranslationRepository extends JpaRepository<TranslationEntity, Long> {
-
-    TranslationEntity findByProductIdAndLang(int id, String lang);
-
-    @Query("SELECT t FROM TranslationEntity t WHERE t.productId IN (SELECT p.ProductID FROM ProvidesEntity p WHERE p.RestaurantID = ?1)" +
-            "AND t.lang = ?2")
-    List<TranslationEntity> findTranslationEntitiesByProductIdAndLang(int id, String lang);
+    @Query("""
+    SELECT t
+    FROM TranslationEntity t
+    WHERE t.product = :product AND t.id.lang = :lang
+""")
+    TranslationEntity findByProductAndLang(@Param("product") ProductEntity product, @Param("lang") String lang);
 
 }

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 /**
  * Repository for the {@link ContactInfoEntity} class.
  */
-public interface ContactInfoRepository extends JpaRepository<ContactInfoEntity, Long> {
+public interface ContactInfoRepository extends JpaRepository<ContactInfoEntity, Integer> {
 
     ContactInfoEntity findContactInfoEntityByUserId(int userID);
 

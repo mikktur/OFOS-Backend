@@ -1,8 +1,11 @@
 package ofos.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * UserEntity class is an entity class that maps to the Users table in the database.
@@ -12,7 +15,8 @@ import java.util.Set;
  * - Password
  * - Role
  */
-
+@Setter
+@Getter
 @Entity
 @Table(name = "Users")
 public class UserEntity {
@@ -24,74 +28,33 @@ public class UserEntity {
 
     @Column(name = "Username")
     private String username;
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<OrdersEntity> orders = new ArrayList<>();
     @Column(name = "Password")
     private String password;
 
     @Column(name = "Role")
     private String role = "USER";
-
-    @Column(name = "Enabled")
-    private boolean enabled;
-
-
+    @Column(name = "Enabled", nullable = true)
+    private boolean enabled = true;
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<RestaurantEntity> restaurants = new ArrayList<>();
     // Constructors
     public UserEntity() {
     }
 
-    public UserEntity(Integer userId, String username, String password, String role, boolean enabled) {
-        this.userId = userId;
+    public UserEntity(int id,String username, String password, String role, boolean enabled) {
+        this.userId = id;
         this.username = username;
         this.password = password;
         this.role = role;
         this.enabled = enabled;
     }
 
-    // Getters and Setters
+    public void addRestaurant(RestaurantEntity restaurant) {
+        if (!restaurants.contains(restaurant)) {
+            restaurants.add(restaurant);
 
-
-    public boolean isEnabled() {
-        return enabled;
+        }
     }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public Integer getId() {
-        return userId;
-    }
-
 }

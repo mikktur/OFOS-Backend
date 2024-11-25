@@ -35,6 +35,7 @@ class ContactInfoServiceTest {
     @Test
     void getContactInfoTest() {
         int userId = 1;
+
         ContactInfoEntity contactInfoEntity = new ContactInfoEntity();
         contactInfoEntity.setPhoneNumber("0502222222");
         contactInfoEntity.setAddress("Osoite 1");
@@ -42,7 +43,7 @@ class ContactInfoServiceTest {
         contactInfoEntity.setFirstName("Matti");
         contactInfoEntity.setLastName("Meikäläinen");
         contactInfoEntity.setPostalCode("00220");
-        contactInfoEntity.setUserId(1);
+        contactInfoEntity.setUserId(userId);
 
 
         when(contactInfoRepository.findContactInfoEntityByUserId(userId)).thenReturn(contactInfoEntity);
@@ -68,6 +69,7 @@ class ContactInfoServiceTest {
         UserEntity userEntity = new UserEntity();
         userEntity.setUserId(1);
         when(userRepository.findByUsername(username)).thenReturn(userEntity);
+        when(contactInfoRepository.findContactInfoEntityByUserId(userEntity.getUserId())).thenReturn(new ContactInfoEntity());
 
         ResponseEntity<String> result = contactInfoService.updateContactInfo(contactInfoDTO, username);
 
@@ -98,23 +100,5 @@ class ContactInfoServiceTest {
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
 
-    @Test
-    void createEntityTest() {
-        ContactInfoDTO contactInfoDTO = new ContactInfoDTO(
-                "050222222",
-                "Osoite 1",
-                "Kaupunki",
-                "Matti",
-                "Meikäläinen",
-                "email@gmail.com",
-                "00220",
-                1
-        );
-        ContactInfoEntity contactInfoEntity = new ContactInfoEntity();
 
-        ContactInfoEntity result = contactInfoService.createEntity(contactInfoDTO, contactInfoEntity);
-
-
-        assertEquals(contactInfoEntity, result);
-    }
 }

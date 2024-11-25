@@ -14,8 +14,7 @@ public class DeliveryAddressDTO {
     private String city;
     @NotNull
     private String postalCode;
-    @NotNull
-    private int deliveryAddressId;
+    private @NotNull int deliveryAddressId;
 
     private String info;
 
@@ -25,7 +24,7 @@ public class DeliveryAddressDTO {
     }
 
 
-    public DeliveryAddressDTO(String streetAddress, String city, String postCode, int deliveryAddressID, String info, boolean defaultAddress) {
+    public DeliveryAddressDTO(String streetAddress, String city, String postCode,int deliveryAddressID, String info, boolean defaultAddress) {
         this.streetAddress = streetAddress;
         this.city = city;
         this.postalCode = postCode;

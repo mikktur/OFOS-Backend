@@ -8,16 +8,15 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "product_translations")
-@IdClass(TranslationId.class)
 public class TranslationEntity {
 
-    @Id
-    @Column(name = "Lang")
-    private String lang;
+    @EmbeddedId
+    private TranslationId id = new TranslationId();
 
-    @Id
-    @Column(name = "ProductID")
-    private int productId;
+    @MapsId("productId")
+    @ManyToOne
+    @JoinColumn(name = "ProductID", nullable = false)
+    private ProductEntity product;
 
     @Column(name = "Description")
     private String description;
@@ -25,11 +24,16 @@ public class TranslationEntity {
     @Column(name = "Name")
     private String name;
 
-    public TranslationEntity(){}
-
-    public TranslationEntity(String description, String name){
+    public TranslationEntity() {}
+    public TranslationEntity(ProductEntity product, String lang, String name, String description) {
+        this.product = product;
+        this.name = name;
+        this.description = description;
+        this.id.setProductId(product.getProductId());
+        this.id.setLang(lang);
+    }
+    public TranslationEntity(String description, String name) {
         this.description = description;
         this.name = name;
     }
-
 }

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Repository for the {@link OrderProductsEntity} class.
  */
-public interface OrderProductsRepository extends JpaRepository<OrderProductsEntity, Long> {
+public interface OrderProductsRepository extends JpaRepository<OrderProductsEntity, Integer> {
     /**
      * Retrieves all products from join table by user ID.
      * @param userID The ID of the user.

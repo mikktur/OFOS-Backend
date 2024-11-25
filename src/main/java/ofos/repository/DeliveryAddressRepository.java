@@ -28,7 +28,7 @@ public interface DeliveryAddressRepository extends JpaRepository<DeliveryAddress
      * @return The number of deleted addresses.
      */
     @Modifying
-    long deleteByDeliveryAddressId(int addressID);
+    int deleteByDeliveryAddressId(int addressID);
 
     /**
      * Deletes a user's address from the jointable by the delivery address ID.

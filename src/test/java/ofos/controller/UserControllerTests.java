@@ -3,6 +3,7 @@ package ofos.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import ofos.dto.CreateUserRequestDTO;
+import ofos.dto.UserDTO;
 import ofos.entity.UserEntity;
 import ofos.security.JwtRequestFilter;
 import ofos.security.JwtUtil;
@@ -64,7 +65,7 @@ public class UserControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.role").value(userEntity.getRole()))
                 .andExpect(jsonPath("$.username").value(userEntity.getUsername()))
-                .andExpect(jsonPath("$.id").value(userEntity.getUserId()))
+                .andExpect(jsonPath("$.userId").value(userEntity.getUserId()))
                 .andDo(MockMvcResultHandlers.print());
 
 
@@ -93,6 +94,7 @@ public class UserControllerTests {
 
     @Test
     public void getUserByUsernameTest() throws Exception {
+
         String username = "kissa1";
         UserEntity userEntity = new UserEntity();
         userEntity.setUserId(10);
@@ -105,30 +107,33 @@ public class UserControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.role").value(userEntity.getRole()))
                 .andExpect(jsonPath("$.username").value(userEntity.getUsername()))
-                .andExpect(jsonPath("$.id").value(userEntity.getUserId()))
+                .andExpect(jsonPath("$.userId").value(userEntity.getUserId()))
                 .andDo(MockMvcResultHandlers.print());
 
     }
 
     @Test
     public void getAllUsersTest() throws Exception {
-        List<UserEntity> kissat = new ArrayList<>();
-        UserEntity userEntity = new UserEntity();
-        UserEntity userEntity1 = new UserEntity();
-        userEntity.setUserId(10);
-        userEntity.setUsername("kissa1");
-        userEntity.setRole("kissa");
-        userEntity1.setUserId(101);
-        userEntity1.setUsername("kissa12");
-        userEntity1.setRole("kissa");
-        kissat.add(userEntity);
-        kissat.add(userEntity1);
+        // Mock data: Create UserDTO objects to simulate the service's response
+        List<UserDTO> userDTOs = new ArrayList<>();
+        UserDTO userDTO1 = new UserDTO(10, "kissa1", "kissa", true);
+        UserDTO userDTO2 = new UserDTO(101, "kissa12", "kissa", true);
+        userDTOs.add(userDTO1);
+        userDTOs.add(userDTO2);
 
-        when(userService.getAllUsers()).thenReturn(kissat);
+        // Mock the service to return the list of UserDTOs
+        when(userService.getAllUsers()).thenReturn(userDTOs);
 
+        // Perform the GET request and validate the response
         mvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].userId").value(10))
+                .andExpect(jsonPath("$[0].username").value("kissa1"))
+                .andExpect(jsonPath("$[0].role").value("kissa"))
+                .andExpect(jsonPath("$[1].userId").value(101))
+                .andExpect(jsonPath("$[1].username").value("kissa12"))
+                .andExpect(jsonPath("$[1].role").value("kissa"))
                 .andDo(MockMvcResultHandlers.print());
 
     }

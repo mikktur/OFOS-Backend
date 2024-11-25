@@ -6,7 +6,6 @@ import ofos.entity.RestaurantEntity;
 import ofos.entity.UserEntity;
 import ofos.repository.RestaurantRepository;
 import ofos.repository.UserRepository;
-import ofos.service.RestaurantService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -86,11 +85,11 @@ public class RestaurantServiceTests {
         List<RestaurantEntity> restaurants = List.of(restaurant1, restaurant2);
 
         // Mock repository behavior
-        Mockito.when(userRepository.findById(30L)).thenReturn(Optional.of(owner));
-        Mockito.when(restaurantRepository.findByOwner_UserId(30L)).thenReturn(restaurants);
+        Mockito.when(userRepository.findById(30)).thenReturn(Optional.of(owner));
+        Mockito.when(restaurantRepository.findByOwner_UserId(30)).thenReturn(restaurants);
 
         // Act
-        List<RestaurantDTO> returnedRestaurants = restaurantService.getRestaurantsByOwner(30L);
+        List<RestaurantDTO> returnedRestaurants = restaurantService.getRestaurantsByOwner(30);
 
         // Assert
         Assertions.assertEquals(2, returnedRestaurants.size());
@@ -132,7 +131,7 @@ public class RestaurantServiceTests {
         RestaurantEntity restaurant = createRestaurant(1, "Old Name", "123456789", "oldpicture.jpg", owner1);
 
         // Mock repository behavior
-        Mockito.when(restaurantRepository.findById(1)).thenReturn(Optional.of(restaurant));
+        Mockito.when(restaurantRepository.findByRestaurantID(1)).thenReturn(Optional.of(restaurant));
         Mockito.when(restaurantRepository.save(any(RestaurantEntity.class))).thenReturn(restaurant);
 
         // Act: Call the service method to update the restaurant

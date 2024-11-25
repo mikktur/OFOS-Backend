@@ -4,12 +4,13 @@ package ofos.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ofos.dto.ProductDTO;
 import ofos.entity.ProductEntity;
+import ofos.entity.UserEntity;
 import ofos.security.JwtRequestFilter;
 import ofos.security.JwtUtil;
+import ofos.security.MyUserDetails;
 import ofos.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,7 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import java.math.BigDecimal;
-import java.security.Principal;
 
 
 import static org.mockito.ArgumentMatchers.*;
@@ -99,20 +99,19 @@ public class ProductControllerTests {
     public void updateProductTest() throws Exception {
         ProductDTO productDTO = new ProductDTO(333, "Good brgr", "Maistuu namnam", BigDecimal.valueOf(17.50),
                 "Hampurilainen", "https://cdn.rkt-prod.rakentaja.com/media/original_images/202212_60205.jpg");
-        UserDetails userDetails = User.withUsername("testUser")
-                .password("testPassword")
-                .roles("Owner")
-                .build();
+        UserEntity userEntity = new UserEntity(1, "testUser", "testPassword", "Owner",true);
+        MyUserDetails userDetails = new MyUserDetails(userEntity);
+
         ResponseEntity<String> responseEntity = ResponseEntity.ok("Product updated.");
 
         when(jwtUtil.extractRole(any())).thenReturn("Owner");
         when(jwtUtil.extractUsername(any())).thenReturn("testUser");
-        when(productService.updateProduct(any(ProductDTO.class), anyString())).thenReturn(responseEntity);
+        when(productService.updateProduct(any(ProductDTO.class), anyInt(), anyInt())).thenReturn(responseEntity);
 
         Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        mvc.perform(put("/api/products/update")
+        mvc.perform(put("/api/products/update/1")
                 .header("Authorization", "Bearer testToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(productDTO)))

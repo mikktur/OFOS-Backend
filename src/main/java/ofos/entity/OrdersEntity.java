@@ -3,10 +3,10 @@ package ofos.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.sql.Date;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,7 +16,7 @@ public class OrdersEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "OrderID")
-    private int orderId;
+    private Integer orderId;
     @Basic
     @Column(name = "State")
     private String state;
@@ -24,25 +24,25 @@ public class OrdersEntity {
     @Column(name = "OrderAddress")
     private String orderAddress;
     @Basic
-    @CreatedDate
-    @Column(name = "OrderDate")
+    @Column(name = "OrderDate", insertable = false, updatable = false)
     private Date orderDate;
-    @Basic
-    @Column(name = "User_ID")
-    private int userId;
-    @Basic
-    @Column(name = "RestaurantID")
-    private int restaurantId;
-
+    @ManyToOne
+    @JoinColumn(name = "User_ID")
+    private UserEntity user;
+    @ManyToOne
+    @JoinColumn(name = "RestaurantID")
+    private RestaurantEntity restaurant;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<OrderProductsEntity> orderProducts = new ArrayList<>();
     public OrdersEntity(){}
 
     // Testiä varten
-    public OrdersEntity(int orderId, String state, String orderAddress, Date orderDate, int userId, int restaurantId) {
+    public OrdersEntity(Integer orderId, String state, String orderAddress, Date orderDate, UserEntity user, RestaurantEntity restaurant) {
         this.orderId = orderId;
         this.state = state;
         this.orderAddress = orderAddress;
         this.orderDate = orderDate;
-        this.userId = userId;
-        this.restaurantId = restaurantId;
+        this.user = user;
+        this.restaurant = restaurant;
     }
 }

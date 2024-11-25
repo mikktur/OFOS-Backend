@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Repository for the {@link UserEntity} class.
  */
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     //add custom queries here
     UserEntity findByUsername(String username);
     UserEntity findByUserId(int userId);

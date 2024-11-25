@@ -2,9 +2,9 @@ package ofos.service;
 
 
 import ofos.dto.CreateUserRequestDTO;
+import ofos.dto.UserDTO;
 import ofos.entity.UserEntity;
 import ofos.repository.UserRepository;
-import ofos.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,10 +75,18 @@ public class UserServiceTests {
 
         Mockito.when(userRepository.findAll()).thenReturn(users);
 
-        List<UserEntity> returnedUsers= userService.getAllUsers();
+        List<UserDTO> returnedUsers = userService.getAllUsers();
 
-        Assertions.assertEquals(users, returnedUsers);
-        Assertions.assertEquals(returnedUsers.size(), users.size());
+        Assertions.assertEquals(users.size(), returnedUsers.size(), "Sizes should match");
+        Assertions.assertEquals(users.get(0).getUserId(), returnedUsers.get(0).getUserId());
+        Assertions.assertEquals(users.get(0).getUsername(), returnedUsers.get(0).getUsername());
+        Assertions.assertEquals(users.get(0).getRole(), returnedUsers.get(0).getRole());
+        Assertions.assertEquals(users.get(0).isEnabled(), returnedUsers.get(0).isEnabled());
+
+        Assertions.assertEquals(users.get(1).getUserId(), returnedUsers.get(1).getUserId());
+        Assertions.assertEquals(users.get(1).getUsername(), returnedUsers.get(1).getUsername());
+        Assertions.assertEquals(users.get(1).getRole(), returnedUsers.get(1).getRole());
+        Assertions.assertEquals(users.get(1).isEnabled(), returnedUsers.get(1).isEnabled());
     }
 
     @Test

@@ -42,9 +42,6 @@ public class RestaurantService {
         List<RestaurantEntity> restaurants = restaurantRepository.findAll();
         // Print all restaurants retrieved from the repository
         System.out.println("Restaurants retrieved: ");
-        restaurants.forEach(restaurant ->
-                System.out.println("Restaurant Name: " + restaurant.getRestaurantName() + ", Owner: " + restaurant.getOwner().getUsername())
-        );
 
         return restaurants.stream()
                 .map(RestaurantDTO::fromEntity)
@@ -57,7 +54,7 @@ public class RestaurantService {
      * @param userId The ID of the user.
      * @return A list of {@link RestaurantDTO} objects representing all restaurants owned by the user in the database.
      */
-    public List<RestaurantDTO> getRestaurantsByOwner(long userId) {
+    public List<RestaurantDTO> getRestaurantsByOwner(int userId) {
         System.out.println("Entered getRestaurantsByOwner method in RestaurantService");
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -80,9 +77,9 @@ public class RestaurantService {
      * @return The updated {@link RestaurantDTO} object.
      */
     @Transactional
-    public RestaurantDTO updateRestaurant(Integer restaurantId, UpdateRestaurantDTO updateRestaurantDTO) {
+    public RestaurantDTO updateRestaurant(int restaurantId, UpdateRestaurantDTO updateRestaurantDTO) {
         System.out.println("Entered updateRestaurant method in RestaurantService");
-        RestaurantEntity restaurant = restaurantRepository.findById(restaurantId)
+        RestaurantEntity restaurant = restaurantRepository.findByRestaurantID(restaurantId)
                 .orElseThrow(() -> new UserNotFoundException("Restaurant not found"));
 
 
@@ -131,7 +128,8 @@ public class RestaurantService {
 
     public ResponseEntity<String> setNewOwner(int newOwnerId, int restaurantId){
         try {
-            RestaurantEntity restaurant = restaurantRepository.findByRestaurantID(restaurantId);
+            RestaurantEntity restaurant = restaurantRepository.findById(restaurantId)
+                    .orElseThrow(() -> new RuntimeException("Restaurant not found"));
             UserEntity newOwner = userRepository.findByUserId(newOwnerId);
             int oldOwnerId = restaurant.getOwner().getUserId();
             restaurant.setOwner(newOwner);
@@ -162,4 +160,14 @@ public class RestaurantService {
 
     }
 
+    @Transactional
+    public void addRestaurantOwnerRole(int uid,int rid){
+        UserEntity user = userRepository.findById(uid)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        RestaurantEntity restaurant = restaurantRepository.findById(rid)
+                .orElseThrow(() -> new UserNotFoundException("Restaurant not found"));
+        restaurant.setOwner(user);
+        restaurantRepository.save(restaurant);
+
+    }
 }

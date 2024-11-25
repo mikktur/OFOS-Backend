@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import ofos.entity.ProductEntity;
 
 import java.math.BigDecimal;
 
@@ -12,7 +11,7 @@ import java.math.BigDecimal;
 @Setter
 public class ProductDTO {
 
-    private int productID;
+    private Integer productID;
     @NotBlank(message = "Product name is missing.")
     private String productName;
     @NotBlank(message = "Product description is missing.")
@@ -27,7 +26,7 @@ public class ProductDTO {
     private String lang;
     public ProductDTO(){}
 
-    public ProductDTO(Integer productID,String productName, String productDesc, BigDecimal productPrice, String category, String picture, boolean active) {
+    public ProductDTO(Integer productID, String productName, String productDesc, BigDecimal productPrice, String category, String picture, boolean active) {
         this.productID = productID;
         this.productName = productName;
         this.productDesc = productDesc;
@@ -40,7 +39,7 @@ public class ProductDTO {
 
 
     // Testiä varten.
-    public ProductDTO(int productID, String productName, String productDesc, BigDecimal productPrice, String category, String picture) {
+    public ProductDTO(Integer productID, String productName, String productDesc, BigDecimal productPrice, String category, String picture) {
         this.productID = productID;
         this.productName = productName;
         this.productDesc = productDesc;

@@ -2,22 +2,32 @@ package ofos.service;
 
 import ofos.dto.ChangePasswordDTO;
 import ofos.dto.CreateUserRequestDTO;
+import ofos.dto.UserDTO;
 import ofos.entity.DeliveryAddressEntity;
+import ofos.entity.RestaurantEntity;
 import ofos.entity.UserEntity;
 import ofos.entity.UsersAddressEntity;
+import ofos.exception.UserNotFoundException;
 import ofos.repository.DeliveryAddressRepository;
+import ofos.repository.RestaurantRepository;
 import ofos.repository.UserRepository;
 import ofos.repository.UsersAddressRepository;
+import ofos.security.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class provides methods to interact and save the user data stored in the database.
@@ -25,23 +35,31 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+
+    private final UserRepository userRepository;
 
     @Autowired
     private DeliveryAddressRepository deliveryAddressRepository;
 
     @Autowired
     private UsersAddressRepository usersAddressRepository;
+    @Autowired
+    private RestaurantRepository restaurantRepository;
 
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
     /**
      * Creates a new user and saves it to the database.
      * @param user contains username,password.
      * @return The created {@link UserEntity} object.
      */
+    @Transactional
     public UserEntity createUser(CreateUserRequestDTO user) {
         System.out.println("Creating user: " + user.getUsername());
         UserEntity userEntity = new UserEntity();
@@ -56,8 +74,10 @@ public class UserService {
      *
      * @return A list of {@link UserEntity} objects representing all users in the database.
      */
-    public List<UserEntity> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserDTO(user.getUserId(), user.getUsername(), user.getRole(), user.isEnabled()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -115,7 +135,7 @@ public class UserService {
             deliveryAddressRepository.deleteById(uae.getDeliveryAddressId());
         }
         try {
-            userRepository.deleteById((long) user.getUserId());
+            userRepository.deleteById(user.getUserId());
             return new ResponseEntity<>(
                     "User deleted.",
                     HttpStatus.OK
@@ -127,7 +147,7 @@ public class UserService {
             );
         }
     }
-
+    @Transactional
     public ResponseEntity<String> updateBanStatus(int userId){
         int affectedRows = userRepository.updateBanStatus(userId);
         if (affectedRows != 0){
@@ -141,5 +161,18 @@ public class UserService {
                 HttpStatus.BAD_REQUEST
         );
     }
+
+    @Transactional
+    public void updateUserRole(int userId, String role){
+
+        UserEntity user = userRepository.findByUserId(userId);
+        if (user == null){
+            throw new UsernameNotFoundException("User not found: " + userId);
+        }
+        user.setRole(role);
+        userRepository.save(user);
+
+    }
+
 
 }

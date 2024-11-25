@@ -1,13 +1,12 @@
 package ofos.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import ofos.dto.DeliveryAddressDTO;
 import ofos.security.JwtUtil;
+import ofos.service.CustomUserDetailsService;
 import ofos.service.DeliveryAddressService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -35,7 +33,8 @@ class DeliveryAddressControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
     @MockBean
     private DeliveryAddressService deliveryAddressService;
 
@@ -67,19 +66,24 @@ class DeliveryAddressControllerTest {
     @Test
     void saveDeliveryAddressTest() throws Exception {
         DeliveryAddressDTO deliveryAddressDTO = new DeliveryAddressDTO("Address", "City", "00410", 1, "Info", true);
-        String jwt = "Bearer jwtToken";
+        String jwt = "Bearer jwtToken"; // Simulate a JWT token
         String dummyUsername = "dummyUser";
-        ResponseEntity<String> responseEntity = ResponseEntity.ok("Saved successfully.");
 
+        // Mock the JWT extraction to return the dummy username
         Mockito.when(jwtUtil.extractUsername(jwt.substring(7))).thenReturn(dummyUsername);
 
-        Mockito.when(deliveryAddressService.saveDeliveryAddress(any(DeliveryAddressDTO.class), eq(dummyUsername))).thenReturn(responseEntity);
+        // Mock the service layer to simulate saving the address
+        ResponseEntity<String> responseEntity = ResponseEntity.ok("Saved successfully.");
+        Mockito.when(deliveryAddressService.saveDeliveryAddress(Mockito.any(DeliveryAddressDTO.class), Mockito.eq(dummyUsername)))
+                .thenReturn(responseEntity);
 
+        // Perform the mock request and check the response
         mockMvc.perform(MockMvcRequestBuilders.post("/api/deliveryaddress/save")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(deliveryAddressDTO))
-                .header("Authorization", jwt))
-                .andExpect(status().isOk());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(deliveryAddressDTO)) // Convert DTO to JSON string
+                        .header("Authorization", jwt)) // Add JWT token to the request header
+                .andExpect(status().isOk()) // Expect HTTP status 200 OK
+                .andExpect(content().string("Saved successfully.")); // Verify the response body
     }
 
     @Test

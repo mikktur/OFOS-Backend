@@ -14,7 +14,7 @@ public class DeliveryAddressEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "DeliveryAddressID", nullable = false)
-    private int deliveryAddressId;
+    private Integer deliveryAddressId;
     @Basic
     @Column(name = "StreetAddress", nullable = false, length = 255)
     private String streetAddress;

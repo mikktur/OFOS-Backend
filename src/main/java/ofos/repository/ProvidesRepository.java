@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Repository for the {@link ProvidesEntity} class.
  */
-public interface ProvidesRepository extends JpaRepository<ProvidesEntity, Long> {
+public interface ProvidesRepository extends JpaRepository<ProvidesEntity, Integer> {
 
     /**
      * Retrieves all products provided by a restaurant of a certain owner.
