@@ -3,7 +3,6 @@ package ofos.controller;
 
 import ofos.dto.RestaurantDTO;
 import ofos.dto.UpdateRestaurantDTO;
-import ofos.entity.RestaurantEntity;
 import ofos.exception.RestaurantNotFoundException;
 import ofos.exception.UserNotFoundException;
 import ofos.security.JwtUtil;
@@ -59,11 +58,6 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurants);
     }
 
-    /**
-     * Changes the owner of a restaurant.
-     * @param payload A map containing the new owner ID and restaurant ID.
-     * @return A response entity containing a message and status code.
-     */
     @PutMapping("/changeowner")
     public ResponseEntity<String> changeOwner(@RequestBody Map<String, Object> payload){
         int ownerId = (int) payload.get("newOwnerId");

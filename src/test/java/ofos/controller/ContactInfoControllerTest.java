@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
@@ -105,4 +106,49 @@ class ContactInfoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Contact info saved for: John")));
     }
+
+
+    @Test
+    public void getContactInfoNotFoundTest() throws Exception {
+        when(contactInfoService.getContactInfo(anyInt())).thenReturn(null);
+
+        mvc.perform(get("/api/contactinfo/999")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void updateContactInfoFailureTest() throws Exception {
+        ContactInfoDTO contactInfoDTO = new ContactInfoDTO("05055555555", "Osoite 55", "Lontoo", "John",
+                "Doe", "john.doe@example.com", "1234567890", 1);
+
+        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed.");
+        when(jwtUtil.extractUsername(any())).thenReturn("testUser");
+        when(contactInfoService.updateContactInfo(any(ContactInfoDTO.class), anyString())).thenReturn(responseEntity);
+
+        mvc.perform(post("/api/contactinfo/update")
+                .header("Authorization", "Bearer testToken")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(contactInfoDTO)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Update failed."));
+    }
+
+    @Test
+    public void saveInfoFailureTest() throws Exception {
+        ContactInfoDTO contactInfoDTO = new ContactInfoDTO("05055555555", "Osoite 55", "Lontoo", "John",
+                "Doe", "john.doe@example.com", "1234567890", 1);
+
+        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Save failed.");
+        when(jwtUtil.extractUsername(any())).thenReturn("testUser");
+        when(contactInfoService.saveContactInfo(any(ContactInfoDTO.class), anyString())).thenReturn(responseEntity);
+
+        mvc.perform(post("/api/contactinfo/save")
+                .header("Authorization", "Bearer testToken")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(contactInfoDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Save failed."));
+    }
+
 }

@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ofos.dto.ProductDTO;
 import ofos.entity.ProductEntity;
 import ofos.entity.UserEntity;
+import ofos.repository.RestaurantRepository;
 import ofos.security.JwtRequestFilter;
 import ofos.security.JwtUtil;
 import ofos.security.MyUserDetails;
 import ofos.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,11 +25,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import java.math.BigDecimal;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -52,6 +56,9 @@ public class ProductControllerTests {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private RestaurantRepository restaurantRepository;
 
 
     @Test
@@ -118,6 +125,41 @@ public class ProductControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Product updated."))
                 .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void getProductByIdFailureTest() throws Exception {
+        when(productService.getDishById(anyInt(), anyString())).thenReturn(null);
+
+
+        MvcResult mvcResult = mvc.perform(get("/api/products/en/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertEquals("", responseBody);
+    }
+
+    @Test
+    public void deleteDishFailureTest() throws Exception {
+        when(jwtUtil.extractRole(anyString())).thenReturn("USER");
+
+        mvc.perform(delete("/api/products/delete/1")
+                        .header("Authorization", "Bearer testToken")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("Not an owner."));
+    }
+
+    @Test
+    public void deleteDishFromRestaurantFailureTest() throws Exception {
+        when(jwtUtil.extractRole(anyString())).thenReturn("USER");
+
+        mvc.perform(delete("/api/products/delete/1/restaurant/1")
+                .header("Authorization", "Bearer testToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("Not an owner."));
     }
 
 

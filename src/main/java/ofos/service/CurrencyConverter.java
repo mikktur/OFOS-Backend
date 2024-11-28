@@ -12,13 +12,7 @@ public class CurrencyConverter {
             "ru", new BigDecimal("90.0")
     );
 
-    /**
-     * Converts an amount from one currency to another.
-     * @param fromCurrency The currency to convert from.
-     * @param toCurrency The currency to convert to.
-     * @param amount The amount to convert.
-     * @return The converted amount.
-     */
+
     public static BigDecimal convert(String fromCurrency, String toCurrency, BigDecimal amount) {
         if (fromCurrency.equals("EUR")) {
             // Convert from euros to the target currency

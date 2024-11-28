@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
@@ -84,7 +85,7 @@ class OrderControllerTest {
         when(ordersService.getOrdersByUserID(anyInt())).thenReturn(orders);
 
         MvcResult mvcResult = mvc.perform(get("/api/order/1")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -160,5 +161,70 @@ class OrderControllerTest {
                 assertEquals(expected.getOrderDate().toString(), returned.getOrderDate().toString());
             }
         }
+    }
+
+    @Test
+    void makeOrderFailureTest() throws Exception {
+        List<OrderDTO> order = new ArrayList<>();
+        order.add(new OrderDTO("Ordered", 5, 1, 1, 1));
+
+        when(jwtUtil.extractUsername(any())).thenReturn("testUser");
+        when(ordersService.postOrder(anyList(), anyString())).thenReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Order failed."));
+
+        mvc.perform(post("/api/order")
+                .header("Authorization", "Bearer testToken")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(order)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Order failed."));
+    }
+
+    @Test
+    void getOrdersByIDFailureTest() throws Exception {
+        when(ordersService.getOrdersByUserID(anyInt())).thenReturn(null);
+
+        MvcResult mvcResult = mvc.perform(get("/api/order/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertEquals("", responseBody);
+    }
+
+    @Test
+    void getOrderProductsByIDFailureTest() throws Exception {
+        when(ordersService.getOrderContentsByUserID(anyInt())).thenReturn(null);
+
+        MvcResult mvcResult = mvc.perform(get("/api/order/products/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertEquals("", responseBody);
+    }
+
+    @Test
+    void getOrderHistoryFailureTest() throws Exception {
+        when(jwtUtil.extractUsername(any())).thenReturn("testUser");
+        when(ordersService.getHistory(anyString(), anyString())).thenReturn(null);
+
+
+        MvcResult mvcResult = mvc.perform(get("/api/order/fi/history")
+                .header("Authorization", "Bearer testToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        assertEquals("", responseBody);
+    }
+
+    @Test
+    void updateStatusFailureTest() throws Exception {
+        when(ordersService.updateStatus(anyInt(), anyString())).thenReturn(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update status failed."));
+
+        mvc.perform(post("/api/order/status/1/failed")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Update status failed."));
     }
 }

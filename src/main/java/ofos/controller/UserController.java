@@ -68,12 +68,7 @@ public class UserController {
     }
 
 
-    /**
-     * Creates a new user.
-     *
-     * @param createUserRequest The request object containing the user data.
-     * @return A {@link ResponseEntity} object containing the status code and message.
-     */
+
 
     @PostMapping("/create")
     public ResponseEntity<CreateUserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO createUserRequest) {
@@ -103,12 +98,6 @@ public class UserController {
         }
     }
 
-    /**
-     * Updates user's password.
-     * @param changePasswordDTO The request object containing the new password and old password.
-     * @param req The HTTP request object for authorization.
-     * @return A ResponseEntity object containing the status code and message.
-     */
     @PutMapping("/updatePassword")
     public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO, HttpServletRequest req) {
         String jwt = req.getHeader("Authorization").substring(7);
@@ -116,11 +105,7 @@ public class UserController {
         return userService.updatePassword(changePasswordDTO, username);
     }
 
-    /**
-     * Deletes a user.
-     * @param req The HTTP request object for authorization.
-     * @return A ResponseEntity object containing the status code and message.
-     */
+
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteUser(HttpServletRequest req) {
         String jwt = req.getHeader("Authorization").substring(7);
@@ -134,11 +119,6 @@ public class UserController {
         return userService.deleteUser(username);
     }
 
-    /**
-     * Updates the ban status of a user.
-     * @param userId The ID of the user to be banned.
-     * @return A ResponseEntity object containing the status code and message.
-     */
     @PostMapping("/ban/{userId}")
     public ResponseEntity<String> updateBanStatus(@PathVariable int userId) {
         return userService.updateBanStatus(userId);

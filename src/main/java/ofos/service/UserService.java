@@ -29,9 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * This class provides methods to interact and save the user data stored in the database.
- */
 @Service
 public class UserService {
 
@@ -54,11 +51,7 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    /**
-     * Creates a new user and saves it to the database.
-     * @param user contains username,password.
-     * @return The created {@link UserEntity} object.
-     */
+
     @Transactional
     public UserEntity createUser(CreateUserRequestDTO user) {
         System.out.println("Creating user: " + user.getUsername());
@@ -69,43 +62,23 @@ public class UserService {
         return userRepository.save(userEntity);
     }
 
-    /**
-     * Retrieves all users from the database.
-     *
-     * @return A list of {@link UserEntity} objects representing all users in the database.
-     */
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(user -> new UserDTO(user.getUserId(), user.getUsername(), user.getRole(), user.isEnabled()))
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Retrieves a user by their username.
-     *
-     * @param username The username of the user.
-     * @return The {@link UserEntity} object representing the user.
-     */
+
     public UserEntity getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    /**
-     * Retrieves a user by their user ID.
-     *
-     * @param userId The ID of the user.
-     * @return The {@link UserEntity} object representing the user.
-     */
+
     public UserEntity getUserById(int userId) {
         return userRepository.findByUserId(userId);
     }
 
-    /**
-     * Updates password for a user.
-     * @param changePasswordDTO {@link ChangePasswordDTO} DTO containing old and new password.
-     * @param username The username of the user.
-     * @return
-     */
+
     @Transactional
     public ResponseEntity<String> updatePassword(ChangePasswordDTO changePasswordDTO, String username){
         String hashedPassword = userRepository.findPassword(username);
@@ -131,11 +104,7 @@ public class UserService {
         );
     }
 
-    /**
-     * Deletes a user from the database.
-     * @param username The username of the user.
-     * @return ResponseEntity object with a message and a status code.
-     */
+
     @Transactional
     public ResponseEntity<String> deleteUser(String username){
         UserEntity user = userRepository.findByUsername(username);
@@ -159,11 +128,7 @@ public class UserService {
         }
     }
 
-    /**
-     * Updates ban status for a user.
-     * @param userId The ID of the user.
-     * @return ResponseEntity object with a message and a status code.
-     */
+
     @Transactional
     public ResponseEntity<String> updateBanStatus(int userId){
         int affectedRows = userRepository.updateBanStatus(userId);
@@ -179,11 +144,7 @@ public class UserService {
         );
     }
 
-    /**
-     * Updates user role.
-     * @param userId The ID of the user.
-     * @param role The new role for the user.
-     */
+
     @Transactional
     public void updateUserRole(int userId, String role){
 

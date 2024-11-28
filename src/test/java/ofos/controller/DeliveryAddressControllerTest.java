@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
@@ -131,5 +132,73 @@ class DeliveryAddressControllerTest {
                 .content(new ObjectMapper().writeValueAsString(payload))
                 .header("Authorization", jwt))
                 .andExpect(status().isOk());
+    }
+
+
+    @Test
+    void saveDeliveryAddressFailureTest() throws Exception {
+        DeliveryAddressDTO deliveryAddressDTO = new DeliveryAddressDTO("Address", "City", "00410", 1, "Info", true);
+        String jwt = "Bearer jwtToken";
+        String dummyUsername = "dummyUser";
+
+        Mockito.when(jwtUtil.extractUsername(jwt.substring(7))).thenReturn(dummyUsername);
+        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Save failed.");
+        Mockito.when(deliveryAddressService.saveDeliveryAddress(Mockito.any(DeliveryAddressDTO.class), Mockito.eq(dummyUsername)))
+                .thenReturn(responseEntity);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/deliveryaddress/save")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(deliveryAddressDTO))
+                        .header("Authorization", jwt))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Save failed."));
+    }
+
+    @Test
+    void updateDeliveryAddressFailureTest() throws Exception {
+        DeliveryAddressDTO deliveryAddressDTO = new DeliveryAddressDTO("Address", "City", "00410", 1, "Info", true);
+        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Update failed.");
+        Mockito.when(deliveryAddressService.updateDeliveryAddress(any(DeliveryAddressDTO.class))).thenReturn(responseEntity);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/deliveryaddress/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(deliveryAddressDTO)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Update failed."));
+    }
+
+    @Test
+    void deleteDeliveryAddressFailureTest() throws Exception {
+        String jwt = "Bearer jwtToken";
+        String dummyUsername = "dummyUser";
+        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Delete failed.");
+
+        Mockito.when(jwtUtil.extractUsername(jwt.substring(7))).thenReturn(dummyUsername);
+        Mockito.when(deliveryAddressService.deleteDeliveryAddress(anyInt(), eq(dummyUsername))).thenReturn(responseEntity);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/deliveryaddress/delete/1")
+                        .header("Authorization", jwt))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Delete failed."));
+    }
+
+    @Test
+    void setDefaultDeliveryAddressFailureTest() throws Exception {
+        Map<String, Integer> payload = new HashMap<>();
+        payload.put("deliveryAddressId", 1);
+        payload.put("userId", 1);
+        String jwt = "Bearer jwtToken";
+        String dummyUsername = "dummyUser";
+        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Set default failed.");
+
+        Mockito.when(jwtUtil.extractUsername(jwt.substring(7))).thenReturn(dummyUsername);
+        Mockito.when(deliveryAddressService.setDefaultDeliveryAddress(anyInt(), anyInt(), eq(dummyUsername))).thenReturn(responseEntity);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/deliveryaddress/setDefault")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(payload))
+                        .header("Authorization", jwt))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Set default failed."));
     }
 }

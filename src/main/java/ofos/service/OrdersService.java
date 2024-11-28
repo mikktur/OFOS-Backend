@@ -14,9 +14,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/**
- * This class provides methods to interact with and save the order data stored in the database.
- */
+
 @Service
 public class OrdersService {
 
@@ -39,33 +37,16 @@ public class OrdersService {
     private ProductRepository productRepository;
 
 
-    /**
-     * Retrieves all orders related to certain user from the database.
-     *
-     * @param userID The ID of the user.
-     * @return A list of {@link OrdersEntity} objects representing all orders in the database.
-     */
+
     public List<OrdersEntity> getOrdersByUserID(int userID) {
         return ordersRepository.findOrdersEntitiesByUser_UserId(userID);
     }
 
-    /**
-     * Retrieves all order contents related to certain user from the database.
-     *
-     * @param userID The ID of the user.
-     * @return A list of {@link OrderProductsEntity} objects representing all related order contents in the database.
-     */
+
     public List<OrderProductsEntity> getOrderContentsByUserID(int userID) {
         return orderProductsRepository.findOrdersByUserID(userID);
     }
 
-    /**
-     * Posts an order to the database.
-     *
-     * @param orders   list of {@link OrderDTO} objects representing the order to be posted.
-     * @param username The username of the user making the order.
-     * @return {@link ResponseEntity} object with a message and a status code.
-     */
     //TODO return Statuscdoes instead of runtime exceptions
     @Transactional
     public ResponseEntity<String> postOrder(List<OrderDTO> orders, String username) {
@@ -107,11 +88,7 @@ public class OrdersService {
         return new ResponseEntity<>("Order placed successfully", HttpStatus.OK);
     }
 
-    /**
-     * Retrieves all products related to the orders from the database.
-     * @param orders list of {@link OrderDTO} objects representing the orders of the user.
-     * @return A map of products contained in the orders.
-     */
+
     private Map<Integer, ProductEntity> getProductsMappedById(List<OrderDTO> orders) {
         List<Integer> productIds = orders.stream()
                 .map(OrderDTO::getProductID)
@@ -122,14 +99,7 @@ public class OrdersService {
                 .stream()
                 .collect(Collectors.toMap(ProductEntity::getProductId, Function.identity()));
     }
-    //should maybe limit history to 20 etc for efficiency
-    /**
-     * Retrieves the order history of a user from the database in the chosen language.
-     *
-     * @param username The username of the user.
-     * @param language The language of the user.
-     * @return A map of order IDs and lists of {@link OrderHistoryDTO} objects representing the order history of the user.
-     */
+
     @Transactional
     public HashMap<Integer, List<OrderHistoryDTO>> getHistory(String username, String language) {
         List<Object[]> results = ordersRepository.findOrdersByUsername(username,language);
@@ -146,13 +116,7 @@ public class OrdersService {
         return history;
     }
 
-    /**
-     * Creates an {@link OrderHistoryDTO} object from the given result and order.
-     *
-     * @param result The result of the query.
-     * @param order  The order to be used.
-     * @return An {@link OrderHistoryDTO} object.
-     */
+
     private static OrderHistoryDTO getOrderHistoryDTO(Object[] result, OrdersEntity order) {
         OrderProductsEntity orderProduct = (OrderProductsEntity) result[1];
         ProductEntity product = (ProductEntity) result[2];
@@ -168,13 +132,7 @@ public class OrdersService {
         );
     }
 
-    /**
-     * Updates the status of an order in the database.
-     *
-     * @param orderID The ID of the order.
-     * @param status  The new status of the order.
-     * @return {@link ResponseEntity} object with a message and a status code.
-     */
+
     public ResponseEntity<String> updateStatus(int orderID, String status) {
         try {
             ordersRepository.updateByOrderId(orderID, status);

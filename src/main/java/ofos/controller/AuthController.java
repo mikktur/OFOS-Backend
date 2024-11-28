@@ -30,11 +30,6 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    /**
-     * Authenticates the user and generates a token for the user.
-     * @param loginRequest The login request object containing the username and password.
-     * @return A ResponseEntity object containing the token and status code.
-     */
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> authenticateUser(@RequestBody LoginRequestDTO loginRequest) {

@@ -31,12 +31,6 @@ public class ContactInfoController {
         }
     }
 
-    /**
-     * Updates contact info for a user.
-     * @param contactInfoDTO The contact info to be updated.
-     * @param request The HTTP request object.
-     * @return {@link ResponseEntity} object with and the username of the user.
-     */
     @PostMapping("/update")
     public ResponseEntity<String> updateContactInfo(@RequestBody ContactInfoDTO contactInfoDTO, HttpServletRequest request){
         String jwt = request.getHeader("Authorization").substring(7);

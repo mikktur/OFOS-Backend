@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import ofos.dto.ProductDTO;
 import ofos.entity.ProductEntity;
-import ofos.entity.TranslationEntity;
 import ofos.security.JwtUtil;
 import ofos.security.MyUserDetails;
 import ofos.service.ProductService;
@@ -14,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -33,13 +29,7 @@ public class ProductController {
     private JwtUtil jwtUtil;
 
 
-    /**
-     * Retrieves a product by its id.
-     *
-     * @param id The id of the product.
-     * @param language The language of the product.
-     * @return A {@link ProductEntity} object containing the product.
-     */
+
 
     @GetMapping("/{language}/{id}")
     @ResponseBody
@@ -64,13 +54,6 @@ public class ProductController {
         );
     }
 
-    /**
-     * Deletes a product from a restaurant.
-     * @param productId The id of the product to be deleted.
-     * @param restaurantId The id of the restaurant.
-     * @param request The HTTP request object for authorization purposes.
-     * @return A ResponseEntity object containing the status code and message.
-     */
     @DeleteMapping("/delete/{productId}/restaurant/{restaurantId}")
     public ResponseEntity<String> deleteDishFromRestaurant(
             @PathVariable int productId,
@@ -126,13 +109,7 @@ public class ProductController {
         }
     }
 
-    /**
-     * Retrieves all products for a restaurant.
-     *
-     * @param restaurant The id of the restaurant.
-     * @param language The language of the products.
-     * @return A list of {@link ProductDTO} objects containing all products of the restaurant.
-     */
+
 
     @GetMapping("/restaurant/{language}/{restaurant}")
     @ResponseBody
