@@ -10,18 +10,12 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Repository for the {@link ProductEntity} class.
- */
+
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Integer> {
 
     ProductEntity findByProductId(int id);
 
-    /**
-     * Updates the availability of a product.
-     * @param id The ID of the product.
-     */
     @Modifying
     @Query("UPDATE ProductEntity p set p.active = false WHERE p.productId = ?1")
     void updateAvailability(int id);

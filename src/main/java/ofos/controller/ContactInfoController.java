@@ -11,9 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * This class is used to handle the contact info requests.
- */
 @RestController
 @RequestMapping("api/contactinfo")
 public class ContactInfoController {
@@ -24,12 +21,6 @@ public class ContactInfoController {
     @Autowired
     JwtUtil jwtUtil;
 
-    /**
-     * Retrieves contact info for a user.
-     *
-     * @param userID The ID of the user.
-     * @return A {@link ResponseEntity} object containing the contact info and status code.
-     */
     @GetMapping("/{userID}")
     public ResponseEntity<ContactInfoEntity> getContactInfo(@PathVariable int userID){
         ContactInfoEntity contactInfo = contactInfoService.getContactInfo(userID);
@@ -53,13 +44,6 @@ public class ContactInfoController {
         return contactInfoService.updateContactInfo(contactInfoDTO, username);
     }
 
-    /**
-     * Saves contact info for a user.
-     *
-     * @param dto The contact info to be saved.
-     * @param request The HTTP request object.
-     * @return {@link ResponseEntity} object with data user data.
-     */
     @PostMapping("/save")
     public ResponseEntity<String> saveInfo(@RequestBody ContactInfoDTO dto, HttpServletRequest request){
         String jwt = request.getHeader("Authorization").substring(7);

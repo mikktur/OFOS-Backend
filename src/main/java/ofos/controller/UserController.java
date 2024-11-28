@@ -19,9 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-/**
- * This class is used to handle the user requests.
- */
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -32,23 +30,14 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    /**
-     * Retrieves all users.
-     *
-     * @return A list of {@link UserEntity} objects containing all users.
-     */
+
     @GetMapping   // Toimiiko pelkällä oletus pathillä?
     public List<UserDTO> getAllUsers() {
         System.out.println("Entered getAllUsers method in UserController");
         return userService.getAllUsers();
     }
 
-    /**
-     * Retrieves a user by their username.
-     *
-     * @param username The username of the user.
-     * @return A {@link UserEntity} object containing the user.
-     */
+
     @GetMapping("/username/{username}")
     @ResponseBody
     public UserDTO getUserByUsername(@PathVariable String username) {
@@ -68,12 +57,7 @@ public class UserController {
         );
     }
 
-    /**
-     * Retrieves a user by their id.
-     *
-     * @param id The id of the user.
-     * @return A {@link UserEntity} object containing the user.
-     */
+
     @GetMapping("/id/{id}")
     @ResponseBody
     public UserEntity getUserById(@PathVariable int id) {
@@ -83,12 +67,14 @@ public class UserController {
         return userEntity;
     }
 
+
     /**
      * Creates a new user.
      *
      * @param createUserRequest The request object containing the user data.
      * @return A {@link ResponseEntity} object containing the status code and message.
      */
+
     @PostMapping("/create")
     public ResponseEntity<CreateUserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO createUserRequest) {
         try {

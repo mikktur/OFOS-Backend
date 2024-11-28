@@ -6,9 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Repository for the {@link UserEntity} class.
- */
+
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     //add custom queries here
     UserEntity findByUsername(String username);

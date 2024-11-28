@@ -21,9 +21,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
-/**
- * This class is used to handle the product requests.
- */
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -42,6 +40,7 @@ public class ProductController {
      * @param language The language of the product.
      * @return A {@link ProductEntity} object containing the product.
      */
+
     @GetMapping("/{language}/{id}")
     @ResponseBody
     public ProductEntity getDishById(@PathVariable int id, @PathVariable String language) {
@@ -49,13 +48,7 @@ public class ProductController {
     }
 
 
-    /**
-     * Deletes a product by its id.
-     *
-     * @param id      The id of the product.
-     * @param request The HTTP request object.
-     * @return A {@link ResponseEntity} object containing the status code.
-     */
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteDish(@PathVariable int id, HttpServletRequest request) {
         String authHead = request.getHeader("Authorization");
@@ -97,14 +90,7 @@ public class ProductController {
     }
 
 
-    /**
-     * Creates a new product for a certain restaurant.
-     *
-     * @param productDTOs  The product to be created.
-     * @param restaurantId The id of the restaurant.
-     * @param request      The HTTP request object.
-     * @return A {@link ResponseEntity} object containing the status code.
-     */
+
     @PostMapping("/create/{restaurantId}")
     public ResponseEntity<String> createProduct(@Valid @RequestBody ProductDTO productDTOs, @PathVariable int restaurantId,
                                                 HttpServletRequest request) {
@@ -125,6 +111,7 @@ public class ProductController {
      * @param rid The id of the restaurant.
      * @return A {@link ResponseEntity} object containing the status code.
      */
+
     @PutMapping("/update/{rid}")
     @PreAuthorize("hasRole('Owner')") // Ensure only users with the 'Owner' role can access this endpoint
     public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable int rid,
@@ -146,6 +133,7 @@ public class ProductController {
      * @param language The language of the products.
      * @return A list of {@link ProductDTO} objects containing all products of the restaurant.
      */
+
     @GetMapping("/restaurant/{language}/{restaurant}")
     @ResponseBody
     public List<ProductDTO> getProductsByRestaurant(@PathVariable int restaurant, @PathVariable String language) {

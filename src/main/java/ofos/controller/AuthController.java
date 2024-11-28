@@ -20,9 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
-/**
- * This class is used to handle the authentication requests.
- */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -38,6 +35,7 @@ public class AuthController {
      * @param loginRequest The login request object containing the username and password.
      * @return A ResponseEntity object containing the token and status code.
      */
+
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> authenticateUser(@RequestBody LoginRequestDTO loginRequest) {
         try {
