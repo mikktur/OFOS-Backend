@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -24,6 +26,8 @@ public class ProductDTO {
     private String picture;
     private boolean active;
     private String lang;
+    @Getter
+    private List<Map<String, String>> translations;
     public ProductDTO(){}
 
     public ProductDTO(Integer productID, String productName, String productDesc, BigDecimal productPrice, String category, String picture, boolean active) {
@@ -49,7 +53,8 @@ public class ProductDTO {
     }
 
 
-
-
+    public void setTranslations(List<Map<String, String>> translations) {
+        this.translations = translations;
+    }
 
 }

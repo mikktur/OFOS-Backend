@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -130,31 +131,52 @@ public class ProductService {
 //        );
 //
 //    }
-    @Transactional
-    public ResponseEntity<String> createProduct(ProductDTO productDTOs, int restaurantID, String owner) {
+@Transactional
+public ResponseEntity<String> createProduct(ProductDTO productDTO, int restaurantId, String username) {
+    // 1. Fetch the restaurant and validate ownership
+    RestaurantEntity restaurant = restaurantRepository.findByRestaurantID(restaurantId)
+            .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
-        RestaurantEntity restaurant = restaurantRepository.findByRestaurantID(restaurantID)
-                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
-
-        if (!restaurant.getOwner().getUsername().equals(owner)) {
-            return new ResponseEntity<>("You are not authorized to create products for this restaurant.", HttpStatus.UNAUTHORIZED);
-        }
-
-        ProductEntity productEntity = new ProductEntity();
-        setValues(productDTOs, productEntity);
-        TranslationEntity translation = new TranslationEntity(
-                productEntity,
-                productDTOs.getLang(),
-                productDTOs.getProductName(),
-                productDTOs.getProductDesc()
-        );
-
-       productEntity.addTranslation(translation);
-       restaurant.addProduct(productEntity);
-       restaurantRepository.save(restaurant);
-
-        return new ResponseEntity<>("Product created.", HttpStatus.OK);
+    if (!restaurant.getOwner().getUsername().equals(username)) {
+        return new ResponseEntity<>("You are not authorized to create products for this restaurant.", HttpStatus.UNAUTHORIZED);
     }
+
+    // 2. Create ProductEntity
+    ProductEntity product = new ProductEntity();
+    product.setProductName(productDTO.getProductName());
+    product.setProductPrice(productDTO.getProductPrice());
+    product.setProductDesc(productDTO.getProductDesc());
+    product.setPicture(productDTO.getPicture());
+    product.setCategory(productDTO.getCategory());
+    product.setActive(productDTO.isActive());
+
+    ProductEntity savedProduct = productRepository.save(product);
+
+    // 3. Save Translations
+    List<Map<String, String>> translations = productDTO.getTranslations();
+    translations.forEach(translation -> {
+        String languageCode = translation.get("languageCode"); // e.g., "en"
+        String name = translation.get("name");
+        String description = translation.get("description");
+
+        TranslationEntity translationEntity = new TranslationEntity();
+        translationEntity.setProduct(savedProduct);
+        translationEntity.setLang(languageCode);
+        translationEntity.setName(name);
+        translationEntity.setDescription(description);
+
+        translationRepository.save(translationEntity);
+    });
+
+    // 4. Associate the product with the restaurant
+    restaurant.addProduct(savedProduct);
+    restaurantRepository.save(restaurant);
+
+    return new ResponseEntity<>("Product created and associated with the restaurant successfully", HttpStatus.CREATED);
+}
+
+
+
 
 
     @Transactional(readOnly = true)
