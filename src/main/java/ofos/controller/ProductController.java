@@ -80,6 +80,7 @@ public class ProductController {
         System.out.println("ProductDTOs: " + productDTOs.getProductName());
         System.out.println("RestaurantId: " + restaurantId);
         System.out.println("Request: " + request);
+
         String jwt = request.getHeader("Authorization").substring(7);
 
         String username = jwtUtil.extractUsername(jwt);
