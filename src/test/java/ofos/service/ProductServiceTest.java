@@ -15,10 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -73,30 +70,36 @@ class ProductServiceTest {
         int restaurantId = 1;
         int productId = 1;
 
+
         ProductDTO productDTO = new ProductDTO();
         productDTO.setProductID(productId);
         productDTO.setProductName("Updated Product");
         productDTO.setProductPrice(BigDecimal.valueOf(10));
+        productDTO.setTranslations(List.of(
+                Map.of("language", "en", "name", "Updated Product", "description", "Updated Description")
+        ));
 
-        RestaurantEntity restaurant = new RestaurantEntity();
         UserEntity owner = new UserEntity();
         owner.setUserId(userId);
+        RestaurantEntity restaurant = new RestaurantEntity();
         restaurant.setOwner(owner);
 
         ProductEntity product = new ProductEntity();
         product.setProductId(productId);
         product.setProductName("Original Product");
+        product.setTranslations(new ArrayList<>());
 
         when(restaurantRepository.findById(restaurantId)).thenReturn(Optional.of(restaurant));
         when(productRepository.findByProductIdAndRestaurantId(productId, restaurantId)).thenReturn(Optional.of(product));
 
-
         ResponseEntity<String> response = productService.updateProduct(productDTO, userId, restaurantId);
-
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Product updated.", response.getBody());
+
         verify(productRepository).save(any(ProductEntity.class));
+        verify(restaurantRepository).findById(restaurantId);
+        verify(productRepository).findByProductIdAndRestaurantId(productId, restaurantId);
     }
 
 //    @Test

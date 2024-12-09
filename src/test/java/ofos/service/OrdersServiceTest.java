@@ -140,12 +140,11 @@ class OrdersServiceTest {
         Object[] result = new Object[]{mockOrder, mockOrderProduct, mockProduct, mockTranslation, mockRestaurant};
 
 
-        Mockito.when(ordersRepository.findOrdersByUsername("testuser", "en"))
+        Mockito.when(ordersRepository.findOrdersByUsername("testuser", "fi"))
                 .thenReturn(Collections.singletonList(result));
 
 
-        HashMap<Integer, List<OrderHistoryDTO>> history = ordersService.getHistory("testuser", "en");
-
+        HashMap<Integer, List<OrderHistoryDTO>> history = ordersService.getHistory("testuser", "fi");
 
         Assertions.assertEquals(1, history.size(), "History should contain one order");
         Assertions.assertTrue(history.containsKey(1), "History should contain order ID 1");

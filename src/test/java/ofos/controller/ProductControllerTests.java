@@ -69,12 +69,11 @@ public class ProductControllerTests {
 
         when(productService.getDishById(20)).thenReturn(productDTO);
 
-        mvc.perform(get("/api/products/" + language + "/20"))
+        mvc.perform(get("/api/products/20"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.productName").value(productDTO.getProductName()))
-                .andExpect(jsonPath("$.productId").value(productDTO.getProductID()))
+                .andExpect(jsonPath("$.productID").value(productDTO.getProductID()))
                 .andDo(MockMvcResultHandlers.print());
-
 
     }
 
