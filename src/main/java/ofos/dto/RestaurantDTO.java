@@ -10,6 +10,7 @@ public class RestaurantDTO {
     private String ownerUsername;
     private String address;
     private String businessHours;
+    private Integer ownerId;
 
     public RestaurantDTO(Integer id, String restaurantName, String restaurantPhone, String picture, String ownerUsername, String address, String businessHours) {
         this.id = id;
@@ -25,6 +26,15 @@ public class RestaurantDTO {
     }
 
     // Getters and Setters
+
+    public Integer getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Integer ownerId) {
+        this.ownerId = ownerId;
+    }
+
     public Integer getId() {
         return id;
     }

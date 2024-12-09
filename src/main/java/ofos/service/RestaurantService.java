@@ -149,4 +149,27 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
 
     }
+
+    @Transactional
+    public void createRestaurant(RestaurantDTO restaurantDTO) {
+        System.out.println("Entered createRestaurant method in RestaurantService");
+        UserEntity user = userRepository.findById(restaurantDTO.getOwnerId())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        System.out.println("User retrieved: " + user.getUsername() + " role: " + user.getRole());
+        if (!"OWNER".equals(user.getRole().toUpperCase())) {
+            System.out.println("User is not an owner");
+            throw new UserNotOwnerException("User is not an owner");
+        }
+
+        RestaurantEntity restaurant = new RestaurantEntity();
+        restaurant.setRestaurantName(restaurantDTO.getRestaurantName());
+        restaurant.setRestaurantPhone(restaurantDTO.getRestaurantPhone());
+        restaurant.setPicture(restaurantDTO.getPicture());
+        restaurant.setBusinessHours(restaurantDTO.getBusinessHours());
+        restaurant.setAddress(restaurantDTO.getAddress());
+        restaurant.setOwner(user);
+        System.out.println("Restaurant created: " + restaurant.getRestaurantName());
+        restaurantRepository.save(restaurant);
+
+    }
 }

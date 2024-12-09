@@ -14,9 +14,7 @@ import java.util.Map;
 public class ProductDTO {
 
     private Integer productID;
-    @NotBlank(message = "Product name is missing.")
     private String productName;
-    @NotBlank(message = "Product description is missing.")
     private String productDesc;
     @NotNull(message = "Product price is missing.")
     private BigDecimal productPrice;

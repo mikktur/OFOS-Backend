@@ -149,10 +149,12 @@ public class UserService {
     public void updateUserRole(int userId, String role){
 
         UserEntity user = userRepository.findByUserId(userId);
+        System.out.println( "User: " + user.getUserId() + " Role: " + role);
         if (user == null){
             throw new UsernameNotFoundException("User not found: " + userId);
         }
         user.setRole(role);
+        System.out.println("User role updated: " + user.getRole());
         userRepository.save(user);
 
     }

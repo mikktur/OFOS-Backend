@@ -108,7 +108,7 @@ public class OrdersService {
 
         for (Object[] result : results) {
             OrdersEntity order = (OrdersEntity) result[0];
-            OrderHistoryDTO dto = getOrderHistoryDTO(result, order);
+            OrderHistoryDTO dto = getOrderHistoryDTO(result, order,language);
 
             history.computeIfAbsent(order.getOrderId(), k -> new ArrayList<>()).add(dto);
         }
@@ -117,13 +117,13 @@ public class OrdersService {
     }
 
 
-    private static OrderHistoryDTO getOrderHistoryDTO(Object[] result, OrdersEntity order) {
+    private static OrderHistoryDTO getOrderHistoryDTO(Object[] result, OrdersEntity order,String language) {
         OrderProductsEntity orderProduct = (OrderProductsEntity) result[1];
         ProductEntity product = (ProductEntity) result[2];
         TranslationEntity translation = (TranslationEntity) result[3];
         RestaurantEntity restaurant = (RestaurantEntity) result[4];
         return new OrderHistoryDTO(
-                product.getProductPrice(),
+                CurrencyConverter.convert("fi",language,product.getProductPrice()),
                 orderProduct.getQuantity(),
                 translation.getName(),
                 order.getOrderDate(),

@@ -36,22 +36,47 @@ public class ProductService {
     @Autowired
     TranslationRepository translationRepository;
 
+    @Transactional(readOnly = true)
+    public ProductDTO getDishById(int productId) {
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setProductID(product.getProductId());
+        productDTO.setProductPrice(product.getProductPrice());
+        productDTO.setCategory(product.getCategory());
+        productDTO.setPicture(product.getPicture());
+        productDTO.setTranslations(product.getTranslations().stream()
+                .map(t -> Map.of(
+                        "language", t.getId().getLang(),
+                        "name", t.getName(),
+                        "description", t.getDescription()
+                )).collect(Collectors.toList()));
 
-
-    public ProductEntity getDishById(int productId, String language) {
-        ProductEntity product = productRepository.findByProductId(productId);
-        if (!language.equals("fi")) {
-
-            TranslationEntity translated = translationRepository.findByProductAndLang(product, language);
-            product.setProductDesc(translated.getDescription());
-            product.setProductName(translated.getName());
-        }
-        return product;
+        return productDTO;
 
     }
 
+    @Transactional
+    public ProductDTO getDishByIdAndLanguage(int productId, String lang) {
+        ProductEntity product = productRepository.findByProductId(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        TranslationEntity translation = translationRepository.findByProductAndLang(product, lang);
+        if (translation == null) {
+            throw new RuntimeException("Translation not found");
+        }
 
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setProductID(product.getProductId());
+        productDTO.setProductName(translation.getName());
+        productDTO.setProductDesc(translation.getDescription());
+        productDTO.setProductPrice(CurrencyConverter.convert("fi", lang, product.getProductPrice()));
+        productDTO.setCategory(product.getCategory());
+        productDTO.setPicture(product.getPicture());
+        productDTO.setLang(lang);
+
+        return productDTO;
+    }
 
     @Transactional
     public ResponseEntity<String> deleteDishById(int productId, String owner) {
@@ -76,7 +101,6 @@ public class ProductService {
 
     @Transactional
     public ResponseEntity<String> updateProduct(ProductDTO productDTO, int userId, int restaurantId) {
-
         RestaurantEntity restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
@@ -87,17 +111,6 @@ public class ProductService {
         ProductEntity product = productRepository.findByProductIdAndRestaurantId(productDTO.getProductID(), restaurantId)
                 .orElseThrow(() -> new RuntimeException("The specified product does not belong to this restaurant."));
 
-        TranslationEntity translation = translationRepository.findByProductAndLang(product, productDTO.getLang());
-        if (translation == null) {
-            translation = new TranslationEntity();
-            translation.setProduct(product);
-            translation.getId().setLang(productDTO.getLang());
-            translation.getId().setProductId(product.getProductId());
-            product.addTranslation(translation);
-        }
-
-        translation.setName(productDTO.getProductName());
-        translation.setDescription(productDTO.getProductDesc());
 
         setValues(productDTO, product);
 
@@ -106,7 +119,7 @@ public class ProductService {
         return new ResponseEntity<>("Product updated.", HttpStatus.OK);
     }
 
-//    public ResponseEntity<String> createProduct(ProductDTO productDTO, int restaurantID, String owner) {
+    //    public ResponseEntity<String> createProduct(ProductDTO productDTO, int restaurantID, String owner) {
 //        List<RestaurantEntity> ownedRestaurants = restaurantRepository.findRestaurantByOwnerName(owner);
 //        if (!ownedRestaurants.isEmpty()) {
 //            for (RestaurantEntity re : ownedRestaurants) {
@@ -131,52 +144,29 @@ public class ProductService {
 //        );
 //
 //    }
-@Transactional
-public ResponseEntity<String> createProduct(ProductDTO productDTO, int restaurantId, String username) {
-    // 1. Fetch the restaurant and validate ownership
-    RestaurantEntity restaurant = restaurantRepository.findByRestaurantID(restaurantId)
-            .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+    @Transactional
+    public ResponseEntity<String> createProduct(ProductDTO productDTO, int restaurantId, String username) {
+        // 1. Fetch the restaurant and validate ownership
+        RestaurantEntity restaurant = restaurantRepository.findByRestaurantID(restaurantId)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
-    if (!restaurant.getOwner().getUsername().equals(username)) {
-        return new ResponseEntity<>("You are not authorized to create products for this restaurant.", HttpStatus.UNAUTHORIZED);
+        if (!restaurant.getOwner().getUsername().equals(username)) {
+            return new ResponseEntity<>("You are not authorized to create products for this restaurant.", HttpStatus.UNAUTHORIZED);
+        }
+
+        // 2. Create a new ProductEntity
+        ProductEntity product = new ProductEntity();
+
+        // 3. Use setValues to set product details and translations
+        setValues(productDTO, product);
+
+        // 4. Save the product and associate it with the restaurant
+        productRepository.save(product);
+        restaurant.addProduct(product);
+        restaurantRepository.save(restaurant);
+
+        return new ResponseEntity<>("Product created and associated with the restaurant successfully", HttpStatus.CREATED);
     }
-
-    // 2. Create ProductEntity
-    ProductEntity product = new ProductEntity();
-    product.setProductName(productDTO.getProductName());
-    product.setProductPrice(productDTO.getProductPrice());
-    product.setProductDesc(productDTO.getProductDesc());
-    product.setPicture(productDTO.getPicture());
-    product.setCategory(productDTO.getCategory());
-    product.setActive(productDTO.isActive());
-
-    ProductEntity savedProduct = productRepository.save(product);
-
-    // 3. Save Translations
-    List<Map<String, String>> translations = productDTO.getTranslations();
-    translations.forEach(translation -> {
-        String languageCode = translation.get("languageCode"); // e.g., "en"
-        String name = translation.get("name");
-        String description = translation.get("description");
-
-        TranslationEntity translationEntity = new TranslationEntity();
-        translationEntity.setProduct(savedProduct);
-        translationEntity.setLang(languageCode);
-        translationEntity.setName(name);
-        translationEntity.setDescription(description);
-
-        translationRepository.save(translationEntity);
-    });
-
-    // 4. Associate the product with the restaurant
-    restaurant.addProduct(savedProduct);
-    restaurantRepository.save(restaurant);
-
-    return new ResponseEntity<>("Product created and associated with the restaurant successfully", HttpStatus.CREATED);
-}
-
-
-
 
 
     @Transactional(readOnly = true)
@@ -190,10 +180,7 @@ public ResponseEntity<String> createProduct(ProductDTO productDTO, int restauran
             productDTO.setProductID(product.getProductId());
             productDTO.setProductName(translation != null ? translation.getName() : null);
             productDTO.setProductDesc(translation != null ? translation.getDescription() : null);
-            BigDecimal price = product.getProductPrice();
-            if (!lang.equals("fi")) {
-                price = CurrencyConverter.convert("EUR",lang,product.getProductPrice());
-            }
+            BigDecimal price = CurrencyConverter.convert("fi", lang, product.getProductPrice());
             productDTO.setProductPrice(price);
             productDTO.setCategory(product.getCategory());
             productDTO.setPicture(product.getPicture());
@@ -204,16 +191,41 @@ public ResponseEntity<String> createProduct(ProductDTO productDTO, int restauran
     }
 
 
-    protected ProductEntity setValues(ProductDTO productDTO, ProductEntity productEntity) {
-        productEntity.setProductName(productDTO.getProductName());
-        productEntity.setProductDesc(productDTO.getProductDesc());
-        productEntity.setProductPrice(productDTO.getProductPrice());
+    protected void setValues(ProductDTO productDTO, ProductEntity productEntity) {
         productEntity.setCategory(productDTO.getCategory());
         productEntity.setPicture(productDTO.getPicture());
         productEntity.setActive(true);
-        return productEntity;
-    }
+        Map<String, TranslationEntity> existingTranslations = productEntity.getTranslations().stream()
+                .collect(Collectors.toMap(t -> t.getId().getLang(), t -> t));
+        for (Map<String, String> map : productDTO.getTranslations()) {
+            String lang = map.get("language");
+            String name = map.get("name");
+            String description = map.get("description");
+            System.out.println("Lang: " + lang);
+            if (name.isEmpty() && description.isEmpty()) {
+                continue;
+            }
 
+            if (existingTranslations.containsKey(lang)) {
+                TranslationEntity translationEntity = existingTranslations.get(lang);
+                if (name.equals(translationEntity.getName()) && description.equals(translationEntity.getDescription())) {
+                    continue;
+                }
+                translationEntity.setName(name);
+                translationEntity.setDescription(description);
+
+            } else {
+
+                TranslationEntity newTranslation = new TranslationEntity();
+                newTranslation.setProduct(productEntity);
+                newTranslation.getId().setLang(lang);
+                newTranslation.setName(name);
+                newTranslation.setDescription(description);
+                productEntity.addTranslation(newTranslation);
+
+            }
+        }
+    }
 
     @Transactional
     public ResponseEntity<String> deleteProductFromRestaurant(int productId, int restaurantId, String owner) {

@@ -1,5 +1,6 @@
 package ofos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ public class TranslationEntity {
 
     @EmbeddedId
     private TranslationId id = new TranslationId();
-
+    @JsonIgnore
     @MapsId("productId")
     @ManyToOne
     @JoinColumn(name = "ProductID", nullable = false)

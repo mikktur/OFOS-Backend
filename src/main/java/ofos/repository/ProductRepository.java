@@ -13,8 +13,8 @@ import java.util.Optional;
 
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Integer> {
-
-    ProductEntity findByProductId(int id);
+    @Query("SELECT p FROM ProductEntity p LEFT JOIN FETCH p.translations WHERE p.productId = :productId")
+    Optional<ProductEntity> findByProductId(@Param("productId") int productId);
 
     @Modifying
     @Query("UPDATE ProductEntity p set p.active = false WHERE p.productId = ?1")

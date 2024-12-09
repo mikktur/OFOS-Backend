@@ -46,6 +46,7 @@ public class RestaurantController {
     }
 
 
+
     @GetMapping("/owner/{userId}")
     public List<RestaurantDTO> getRestaurantsByOwner(@PathVariable int userId) {
         return restaurantService.getRestaurantsByOwner(userId);
@@ -71,4 +72,20 @@ public class RestaurantController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
         }
     }
+    @PostMapping("/create")
+    public ResponseEntity<String> createRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
+        try {
+            restaurantService.createRestaurant(restaurantDTO);
+            return ResponseEntity.ok("Restaurant created successfully.");
+        } catch (RestaurantNotFoundException e) {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
+        }
+    }
+
 }

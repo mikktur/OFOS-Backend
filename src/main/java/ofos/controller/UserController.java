@@ -127,6 +127,7 @@ public class UserController {
     @PutMapping("/changerole")
     public ResponseEntity<String> changeRole(@RequestBody UserDTO userDTO) {
         try {
+            System.out.println("UserDTO: " + userDTO.getUserId() + " " + userDTO.getRole());
             System.out.println("Entered changeRole method in UserController");
             userService.updateUserRole(userDTO.getUserId(), userDTO.getRole());
             return new ResponseEntity<>(

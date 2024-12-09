@@ -18,6 +18,7 @@ import java.util.Set;
 @Table(name = "Restaurants", schema = "mikt")
 public class RestaurantEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RestaurantID", nullable = false)
     private Integer restaurantID;
 

@@ -31,10 +31,16 @@ public class ProductController {
 
 
 
-    @GetMapping("/{language}/{id}")
+    @GetMapping("/{id}")
     @ResponseBody
-    public ProductEntity getDishById(@PathVariable int id, @PathVariable String language) {
-        return productService.getDishById(id, language);
+    public ProductDTO getDishById(@PathVariable int id) {
+        return productService.getDishById(id);
+    }
+
+    @GetMapping("/{id}/{language}")
+    @ResponseBody
+    public ProductDTO getDishById(@PathVariable int id, @PathVariable String language) {
+        return productService.getDishByIdAndLanguage(id, language);
     }
 
 
@@ -97,7 +103,7 @@ public class ProductController {
      */
 
     @PutMapping("/update/{rid}")
-    @PreAuthorize("hasRole('Owner')") // Ensure only users with the 'Owner' role can access this endpoint
+    @PreAuthorize("hasRole('Owner')")
     public ResponseEntity<String> updateProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable int rid,
                                                 @AuthenticationPrincipal MyUserDetails userDetails) {
         int userId = userDetails.getUserId();

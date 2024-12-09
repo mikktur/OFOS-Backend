@@ -64,20 +64,15 @@ public class ProductControllerTests {
     @Test
     public void getProductByIdTest() throws Exception {
         String language = "en";
-        ProductEntity productEntity = new ProductEntity();
-        productEntity.setProductId(20);
-        productEntity.setProductName("Good brgr");
-        productEntity.setProductDesc("Hyvä burgeri.");
-        productEntity.setPicture("https://cdn.rkt-prod.rakentaja.com/media/original_images/202212_60205.jpg");
-        productEntity.setCategory("Hampurilainen");
-        productEntity.setActive(true);
+        ProductDTO productDTO = new ProductDTO(20, "Good brgr", "Maistuu namnam", BigDecimal.valueOf(17.50),
+                "Hampurilainen", "https://cdn.rkt-prod.rakentaja.com/media/original_images/202212_60205.jpg");
 
-        when(productService.getDishById(20, language)).thenReturn(productEntity);
+        when(productService.getDishById(20)).thenReturn(productDTO);
 
         mvc.perform(get("/api/products/" + language + "/20"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.productName").value(productEntity.getProductName()))
-                .andExpect(jsonPath("$.productId").value(productEntity.getProductId()))
+                .andExpect(jsonPath("$.productName").value(productDTO.getProductName()))
+                .andExpect(jsonPath("$.productId").value(productDTO.getProductID()))
                 .andDo(MockMvcResultHandlers.print());
 
 
@@ -129,7 +124,7 @@ public class ProductControllerTests {
 
     @Test
     public void getProductByIdFailureTest() throws Exception {
-        when(productService.getDishById(anyInt(), anyString())).thenReturn(null);
+        when(productService.getDishById(anyInt())).thenReturn(null);
 
 
         MvcResult mvcResult = mvc.perform(get("/api/products/en/1")
