@@ -153,14 +153,9 @@ public class ProductService {
         if (!restaurant.getOwner().getUsername().equals(username)) {
             return new ResponseEntity<>("You are not authorized to create products for this restaurant.", HttpStatus.UNAUTHORIZED);
         }
-
-        // 2. Create a new ProductEntity
         ProductEntity product = new ProductEntity();
-
-        // 3. Use setValues to set product details and translations
         setValues(productDTO, product);
 
-        // 4. Save the product and associate it with the restaurant
         productRepository.save(product);
         restaurant.addProduct(product);
         restaurantRepository.save(restaurant);
@@ -194,6 +189,7 @@ public class ProductService {
     protected void setValues(ProductDTO productDTO, ProductEntity productEntity) {
         productEntity.setCategory(productDTO.getCategory());
         productEntity.setPicture(productDTO.getPicture());
+        productEntity.setProductPrice(productDTO.getProductPrice());
         productEntity.setActive(true);
         Map<String, TranslationEntity> existingTranslations = productEntity.getTranslations().stream()
                 .collect(Collectors.toMap(t -> t.getId().getLang(), t -> t));
